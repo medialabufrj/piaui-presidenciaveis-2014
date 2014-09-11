@@ -73,6 +73,10 @@ function loadCSV(file,callback){
             }
             // adiciona regiao
             d.REGIAO = data_regioes[_.findWhere(data_estados,{uf: d.UF}).regiao];
+            // formata a data
+            var format = d3.time.format("%d.%m.%Y");
+            d.DATA_STRING = d.DATA;
+            d.DATA = format.parse(d.DATA);
             // retorna obj completo
             return d;
         })
