@@ -3,60 +3,60 @@
 var width = 900;
 var height = 900;
 var radius = 320;
-var force_radius = 300;
+var force_radius = 200;
 
 // DATASETS
 
 var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
     data_estados    = [
 
-        {uf: "AC", regiao: 0},
-        {uf: "AM", regiao: 0},
-        {uf: "AP", regiao: 0},
-        {uf: "PA", regiao: 0},
-        {uf: "RR", regiao: 0},
-        {uf: "RO", regiao: 0},
-        {uf: "TO", regiao: 0},
+        {UF: "AC", REGIAO: 0, NOME: "Acre"},
+        {UF: "AM", REGIAO: 0, NOME: "Amazonas"},
+        {UF: "AP", REGIAO: 0, NOME: "Amapá"},
+        {UF: "PA", REGIAO: 0, NOME: "Pará"},
+        {UF: "RR", REGIAO: 0, NOME: "Roraima"},
+        {UF: "RO", REGIAO: 0, NOME: "Rondônia"},
+        {UF: "TO", REGIAO: 0, NOME: "Tocantins"},
 
-        {uf: 1, regiao: null},
-        {uf: 2, regiao: null},
+        {UF: 1, REGIAO: null},
+        {UF: 2, REGIAO: null},
 
 
-        {uf: "MA", regiao: 1},
-        {uf: "PI", regiao: 1},
-        {uf: "CE", regiao: 1},
-        {uf: "BA", regiao: 1},
-        {uf: "RN", regiao: 1},
-        {uf: "PB", regiao: 1},
-        {uf: "PE", regiao: 1},
-        {uf: "AL", regiao: 1},
-        {uf: "SE", regiao: 1},
+        {UF: "MA", REGIAO: 1, NOME: "Maranhão"},
+        {UF: "PI", REGIAO: 1, NOME: "Piauí"},
+        {UF: "CE", REGIAO: 1, NOME: "Ceará"},
+        {UF: "BA", REGIAO: 1, NOME: "Bahia"},
+        {UF: "RN", REGIAO: 1, NOME: "Rio Grande do Norte"},
+        {UF: "PB", REGIAO: 1, NOME: "Paraíba"},
+        {UF: "PE", REGIAO: 1, NOME: "Pernambuco"},
+        {UF: "AL", REGIAO: 1, NOME: "Alagoas"},
+        {UF: "SE", REGIAO: 1, NOME: "Sergipe"},
     
-        {uf: 6, regiao: null},
-        {uf: 7, regiao: null},
+        {UF: 6, REGIAO: null},
+        {UF: 7, REGIAO: null},
         
-        {uf: "MT", regiao: 2},
-        {uf: "GO", regiao: 2},
-        {uf: "MS", regiao: 2},
-        {uf: "DF", regiao: 2},
+        {UF: "MT", REGIAO: 2, NOME: "Mato Grosso"},
+        {UF: "GO", REGIAO: 2, NOME: "Goiás"},
+        {UF: "MS", REGIAO: 2, NOME: "Mato Grosso do Sul"},
+        {UF: "DF", REGIAO: 2, NOME: "Distrito Federal"},
 
-        {uf: 11, regiao: null},
-        {uf: 12, regiao: null},
+        {UF: 11, REGIAO: null},
+        {UF: 12, REGIAO: null},
         
-        {uf: "ES", regiao: 3},
-        {uf: "MG", regiao: 3},
-        {uf: "RJ", regiao: 3},
-        {uf: "SP", regiao: 3},
+        {UF: "ES", REGIAO: 3, NOME: "Espírito Santo"},
+        {UF: "MG", REGIAO: 3, NOME: "Minas Gerais"},
+        {UF: "RJ", REGIAO: 3, NOME: "Rio de Janeiro"},
+        {UF: "SP", REGIAO: 3, NOME: "São Paulo"},
 
-        {uf: 16, regiao: null},
-        {uf: 17, regiao: null},
+        {UF: 16, REGIAO: null},
+        {UF: 17, REGIAO: null},
         
-        {uf: "PR", regiao: 4},
-        {uf: "SC", regiao: 4},
-        {uf: "RS", regiao: 4},
+        {UF: "PR", REGIAO: 4, NOME: "Paraná"},
+        {UF: "SC", REGIAO: 4, NOME: "Santa Catarina"},
+        {UF: "RS", REGIAO: 4, NOME: "Rio Grande do Sul"},
 
-        {uf: 21, regiao: null},
-        {uf: 22, regiao: null},
+        {UF: 21, REGIAO: null},
+        {UF: 22, REGIAO: null},
         
     ],
     data_candidatos = [],
@@ -99,7 +99,7 @@ function loadCSV(file,callback){
                 data_categorias.push(d.CATEGORIA);
             }
             // adiciona regiao
-            d.REGIAO = data_regioes[_.findWhere(data_estados,{uf: d.UF}).regiao];
+            d.REGIAO = data_regioes[_.findWhere(data_estados,{UF: d.UF}).REGIAO];
             // formata a data
             var format = d3.time.format("%d.%m.%Y");
             d.DATA_STRING = d.DATA;
@@ -135,64 +135,82 @@ var svg = d3.select("#vis").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-// VIS ESTADOS RADIAL
-
 var angle = d3.scale.ordinal()
     .rangePoints([0, 360], 1)
-    .domain(data_estados.map(function(d) { return d.uf; }));
-
-var nodes_uf = svg.append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-    .append("g")
-    .attr("class", "nodes_uf")
-    .selectAll("g")
-        .data(data_estados.filter(function(d){
-            return d.regiao != null;
-        }))
-    .enter().append("g")
-        .attr("transform", function(d) { return "rotate(" + angle(d.uf) + ")translate(" + radius + ",0)"; });
-
-/*
-nodes_uf.append("circle")
-    .attr("r", 5)
-    .attr("fill","#666");
-//*/
-
-nodes_uf.append("path")
-    .attr("d", function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
-    .style("stroke-width",2)
-    .style("stroke","#666")
-    .style("fill","none");
-
-nodes_uf.append("text")
-    .attr("dy", ".35em")
-    .attr("x", 16)
-    .attr("fill","#666")
-    .text(function(d) { return d.uf; })
-    .filter(function(d) { return (angle(d.uf) + 120) % 360 > 180; }) // flipped
-        .attr("x", -16)
-        .attr("transform", "rotate(-180)")
-    .style("text-anchor", "end");
-
+    .domain(data_estados.map(function(d) { return d.UF; }));
 
 // VIS EVENTOS
 
-var nodes_force = svg.append("g")
-    .attr("class", "nodes_force")
-
 var App = {
+    nodes_uf: null,
+    nodes_force: null,
     force: null,
     node: null,
     init: function() {
 
+        App.buildStatesRadial();
+        App.buildForceGraph();
+
+    },
+
+    buildStatesRadial: function(){
+
+        App.nodes_uf = svg.append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+        .append("g")
+        .attr("class", "nodes_uf")
+        .selectAll("g")
+        .data(data_estados.filter(function(d){
+                return d.REGIAO != null;
+            }))
+        .enter().append("g")
+            .attr("data-uf", function(d) { return d.UF; })
+            .attr("transform", function(d) { return "rotate(" + angle(d.UF) + ")translate(" + radius + ",0)"; })
+            .on('mouseover', function(d){
+                App.events.mouseover_UF(d);
+            })
+            .on('mouseout', function(d){
+                App.events.mouseout_UF(d);
+            })
+
+        /*
+        App.nodes_uf.append("circle")
+            .attr("r", 5)
+            .attr("fill","#666");
+        //*/
+
+        App.nodes_uf.append("path")
+            .attr("d", function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
+            .attr("class", "UF-path")
+            .style("stroke-width",2)
+            .style("stroke","#666")
+            .style("fill","none");
+
+        App.nodes_uf.append("text")
+            .attr("class", "UF-text")
+            .attr("dy", ".35em")
+            .attr("x", 16)
+            .attr("fill","#666")
+            .text(function(d) { return d.UF; })
+            .filter(function(d) { return (angle(d.UF) + 105) % 360 > 180; }) // flipped
+                .attr("x", -16)
+                .attr("transform", "rotate(-180)")
+            .style("text-anchor", "end");
+    },
+
+    buildForceGraph: function(){
+
         data_estados.map(function(o){
-            var a = (180 + angle(o.uf)) / 180 * Math.PI,
+            var a = (180 + angle(o.UF)) / 180 * Math.PI,
                 x = width * .5 - Math.cos(a) * force_radius,
                 y = height * .5 - Math.sin(a) * force_radius;
-            clusters[o.uf] = {x: x, y: y, radius: 50};
+            clusters[o.UF] = {x: x, y: y, radius: 50};
         });
 
-        App.node = nodes_force.selectAll("circle.node");
+        App.nodes_force = svg.append("g")
+            .attr("class", "nodes_force")
+
+        App.node = App.nodes_force.selectAll("circle.node");
 
         App.force = d3.layout.force()
             .nodes(data_eventos)
@@ -214,15 +232,10 @@ var App = {
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
                 .on('mouseover', function(d){
-                    console.log("mouse over",d.UF)
-                    d3.selectAll('.node[data-uf='+d.UF+']')
-                        .transition().duration(300)
-                        .attr('r',10);
+                    App.events.mouseover_UF(d);
                 })
                 .on('mouseout', function(d){
-                    d3.selectAll('.node[data-uf='+d.UF+']')
-                        .transition().duration(300)
-                        .attr('r',3);
+                    App.events.mouseout_UF(d);
                 })
             .call(App.force.drag);
         
@@ -298,6 +311,31 @@ var App = {
                 return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
             });
         };
+    },
+
+    events: {
+        mouseover_UF: function(d){
+            d3.selectAll('.node[data-uf='+d.UF+']')
+                .transition().duration(300)
+                .attr('r',6);
+            d3.selectAll('[data-uf='+d.UF+'] .UF-text')
+                .transition().duration(300)
+                .attr('fill','#fff');
+            d3.selectAll('[data-uf='+d.UF+'] .UF-path')
+                .transition().duration(300)
+                .style('stroke','#fff');
+        },
+        mouseout_UF: function(d){
+            d3.selectAll('.node[data-uf='+d.UF+']')
+                .transition().duration(300)
+                .attr('r',3);
+            d3.selectAll('[data-uf='+d.UF+'] .UF-text')
+                .transition().duration(300)
+                .attr('fill','#666');
+            d3.selectAll('[data-uf='+d.UF+'] .UF-path')
+                .transition().duration(300)
+                .style('stroke','#666');
+        }
     }
 };
 

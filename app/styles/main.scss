@@ -3,8 +3,16 @@
 
 // Custom imports & styles here.
 
+body {
+	background: #222;
+}
+
 #vis {
 	background: #222;
 	margin: 100px auto;
 	width: 900px;
+	.nodes_uf,
+	.node {
+		cursor: pointer;
+	}
 }
