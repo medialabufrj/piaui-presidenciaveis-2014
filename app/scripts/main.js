@@ -255,10 +255,10 @@ var App = {
     color: function(candidato){
         switch(candidato){
             case "AECIO NEVES":
-                return '#3333ff';
+                return '#127bbf';
                 break;
             case "MARINA SILVA":
-                return '#ffee00';
+                return '#e8d354';
                 break;
             case "DILMA ROUSSEFF":
                 return '#cc0000';
