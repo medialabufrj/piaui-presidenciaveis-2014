@@ -61,8 +61,7 @@ var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
     data_candidatos = [],
     data_eventos    = [],
     data_categorias = [],
-    clusters = {},
-    clusters_pos = {}
+    clusters = {}
     ;
 
 
@@ -99,8 +98,7 @@ function loadCSV(file,id,callback){
                 data_categorias.push(d.CATEGORIA);
             }
             // adiciona id
-            d.ID = id;
-            id++;
+            d.ID = id; id++;
             // adiciona regiao
             d.REGIAO = data_regioes[_.findWhere(data_estados,{UF: d.UF}).REGIAO];
             // formata a data
@@ -108,11 +106,15 @@ function loadCSV(file,id,callback){
             d.DATA_STRING = d.DATA;
             d.DATA = format.parse(d.DATA);
             // force layout vars
+            var CAPITAL = _.findWhere(data_estados,{UF: d.UF}).CAPITAL;
             d.x = width * .5 - Math.random() * 200;
             d.y = height * .5 - Math.random() * 200;
-            d.radius = _.findWhere(data_estados,{UF: d.UF}).CAPITAL == d.MUNICIPIO ? 4 : 2;
+            d.radius = CAPITAL == d.MUNICIPIO ? 3 : 2;
             d.scale = 1;
             d.cluster = d.UF;
+            if(!clusters[d.UF] || (clusters[d.UF].MUNICIPIO != CAPITAL && CAPITAL == d.MUNICIPIO)){
+                
+            }
             // retorna obj completo
             return d;
         })
@@ -231,7 +233,7 @@ var App = {
 
         App.node.enter()
             .append('circle')
-                .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
+                .attr("r", function(d) { return d.radius * d.scale; })
                 .style("fill", function(d) { return App.color(d.CANDIDATO); })
                 .attr("class", "node")
                 .attr("data-uf", function(d) { return d.UF; })
@@ -246,6 +248,13 @@ var App = {
                 })
             .call(App.force.drag);
         
+        svg.on("mousemove", function() {
+            var p1 = d3.mouse(this);
+            //root.px = p1[0];
+            //root.py = p1[1];
+            App.force.resume();
+        });
+
         console.log('FORCE!');
     },
 
@@ -257,7 +266,7 @@ var App = {
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
         
-        console.log('TICK!');
+        //console.log('TICK!');
 
     },
     color: function(candidato){
@@ -294,7 +303,7 @@ var App = {
     collide: function(alpha){
         var quadtree = d3.geom.quadtree(data_eventos),
             padding = 2,
-            clusterPadding = 2,
+            clusterPadding = 10,
             maxRadius = 10;
         return function(d) {
             var r = d.radius * d.scale + maxRadius + Math.max(padding, clusterPadding),
@@ -376,7 +385,7 @@ var App = {
 
 // CARREGA DATASET E INICIA
 
-var opt = 1;
+var opt = 2;
 
 switch(opt){
     case 1:
