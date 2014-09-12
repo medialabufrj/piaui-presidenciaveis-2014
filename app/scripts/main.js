@@ -12,8 +12,8 @@ var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
 
         {UF: "AC", REGIAO: 0, NOME: "Acre",      CAPITAL: "Rio Branco"},
         {UF: "AM", REGIAO: 0, NOME: "Amazonas",  CAPITAL: "Manaus"},
-        {UF: "AP", REGIAO: 0, NOME: "Amapá",     CAPITAL: "Macapa"},
-        {UF: "PA", REGIAO: 0, NOME: "Pará",      CAPITAL: "Belem"},
+        {UF: "AP", REGIAO: 0, NOME: "Amapá",     CAPITAL: "Macapá"},
+        {UF: "PA", REGIAO: 0, NOME: "Pará",      CAPITAL: "Belém"},
         {UF: "RR", REGIAO: 0, NOME: "Roraima",   CAPITAL: "Boa Vista"},
         {UF: "RO", REGIAO: 0, NOME: "Rondônia",  CAPITAL: "Porto Velho"},
         {UF: "TO", REGIAO: 0, NOME: "Tocantins", CAPITAL: "Palmas"},
@@ -21,37 +21,37 @@ var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
         {UF: "NULL1", REGIAO: null, NOME: null, CAPITAL: null},
         {UF: "NULL2", REGIAO: null, NOME: null, CAPITAL: null},
 
-        {UF: "MA", REGIAO: 1, NOME: "Maranhão",            CAPITAL: "Sao Luis"},
+        {UF: "MA", REGIAO: 1, NOME: "Maranhão",            CAPITAL: "São Luis"},
         {UF: "PI", REGIAO: 1, NOME: "Piauí",               CAPITAL: "Teresina"},
         {UF: "CE", REGIAO: 1, NOME: "Ceará",               CAPITAL: "Fortaleza"},
         {UF: "BA", REGIAO: 1, NOME: "Bahia",               CAPITAL: "Salvador"},
         {UF: "RN", REGIAO: 1, NOME: "Rio Grande do Norte", CAPITAL: "Natal"},
-        {UF: "PB", REGIAO: 1, NOME: "Paraíba",             CAPITAL: "Joao Pessoa"},
+        {UF: "PB", REGIAO: 1, NOME: "Paraíba",             CAPITAL: "João Pessoa"},
         {UF: "PE", REGIAO: 1, NOME: "Pernambuco",          CAPITAL: "Recife"},
-        {UF: "AL", REGIAO: 1, NOME: "Alagoas",             CAPITAL: "Maceio"},
+        {UF: "AL", REGIAO: 1, NOME: "Alagoas",             CAPITAL: "Maceió"},
         {UF: "SE", REGIAO: 1, NOME: "Sergipe",             CAPITAL: "Aracaju"},
     
         {UF: "NULL3", REGIAO: null, NOME: null, CAPITAL: null},
         {UF: "NULL4", REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "GO", REGIAO: 2, NOME: "Goiás",              CAPITAL: "Goiania"},
-        {UF: "DF", REGIAO: 2, NOME: "Distrito Federal",   CAPITAL: "Brasilia"},
+        {UF: "GO", REGIAO: 2, NOME: "Goiás",              CAPITAL: "Goiânia"},
+        {UF: "DF", REGIAO: 2, NOME: "Distrito Federal",   CAPITAL: "Brasília"},
         {UF: "MT", REGIAO: 2, NOME: "Mato Grosso",        CAPITAL: "Cuiaba"},
         {UF: "MS", REGIAO: 2, NOME: "Mato Grosso do Sul", CAPITAL: "Campo Grande"},
 
         {UF: "NULL5", REGIAO: null, NOME: null, CAPITAL: null},
         {UF: "NULL6", REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "ES", REGIAO: 3, NOME: "Espírito Santo", CAPITAL: "Vitoria"},
+        {UF: "ES", REGIAO: 3, NOME: "Espírito Santo", CAPITAL: "Vitória"},
         {UF: "MG", REGIAO: 3, NOME: "Minas Gerais",   CAPITAL: "Belo Horizonte"},
         {UF: "RJ", REGIAO: 3, NOME: "Rio de Janeiro", CAPITAL: "Rio de Janeiro"},
-        {UF: "SP", REGIAO: 3, NOME: "São Paulo",      CAPITAL: "Sao Paulo"},
+        {UF: "SP", REGIAO: 3, NOME: "São Paulo",      CAPITAL: "São Paulo"},
 
         {UF: "NULL7", REGIAO: null, NOME: null, CAPITAL: null},
         {UF: "NULL8", REGIAO: null, NOME: null, CAPITAL: null},
         
         {UF: "PR", REGIAO: 4, NOME: "Paraná",            CAPITAL: "Curitiba"},
-        {UF: "SC", REGIAO: 4, NOME: "Santa Catarina",    CAPITAL: "Florianopolis"},
+        {UF: "SC", REGIAO: 4, NOME: "Santa Catarina",    CAPITAL: "Florianópolis"},
         {UF: "RS", REGIAO: 4, NOME: "Rio Grande do Sul", CAPITAL: "Porto Alegre"},
 
         {UF: "NULL9", REGIAO: null, NOME: null, CAPITAL: null},
@@ -113,7 +113,7 @@ function loadCSV(file,id,callback){
             d.scale = 1;
             d.cluster = d.UF;
             if(!clusters[d.UF] || (clusters[d.UF].MUNICIPIO != CAPITAL && CAPITAL == d.MUNICIPIO)){
-                
+                clusters[d.UF] = d;
             }
             // retorna obj completo
             return d;
@@ -213,6 +213,13 @@ var App = {
             var a = (180 + angle(o.UF)) / 180 * Math.PI,
                 x = width * .5 - Math.cos(a) * force_radius,
                 y = height * .5 - Math.sin(a) * force_radius;
+            
+            /*
+            if(clusters[o.UF]){
+                clusters[o.UF].x = x;
+                clusters[o.UF].x = y;
+            }
+            */
             clusters[o.UF] = {x: x, y: y, radius: 50};
         });
 
@@ -271,7 +278,7 @@ var App = {
     },
     color: function(candidato){
         switch(candidato){
-            case "AECIO NEVES":
+            case "AÉCIO NEVES":
                 return '#127bbf';
                 break;
             case "MARINA SILVA":
@@ -385,21 +392,10 @@ var App = {
 
 // CARREGA DATASET E INICIA
 
-var opt = 2;
 
-switch(opt){
-    case 1:
-    loadDataset([
-        'dados_presidenciaveis_revistapiaui_aecioneves.csv',
-        'dados_presidenciaveis_revistapiaui_dilmarousseff.csv',
-        'dados_presidenciaveis_revistapiaui_marinasilva.csv'
-    ], App.init);
-    break;
-    case 2:
-    loadDataset([
-        'dados_presidenciaveis_revistapiaui_aecionevesx4.csv',
-        'dados_presidenciaveis_revistapiaui_dilmarousseffx4.csv',
-        'dados_presidenciaveis_revistapiaui_marinasilvax4.csv'
-    ], App.init);
-    break;
-}
+loadDataset([
+    'dados_aecioneves.csv',
+    'dados_dilmarousseff.csv',
+    'dados_marinasilva.csv'
+], App.init);
+
