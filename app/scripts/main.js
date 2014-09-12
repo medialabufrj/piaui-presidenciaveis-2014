@@ -137,14 +137,33 @@ var d3line2 = d3.svg.line()
 
 // INICIA GRAFOS
 
-var svg = d3.select("#vis").append("svg")
+var zoom = d3.behavior.zoom()
+    .scaleExtent([1, 5])
+    .on("zoom", function(){
+        vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    });
+
+var wrapper = d3.select("#vis-wrapper").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .append('g').call(zoom);
+
+var rect = wrapper.append('rect')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('fill', '#222')
+    .style("pointer-events", "all");
+
+var vis = wrapper.append('g');
 
 var angle = d3.scale.ordinal()
     .rangePoints([0, 360], 1)
     .domain(data_estados.map(function(d) { return d.UF; }));
 
+
+function zoomed() {
+    
+}
 // VIS EVENTOS
 
 var App = {
@@ -161,7 +180,7 @@ var App = {
 
     buildStatesRadial: function(){
 
-        App.nodes_uf = svg.append("g")
+        App.nodes_uf = vis.append("g")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
         .append("g")
         .attr("class", "nodes_uf")
@@ -223,7 +242,7 @@ var App = {
             clusters[o.UF] = {x: x, y: y, radius: 50};
         });
 
-        App.nodes_force = svg.append("g")
+        App.nodes_force = vis.append("g")
             .attr("class", "nodes_force")
 
         App.node = App.nodes_force.selectAll("circle.node");
@@ -255,7 +274,7 @@ var App = {
                 })
             .call(App.force.drag);
         
-        svg.on("mousemove", function() {
+        vis.on("mousemove", function() {
             var p1 = d3.mouse(this);
             //root.px = p1[0];
             //root.py = p1[1];

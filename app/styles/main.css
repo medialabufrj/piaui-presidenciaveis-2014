@@ -1,9 +1,9 @@
 body {
   background: #222; }
 
-#vis {
+#vis-wrapper {
   background: #222;
   margin: 100px auto;
   width: 900px; }
-  #vis .nodes_uf, #vis .node {
+  #vis-wrapper .nodes_uf, #vis-wrapper .node {
     cursor: pointer; }
