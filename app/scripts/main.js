@@ -10,53 +10,52 @@ var force_radius = 200;
 var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
     data_estados    = [
 
-        {UF: "AC", REGIAO: 0, NOME: "Acre"},
-        {UF: "AM", REGIAO: 0, NOME: "Amazonas"},
-        {UF: "AP", REGIAO: 0, NOME: "Amapá"},
-        {UF: "PA", REGIAO: 0, NOME: "Pará"},
-        {UF: "RR", REGIAO: 0, NOME: "Roraima"},
-        {UF: "RO", REGIAO: 0, NOME: "Rondônia"},
-        {UF: "TO", REGIAO: 0, NOME: "Tocantins"},
+        {UF: "AC", REGIAO: 0, NOME: "Acre",      CAPITAL: "Rio Branco"},
+        {UF: "AM", REGIAO: 0, NOME: "Amazonas",  CAPITAL: "Manaus"},
+        {UF: "AP", REGIAO: 0, NOME: "Amapá",     CAPITAL: "Macapa"},
+        {UF: "PA", REGIAO: 0, NOME: "Pará",      CAPITAL: "Belem"},
+        {UF: "RR", REGIAO: 0, NOME: "Roraima",   CAPITAL: "Boa Vista"},
+        {UF: "RO", REGIAO: 0, NOME: "Rondônia",  CAPITAL: "Porto Velho"},
+        {UF: "TO", REGIAO: 0, NOME: "Tocantins", CAPITAL: "Palmas"},
 
-        {UF: 1, REGIAO: null},
-        {UF: 2, REGIAO: null},
+        {UF: "NULL1", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: "NULL2", REGIAO: null, NOME: null, CAPITAL: null},
 
-
-        {UF: "MA", REGIAO: 1, NOME: "Maranhão"},
-        {UF: "PI", REGIAO: 1, NOME: "Piauí"},
-        {UF: "CE", REGIAO: 1, NOME: "Ceará"},
-        {UF: "BA", REGIAO: 1, NOME: "Bahia"},
-        {UF: "RN", REGIAO: 1, NOME: "Rio Grande do Norte"},
-        {UF: "PB", REGIAO: 1, NOME: "Paraíba"},
-        {UF: "PE", REGIAO: 1, NOME: "Pernambuco"},
-        {UF: "AL", REGIAO: 1, NOME: "Alagoas"},
-        {UF: "SE", REGIAO: 1, NOME: "Sergipe"},
+        {UF: "MA", REGIAO: 1, NOME: "Maranhão",            CAPITAL: "Sao Luis"},
+        {UF: "PI", REGIAO: 1, NOME: "Piauí",               CAPITAL: "Teresina"},
+        {UF: "CE", REGIAO: 1, NOME: "Ceará",               CAPITAL: "Fortaleza"},
+        {UF: "BA", REGIAO: 1, NOME: "Bahia",               CAPITAL: "Salvador"},
+        {UF: "RN", REGIAO: 1, NOME: "Rio Grande do Norte", CAPITAL: "Natal"},
+        {UF: "PB", REGIAO: 1, NOME: "Paraíba",             CAPITAL: "Joao Pessoa"},
+        {UF: "PE", REGIAO: 1, NOME: "Pernambuco",          CAPITAL: "Recife"},
+        {UF: "AL", REGIAO: 1, NOME: "Alagoas",             CAPITAL: "Maceio"},
+        {UF: "SE", REGIAO: 1, NOME: "Sergipe",             CAPITAL: "Aracaju"},
     
-        {UF: 6, REGIAO: null},
-        {UF: 7, REGIAO: null},
+        {UF: "NULL3", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: "NULL4", REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "MT", REGIAO: 2, NOME: "Mato Grosso"},
-        {UF: "GO", REGIAO: 2, NOME: "Goiás"},
-        {UF: "MS", REGIAO: 2, NOME: "Mato Grosso do Sul"},
-        {UF: "DF", REGIAO: 2, NOME: "Distrito Federal"},
+        {UF: "GO", REGIAO: 2, NOME: "Goiás",              CAPITAL: "Goiania"},
+        {UF: "DF", REGIAO: 2, NOME: "Distrito Federal",   CAPITAL: "Brasilia"},
+        {UF: "MT", REGIAO: 2, NOME: "Mato Grosso",        CAPITAL: "Cuiaba"},
+        {UF: "MS", REGIAO: 2, NOME: "Mato Grosso do Sul", CAPITAL: "Campo Grande"},
 
-        {UF: 11, REGIAO: null},
-        {UF: 12, REGIAO: null},
+        {UF: "NULL5", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: "NULL6", REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "ES", REGIAO: 3, NOME: "Espírito Santo"},
-        {UF: "MG", REGIAO: 3, NOME: "Minas Gerais"},
-        {UF: "RJ", REGIAO: 3, NOME: "Rio de Janeiro"},
-        {UF: "SP", REGIAO: 3, NOME: "São Paulo"},
+        {UF: "ES", REGIAO: 3, NOME: "Espírito Santo", CAPITAL: "Vitoria"},
+        {UF: "MG", REGIAO: 3, NOME: "Minas Gerais",   CAPITAL: "Belo Horizonte"},
+        {UF: "RJ", REGIAO: 3, NOME: "Rio de Janeiro", CAPITAL: "Rio de Janeiro"},
+        {UF: "SP", REGIAO: 3, NOME: "São Paulo",      CAPITAL: "Sao Paulo"},
 
-        {UF: 16, REGIAO: null},
-        {UF: 17, REGIAO: null},
+        {UF: "NULL7", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: "NULL8", REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "PR", REGIAO: 4, NOME: "Paraná"},
-        {UF: "SC", REGIAO: 4, NOME: "Santa Catarina"},
-        {UF: "RS", REGIAO: 4, NOME: "Rio Grande do Sul"},
+        {UF: "PR", REGIAO: 4, NOME: "Paraná",            CAPITAL: "Curitiba"},
+        {UF: "SC", REGIAO: 4, NOME: "Santa Catarina",    CAPITAL: "Florianopolis"},
+        {UF: "RS", REGIAO: 4, NOME: "Rio Grande do Sul", CAPITAL: "Porto Alegre"},
 
-        {UF: 21, REGIAO: null},
-        {UF: 22, REGIAO: null},
+        {UF: "NULL9", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: "NULL10", REGIAO: null, NOME: null, CAPITAL: null},
         
     ],
     data_candidatos = [],
@@ -71,18 +70,19 @@ var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
 
 function loadDataset(arr,callback) {
     var count = 0;
-    var cbk = function(){
+    var id = 0;
+    var cbk = function(id){
         count++;
         if(count < arr.length){
-            loadCSV(arr[count], cbk);
+            loadCSV(arr[count], id, cbk);
         } else {
             if(callback) callback();
         }
     }
-    loadCSV(arr[0],cbk);
+    loadCSV(arr[0],id,cbk);
 }
 
-function loadCSV(file,callback){
+function loadCSV(file,id,callback){
 
     // DVS para carregar CSV separado por ;
 
@@ -98,6 +98,9 @@ function loadCSV(file,callback){
             if(data_categorias.indexOf(d.CATEGORIA) == -1){
                 data_categorias.push(d.CATEGORIA);
             }
+            // adiciona id
+            d.ID = id;
+            id++;
             // adiciona regiao
             d.REGIAO = data_regioes[_.findWhere(data_estados,{UF: d.UF}).REGIAO];
             // formata a data
@@ -107,7 +110,8 @@ function loadCSV(file,callback){
             // force layout vars
             d.x = width * .5 - Math.random() * 200;
             d.y = height * .5 - Math.random() * 200;
-            d.radius = 5;
+            d.radius = _.findWhere(data_estados,{UF: d.UF}).CAPITAL == d.MUNICIPIO ? 4 : 2;
+            d.scale = 1;
             d.cluster = d.UF;
             // retorna obj completo
             return d;
@@ -118,7 +122,7 @@ function loadCSV(file,callback){
             // log
             console.log('loaded CSV!');
             // chama callback
-            if(callback) callback();
+            if(callback) callback(id);
         });
 
     console.log('loading file', file);
@@ -189,12 +193,15 @@ var App = {
         App.nodes_uf.append("text")
             .attr("class", "UF-text")
             .attr("dy", ".35em")
-            .attr("x", 16)
+            .attr("x", -12)
+            .attr("y", 16)
             .attr("fill","#666")
             .text(function(d) { return d.UF; })
-            .filter(function(d) { return (angle(d.UF) + 105) % 360 > 180; }) // flipped
-                .attr("x", -16)
-                .attr("transform", "rotate(-180)")
+            .attr("transform", "rotate(-90)")
+            .filter(function(d) { return (angle(d.UF)) % 360 > 180; }) // flipped
+                .attr("transform", "rotate(90)")
+                .attr("x", 12)
+                .attr("y", -16)
             .style("text-anchor", "end");
     },
 
@@ -220,11 +227,11 @@ var App = {
             .on("tick", App.tick)
             .start();
 
-        App.node = App.node.data(data_eventos);
+        App.node = App.node.data(data_eventos, function(d){ return d.ID;});
 
         App.node.enter()
             .append('circle')
-                .attr("r", 3)
+                .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
                 .style("fill", function(d) { return App.color(d.CANDIDATO); })
                 .attr("class", "node")
                 .attr("data-uf", function(d) { return d.UF; })
@@ -232,15 +239,16 @@ var App = {
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
                 .on('mouseover', function(d){
-                    App.events.mouseover_UF(d);
+                    App.events.mouseover_node(d);
                 })
                 .on('mouseout', function(d){
-                    App.events.mouseout_UF(d);
+                    App.events.mouseout_node(d);
                 })
             .call(App.force.drag);
         
         console.log('FORCE!');
     },
+
     tick: function(e){
 
         App.node
@@ -273,7 +281,7 @@ var App = {
             var x = d.x - cluster.x,
                 y = d.y - cluster.y,
                 l = Math.sqrt(x * x + y * y),
-                r = d.radius + cluster.radius;
+                r = d.radius * d.scale + cluster.radius;
             if (l != r) {
                 l = (l - r) / l * alpha;
                 d.x -= x *= l;
@@ -289,7 +297,7 @@ var App = {
             clusterPadding = 2,
             maxRadius = 10;
         return function(d) {
-            var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+            var r = d.radius * d.scale + maxRadius + Math.max(padding, clusterPadding),
                 nx1 = d.x - r,
                 nx2 = d.x + r,
                 ny1 = d.y - r,
@@ -299,7 +307,7 @@ var App = {
                     var x = d.x - quad.point.x,
                         y = d.y - quad.point.y,
                         l = Math.sqrt(x * x + y * y),
-                        r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+                        r = d.radius * d.scale + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
                     if (l < r) {
                         l = (l - r) / l * alpha;
                         d.x -= x *= l;
@@ -314,10 +322,40 @@ var App = {
     },
 
     events: {
+        mouseover_node: function(d){
+            /*_.findWhere(data_eventos,{ID: d.ID}).scale = 2;
+            App.node
+                .data(data_eventos, function(d){ return d.ID;})
+                .transition()
+                .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
+                ;
+            App.force.resume();*/
+            App.events.ligaUF(d);
+        },
+        mouseout_node: function(d){
+            /*_.findWhere(data_eventos,{ID: d.ID}).scale = 1;
+            App.node
+                .data(data_eventos, function(d){ return d.ID;})
+                .transition()
+                .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
+                ;
+            App.force.resume();*/
+            App.events.desligaUF(d);
+        },
         mouseover_UF: function(d){
-            d3.selectAll('.node[data-uf='+d.UF+']')
+            d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
-                .attr('r',6);
+                .style("opacity",.1)
+            App.events.ligaUF(d);
+
+        },
+        mouseout_UF: function(d){
+            d3.selectAll('.node:not([data-uf='+d.UF+'])')
+                .transition().duration(300)
+                .style("opacity",1)
+            App.events.desligaUF(d);
+        },
+        ligaUF: function(d){
             d3.selectAll('[data-uf='+d.UF+'] .UF-text')
                 .transition().duration(300)
                 .attr('fill','#fff');
@@ -325,10 +363,7 @@ var App = {
                 .transition().duration(300)
                 .style('stroke','#fff');
         },
-        mouseout_UF: function(d){
-            d3.selectAll('.node[data-uf='+d.UF+']')
-                .transition().duration(300)
-                .attr('r',3);
+        desligaUF: function(d){
             d3.selectAll('[data-uf='+d.UF+'] .UF-text')
                 .transition().duration(300)
                 .attr('fill','#666');
@@ -341,7 +376,7 @@ var App = {
 
 // CARREGA DATASET E INICIA
 
-var opt = 2;
+var opt = 1;
 
 switch(opt){
     case 1:
