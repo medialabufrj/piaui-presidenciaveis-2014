@@ -3,7 +3,7 @@
 var width = 900;
 var height = 900;
 var radius = 320;
-var force_radius = 200;
+var force_radius = 260;
 var timeline_min = null;
 var timeline_max = null;
 var timeline = [];
@@ -291,9 +291,12 @@ var App = {
         });
 
         data_eventos.map(function(d){
-            var cluster = clusters[d.cluster];
-            d.x = cluster.x;
-            d.y = cluster.y;
+            var a = (180 + angle(d.UF)) / 180 * Math.PI,
+                x = width * .5 - Math.cos(a) * force_radius,
+                y = height * .5 - Math.sin(a) * force_radius;
+
+            d.x = x + Math.random()*10;
+            d.y = y + Math.random()*10;
         });
 
         App.nodes_force = vis.append("g")
@@ -304,7 +307,7 @@ var App = {
         App.force = d3.layout.force()
             .nodes(data_eventos)
             .size([width, height])
-            .gravity(.02)
+            .gravity(0.01)
             .charge(0)
             .on("tick", App.tick)
             .start();
@@ -313,7 +316,7 @@ var App = {
             var p1 = d3.mouse(this);
             //root.px = p1[0];
             //root.py = p1[1];
-            App.force.resume();
+            //App.force.resume();
         });
 
         console.log('FORCE!');
@@ -338,11 +341,11 @@ var App = {
                     App.events.mouseout_node(d);
                 })
                 .call(App.force.drag)
-                .transition(600)
-                .attr("r", function(d) { return d.radius * d.scale; })  
+                .transition().duration(1200)
+                .attr("r", function(d) { return d.radius * d.scale; })
                 ;
         App.node.exit()
-            .transition(600)
+            .transition()
             .attr("r", 0)
             .remove();
         App.force.resume();
@@ -380,9 +383,9 @@ var App = {
             var x = d.x - cluster.x,
                 y = d.y - cluster.y,
                 l = Math.sqrt(x * x + y * y),
-                r = d.radius * d.scale + cluster.radius;
+                r = d.radius * d.scale + cluster.radius * .2;
             if (l != r) {
-                l = (l - r) / l * alpha;
+                l = (l - r) / l * alpha * .1;
                 d.x -= x *= l;
                 d.y -= y *= l;
                 //cluster.x += x;
@@ -429,6 +432,18 @@ var App = {
                 .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
                 ;
             App.force.resume();*/
+
+            var vis = $("#vis-wrapper");
+            var format = locale.timeFormat("(%d/%m)");
+            $('#vis-tip .data').text(format(d.DATA));
+            $('#vis-tip .local').text(d.MUNICIPIO + " - " + d.UF);
+            $('#vis-tip .candidato').text(d.CANDIDATO).css('color',App.color(d.CANDIDATO));
+            $('#vis-tip .categoria').text(d.CATEGORIA);
+            $('#vis-tip .atividade').text(d.ATIVIDADE);
+             $('#vis-tip').css({
+                left: vis.offset().left + width * .5,
+                top: vis.offset().top + height * .5
+             })
             App.events.ligaUF(d);
         },
         mouseout_node: function(d){
@@ -439,6 +454,7 @@ var App = {
                 .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
                 ;
             App.force.resume();*/
+            $('#vis-tip .string').text('');
             App.events.desligaUF(d);
         },
         mouseover_UF: function(d){

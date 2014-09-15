@@ -5,6 +5,12 @@
 
 body {
 	background: #222;
+	color: #fff;
+	font-family: "Bitter";
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	font-family: "Bitter";
 }
 
 #vis-control {
@@ -18,11 +24,32 @@ body {
 }
 
 #vis-wrapper {
-	background: #222;
+	position: relative;
+	background: transparent;
 	margin: 100px auto;
 	width: 900px;
 	.nodes_uf,
 	.node {
 		cursor: pointer;
+	}
+}
+
+#vis-tip {
+	position: absolute;
+	top: 0;
+	left: 0;
+	text-align: center;
+	width: 240px;
+	height: 120px;
+	margin-top: -60px;
+	margin-left: -120px;
+	font-size: 12px;
+	line-height: 1.5em;
+	.candidato {
+		font-size: 18px;
+	}
+	.categoria, .data {
+		text-transform: uppercase;
+		color: #999;
 	}
 }
