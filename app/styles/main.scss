@@ -7,6 +7,16 @@ body {
 	background: #222;
 }
 
+#vis-control {
+	padding: 100px 0 0;
+	label {
+		color: #fff;
+	}
+	#vis-time-range {
+		width: 100%;
+	}
+}
+
 #vis-wrapper {
 	background: #222;
 	margin: 100px auto;

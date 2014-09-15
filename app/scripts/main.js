@@ -4,6 +4,9 @@ var width = 900;
 var height = 900;
 var radius = 320;
 var force_radius = 200;
+var timeline_min = null;
+var timeline_max = null;
+var timeline = [];
 
 // DATASETS
 
@@ -64,6 +67,20 @@ var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
     clusters = {}
     ;
 
+var locale = d3.locale({
+    "decimal": ",",
+    "thousands": ".",
+    "grouping": [3],
+    "currency": ["$", ""],
+    "dateTime": "%a %b %e %X %Y",
+    "date": "%d/%m/%Y",
+    "time": "%H:%M:%S",
+    "periods": ["AM", "PM"],
+    "days": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+    "shortDays": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+    "months": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+    "shortMonths": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+});
 
 // PROCESSAMENTO DE DADOS
 
@@ -105,11 +122,23 @@ function loadCSV(file,id,callback){
             var format = d3.time.format("%d.%m.%Y");
             d.DATA_STRING = d.DATA;
             d.DATA = format.parse(d.DATA);
+            // unixtime
+            var unixtime = +d.DATA;
+            if(timeline_min == null || timeline_min > unixtime){
+                timeline_min = unixtime;
+            }
+            if(timeline_max == null || timeline_max < unixtime){
+                timeline_max = unixtime;
+            }
+            if(timeline.indexOf(unixtime) == -1){
+                timeline.push(unixtime);
+            }
+            //console.log();
             // force layout vars
             var CAPITAL = _.findWhere(data_estados,{UF: d.UF}).CAPITAL;
             d.x = width * .5 - Math.random() * 200;
             d.y = height * .5 - Math.random() * 200;
-            d.radius = CAPITAL == d.MUNICIPIO ? 3 : 2;
+            d.radius = CAPITAL == d.MUNICIPIO ? 5 : 3;
             d.scale = 1;
             d.cluster = d.UF;
             if(!clusters[d.UF] || (clusters[d.UF].MUNICIPIO != CAPITAL && CAPITAL == d.MUNICIPIO)){
@@ -146,7 +175,9 @@ var zoom = d3.behavior.zoom()
 var wrapper = d3.select("#vis-wrapper").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .append('g').call(zoom);
+    .append('g')
+    //.call(zoom)
+    ;
 
 var rect = wrapper.append('rect')
     .attr('width', width)
@@ -160,21 +191,38 @@ var angle = d3.scale.ordinal()
     .rangePoints([0, 360], 1)
     .domain(data_estados.map(function(d) { return d.UF; }));
 
-
-function zoomed() {
-    
-}
 // VIS EVENTOS
 
 var App = {
+
     nodes_uf: null,
     nodes_force: null,
     force: null,
     node: null,
+    timerange: null,
+
     init: function() {
 
         App.buildStatesRadial();
         App.buildForceGraph();
+
+        timeline = timeline.sort();
+        console.log(timeline);
+
+        App.timerange = $("#vis-time-range");
+        App.timerange.attr('max',timeline.length-1);
+        App.timerange.on('change input', function(d) {
+            var current = parseInt(this.value);
+            var format = locale.timeFormat("%d de %B de %Y");
+            $('#vis-time-date').text(format(new Date(timeline[current])));
+            console.log(timeline[current]);
+            App.renderForceNodes(_.filter(data_eventos,function(d){
+                return +d.DATA <= timeline[current];
+            }));
+            //var new_data = matrices[current]
+            //rerender(new_data);
+        })
+        .change();
 
     },
 
@@ -228,18 +276,24 @@ var App = {
 
     buildForceGraph: function(){
 
-        data_estados.map(function(o){
-            var a = (180 + angle(o.UF)) / 180 * Math.PI,
+        data_estados.map(function(d){
+            var a = (180 + angle(d.UF)) / 180 * Math.PI,
                 x = width * .5 - Math.cos(a) * force_radius,
                 y = height * .5 - Math.sin(a) * force_radius;
             
             /*
-            if(clusters[o.UF]){
-                clusters[o.UF].x = x;
-                clusters[o.UF].x = y;
+            if(clusters[d.UF]){
+                clusters[d.UF].x = x;
+                clusters[d.UF].x = y;
             }
             */
-            clusters[o.UF] = {x: x, y: y, radius: 50};
+            clusters[d.UF] = {x: x, y: y, radius: 50};
+        });
+
+        data_eventos.map(function(d){
+            var cluster = clusters[d.cluster];
+            d.x = cluster.x;
+            d.y = cluster.y;
         });
 
         App.nodes_force = vis.append("g")
@@ -254,12 +308,23 @@ var App = {
             .charge(0)
             .on("tick", App.tick)
             .start();
+        
+        vis.on("mousemove", function() {
+            var p1 = d3.mouse(this);
+            //root.px = p1[0];
+            //root.py = p1[1];
+            App.force.resume();
+        });
 
-        App.node = App.node.data(data_eventos, function(d){ return d.ID;});
+        console.log('FORCE!');
+    },
+
+    renderForceNodes: function(arr){
+        App.node = App.node.data(arr, function(d){ return d.ID;});
 
         App.node.enter()
             .append('circle')
-                .attr("r", function(d) { return d.radius * d.scale; })
+                .attr("r", 0)
                 .style("fill", function(d) { return App.color(d.CANDIDATO); })
                 .attr("class", "node")
                 .attr("data-uf", function(d) { return d.UF; })
@@ -272,16 +337,15 @@ var App = {
                 .on('mouseout', function(d){
                     App.events.mouseout_node(d);
                 })
-            .call(App.force.drag);
-        
-        vis.on("mousemove", function() {
-            var p1 = d3.mouse(this);
-            //root.px = p1[0];
-            //root.py = p1[1];
-            App.force.resume();
-        });
-
-        console.log('FORCE!');
+                .call(App.force.drag)
+                .transition(600)
+                .attr("r", function(d) { return d.radius * d.scale; })  
+                ;
+        App.node.exit()
+            .transition(600)
+            .attr("r", 0)
+            .remove();
+        App.force.resume();
     },
 
     tick: function(e){
