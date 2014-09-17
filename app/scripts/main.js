@@ -10,55 +10,55 @@ var timeline = [];
 
 // DATASETS
 
-var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
+var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
     data_estados    = [
 
-        {UF: "AC", REGIAO: 0, NOME: "Acre",      CAPITAL: "Rio Branco"},
-        {UF: "AM", REGIAO: 0, NOME: "Amazonas",  CAPITAL: "Manaus"},
-        {UF: "AP", REGIAO: 0, NOME: "Amapá",     CAPITAL: "Macapá"},
-        {UF: "PA", REGIAO: 0, NOME: "Pará",      CAPITAL: "Belém"},
-        {UF: "RR", REGIAO: 0, NOME: "Roraima",   CAPITAL: "Boa Vista"},
-        {UF: "RO", REGIAO: 0, NOME: "Rondônia",  CAPITAL: "Porto Velho"},
-        {UF: "TO", REGIAO: 0, NOME: "Tocantins", CAPITAL: "Palmas"},
+        {UF: 'AC', REGIAO: 0, NOME: 'Acre',      CAPITAL: 'Rio Branco'},
+        {UF: 'AM', REGIAO: 0, NOME: 'Amazonas',  CAPITAL: 'Manaus'},
+        {UF: 'AP', REGIAO: 0, NOME: 'Amapá',     CAPITAL: 'Macapá'},
+        {UF: 'PA', REGIAO: 0, NOME: 'Pará',      CAPITAL: 'Belém'},
+        {UF: 'RR', REGIAO: 0, NOME: 'Roraima',   CAPITAL: 'Boa Vista'},
+        {UF: 'RO', REGIAO: 0, NOME: 'Rondônia',  CAPITAL: 'Porto Velho'},
+        {UF: 'TO', REGIAO: 0, NOME: 'Tocantins', CAPITAL: 'Palmas'},
 
-        {UF: "NULL1", REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: "NULL2", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL1', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL2', REGIAO: null, NOME: null, CAPITAL: null},
 
-        {UF: "MA", REGIAO: 1, NOME: "Maranhão",            CAPITAL: "São Luis"},
-        {UF: "PI", REGIAO: 1, NOME: "Piauí",               CAPITAL: "Teresina"},
-        {UF: "CE", REGIAO: 1, NOME: "Ceará",               CAPITAL: "Fortaleza"},
-        {UF: "BA", REGIAO: 1, NOME: "Bahia",               CAPITAL: "Salvador"},
-        {UF: "RN", REGIAO: 1, NOME: "Rio Grande do Norte", CAPITAL: "Natal"},
-        {UF: "PB", REGIAO: 1, NOME: "Paraíba",             CAPITAL: "João Pessoa"},
-        {UF: "PE", REGIAO: 1, NOME: "Pernambuco",          CAPITAL: "Recife"},
-        {UF: "AL", REGIAO: 1, NOME: "Alagoas",             CAPITAL: "Maceió"},
-        {UF: "SE", REGIAO: 1, NOME: "Sergipe",             CAPITAL: "Aracaju"},
+        {UF: 'MA', REGIAO: 1, NOME: 'Maranhão',            CAPITAL: 'São Luis'},
+        {UF: 'PI', REGIAO: 1, NOME: 'Piauí',               CAPITAL: 'Teresina'},
+        {UF: 'CE', REGIAO: 1, NOME: 'Ceará',               CAPITAL: 'Fortaleza'},
+        {UF: 'BA', REGIAO: 1, NOME: 'Bahia',               CAPITAL: 'Salvador'},
+        {UF: 'RN', REGIAO: 1, NOME: 'Rio Grande do Norte', CAPITAL: 'Natal'},
+        {UF: 'PB', REGIAO: 1, NOME: 'Paraíba',             CAPITAL: 'João Pessoa'},
+        {UF: 'PE', REGIAO: 1, NOME: 'Pernambuco',          CAPITAL: 'Recife'},
+        {UF: 'AL', REGIAO: 1, NOME: 'Alagoas',             CAPITAL: 'Maceió'},
+        {UF: 'SE', REGIAO: 1, NOME: 'Sergipe',             CAPITAL: 'Aracaju'},
     
-        {UF: "NULL3", REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: "NULL4", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "GO", REGIAO: 2, NOME: "Goiás",              CAPITAL: "Goiânia"},
-        {UF: "DF", REGIAO: 2, NOME: "Distrito Federal",   CAPITAL: "Brasília"},
-        {UF: "MT", REGIAO: 2, NOME: "Mato Grosso",        CAPITAL: "Cuiaba"},
-        {UF: "MS", REGIAO: 2, NOME: "Mato Grosso do Sul", CAPITAL: "Campo Grande"},
+        {UF: 'GO', REGIAO: 2, NOME: 'Goiás',              CAPITAL: 'Goiânia'},
+        {UF: 'DF', REGIAO: 2, NOME: 'Distrito Federal',   CAPITAL: 'Brasília'},
+        {UF: 'MT', REGIAO: 2, NOME: 'Mato Grosso',        CAPITAL: 'Cuiaba'},
+        {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
 
-        {UF: "NULL5", REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: "NULL6", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL5', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL6', REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "ES", REGIAO: 3, NOME: "Espírito Santo", CAPITAL: "Vitória"},
-        {UF: "MG", REGIAO: 3, NOME: "Minas Gerais",   CAPITAL: "Belo Horizonte"},
-        {UF: "RJ", REGIAO: 3, NOME: "Rio de Janeiro", CAPITAL: "Rio de Janeiro"},
-        {UF: "SP", REGIAO: 3, NOME: "São Paulo",      CAPITAL: "São Paulo"},
+        {UF: 'ES', REGIAO: 3, NOME: 'Espírito Santo', CAPITAL: 'Vitória'},
+        {UF: 'MG', REGIAO: 3, NOME: 'Minas Gerais',   CAPITAL: 'Belo Horizonte'},
+        {UF: 'RJ', REGIAO: 3, NOME: 'Rio de Janeiro', CAPITAL: 'Rio de Janeiro'},
+        {UF: 'SP', REGIAO: 3, NOME: 'São Paulo',      CAPITAL: 'São Paulo'},
 
-        {UF: "NULL7", REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: "NULL8", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
         
-        {UF: "PR", REGIAO: 4, NOME: "Paraná",            CAPITAL: "Curitiba"},
-        {UF: "SC", REGIAO: 4, NOME: "Santa Catarina",    CAPITAL: "Florianópolis"},
-        {UF: "RS", REGIAO: 4, NOME: "Rio Grande do Sul", CAPITAL: "Porto Alegre"},
+        {UF: 'PR', REGIAO: 4, NOME: 'Paraná',            CAPITAL: 'Curitiba'},
+        {UF: 'SC', REGIAO: 4, NOME: 'Santa Catarina',    CAPITAL: 'Florianópolis'},
+        {UF: 'RS', REGIAO: 4, NOME: 'Rio Grande do Sul', CAPITAL: 'Porto Alegre'},
 
-        {UF: "NULL9", REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: "NULL10", REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL9', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL10', REGIAO: null, NOME: null, CAPITAL: null},
         
     ],
     data_candidatos = [],
@@ -68,18 +68,18 @@ var data_regioes    = ["Norte","Nordeste","Centro-oeste","Sudeste","Sul"],
     ;
 
 var locale = d3.locale({
-    "decimal": ",",
-    "thousands": ".",
-    "grouping": [3],
-    "currency": ["$", ""],
-    "dateTime": "%a %b %e %X %Y",
-    "date": "%d/%m/%Y",
-    "time": "%H:%M:%S",
-    "periods": ["AM", "PM"],
-    "days": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
-    "shortDays": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-    "months": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-    "shortMonths": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+    'decimal': ',',
+    'thousands': '.',
+    'grouping': [3],
+    'currency': ['$', ''],
+    'dateTime': '%a %b %e %X %Y',
+    'date': '%d/%m/%Y',
+    'time': '%H:%M:%S',
+    'periods': ['AM', 'PM'],
+    'days': ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    'shortDays': ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+    'months': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    'shortMonths': ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 });
 
 // PROCESSAMENTO DE DADOS
@@ -102,7 +102,7 @@ function loadCSV(file,id,callback){
 
     // DVS para carregar CSV separado por ;
 
-    var dsv = d3.dsv(";", "text/plain");
+    var dsv = d3.dsv(';', 'text/plain');
 
     dsv(file)
         .row(function(d){
@@ -119,7 +119,7 @@ function loadCSV(file,id,callback){
             // adiciona regiao
             d.REGIAO = data_regioes[_.findWhere(data_estados,{UF: d.UF}).REGIAO];
             // formata a data
-            var format = d3.time.format("%d.%m.%Y");
+            var format = d3.time.format('%d.%m.%Y');
             d.DATA_STRING = d.DATA;
             d.DATA = format.parse(d.DATA);
             // unixtime
@@ -162,19 +162,19 @@ function loadCSV(file,id,callback){
 var d3line2 = d3.svg.line()
     .x(function(d){return d.x;})
     .y(function(d){return d.y;})
-    .interpolate("linear"); 
+    .interpolate('linear'); 
 
 // INICIA GRAFOS
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 5])
-    .on("zoom", function(){
-        vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    .on('zoom', function(){
+        vis.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
     });
 
-var wrapper = d3.select("#vis-wrapper").append("svg")
-    .attr("width", width)
-    .attr("height", height)
+var wrapper = d3.select('#vis-wrapper').append('svg')
+    .attr('width', width)
+    .attr('height', height)
     .append('g')
     //.call(zoom)
     ;
@@ -183,7 +183,7 @@ var rect = wrapper.append('rect')
     .attr('width', width)
     .attr('height', height)
     .attr('fill', '#222')
-    .style("pointer-events", "all");
+    .style('pointer-events', 'all');
 
 var vis = wrapper.append('g');
 
@@ -209,11 +209,11 @@ var App = {
         timeline = timeline.sort();
         console.log(timeline);
 
-        App.timerange = $("#vis-time-range");
+        App.timerange = $('#vis-time-range');
         App.timerange.attr('max',timeline.length-1);
         App.timerange.on('change input', function(d) {
             var current = parseInt(this.value);
-            var format = locale.timeFormat("%d de %B de %Y");
+            var format = locale.timeFormat('%d de %B de %Y');
             $('#vis-time-date').text(format(new Date(timeline[current])));
             console.log(timeline[current]);
             App.renderForceNodes(_.filter(data_eventos,function(d){
@@ -228,17 +228,17 @@ var App = {
 
     buildStatesRadial: function(){
 
-        App.nodes_uf = vis.append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-        .append("g")
-        .attr("class", "nodes_uf")
-        .selectAll("g")
+        App.nodes_uf = vis.append('g')
+        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+        .append('g')
+        .attr('class', 'nodes_uf')
+        .selectAll('g')
         .data(data_estados.filter(function(d){
                 return d.REGIAO != null;
             }))
-        .enter().append("g")
-            .attr("data-uf", function(d) { return d.UF; })
-            .attr("transform", function(d) { return "rotate(" + angle(d.UF) + ")translate(" + radius + ",0)"; })
+        .enter().append('g')
+            .attr('data-uf', function(d) { return d.UF; })
+            .attr('transform', function(d) { return 'rotate(' + angle(d.UF) + ')translate(' + radius + ',0)'; })
             .on('mouseover', function(d){
                 App.events.mouseover_UF(d);
             })
@@ -247,31 +247,31 @@ var App = {
             })
 
         /*
-        App.nodes_uf.append("circle")
-            .attr("r", 5)
-            .attr("fill","#666");
+        App.nodes_uf.append('circle')
+            .attr('r', 5)
+            .attr('fill','#666');
         //*/
 
-        App.nodes_uf.append("path")
-            .attr("d", function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
-            .attr("class", "UF-path")
-            .style("stroke-width",2)
-            .style("stroke","#666")
-            .style("fill","none");
+        App.nodes_uf.append('path')
+            .attr('d', function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
+            .attr('class', 'UF-path')
+            .style('stroke-width',2)
+            .style('stroke','#666')
+            .style('fill','none');
 
-        App.nodes_uf.append("text")
-            .attr("class", "UF-text")
-            .attr("dy", ".35em")
-            .attr("x", -12)
-            .attr("y", 16)
-            .attr("fill","#666")
+        App.nodes_uf.append('text')
+            .attr('class', 'UF-text')
+            .attr('dy', '.35em')
+            .attr('x', -12)
+            .attr('y', 16)
+            .attr('fill','#666')
             .text(function(d) { return d.UF; })
-            .attr("transform", "rotate(-90)")
+            .attr('transform', 'rotate(-90)')
             .filter(function(d) { return (angle(d.UF)) % 360 > 180; }) // flipped
-                .attr("transform", "rotate(90)")
-                .attr("x", 12)
-                .attr("y", -16)
-            .style("text-anchor", "end");
+                .attr('transform', 'rotate(90)')
+                .attr('x', 12)
+                .attr('y', -16)
+            .style('text-anchor', 'end');
     },
 
     buildForceGraph: function(){
@@ -299,20 +299,20 @@ var App = {
             d.y = y + Math.random()*10;
         });
 
-        App.nodes_force = vis.append("g")
-            .attr("class", "nodes_force")
+        App.nodes_force = vis.append('g')
+            .attr('class', 'nodes_force')
 
-        App.node = App.nodes_force.selectAll("circle.node");
+        App.node = App.nodes_force.selectAll('circle.node');
 
         App.force = d3.layout.force()
             .nodes(data_eventos)
             .size([width, height])
             .gravity(0.01)
             .charge(0)
-            .on("tick", App.tick)
+            .on('tick', App.tick)
             .start();
         
-        vis.on("mousemove", function() {
+        vis.on('mousemove', function() {
             var p1 = d3.mouse(this);
             //root.px = p1[0];
             //root.py = p1[1];
@@ -327,13 +327,13 @@ var App = {
 
         App.node.enter()
             .append('circle')
-                .attr("r", 0)
-                .style("fill", function(d) { return App.color(d.CANDIDATO); })
-                .attr("class", "node")
-                .attr("data-uf", function(d) { return d.UF; })
-                .attr("data-candidato", function(d) { return d.CANDIDATO.split(" ").join("_"); })
-                .attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; })
+                .attr('r', 0)
+                .style('fill', function(d) { return App.color(d.CANDIDATO); })
+                .attr('class', 'node')
+                .attr('data-uf', function(d) { return d.UF; })
+                .attr('data-candidato', function(d) { return d.CANDIDATO.split(' ').join('_'); })
+                .attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) { return d.y; })
                 .on('mouseover', function(d){
                     App.events.mouseover_node(d);
                 })
@@ -342,11 +342,11 @@ var App = {
                 })
                 .call(App.force.drag)
                 .transition().duration(1200)
-                .attr("r", function(d) { return d.radius * d.scale; })
+                .attr('r', function(d) { return d.radius * d.scale; })
                 ;
         App.node.exit()
             .transition()
-            .attr("r", 0)
+            .attr('r', 0)
             .remove();
         App.force.resume();
     },
@@ -356,21 +356,21 @@ var App = {
         App.node
             .each(App.cluster(10 * e.alpha * e.alpha))
             .each(App.collide(.5))
-            .attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
+            .attr('cx', function(d) { return d.x; })
+            .attr('cy', function(d) { return d.y; });
         
         //console.log('TICK!');
 
     },
     color: function(candidato){
         switch(candidato){
-            case "AÉCIO NEVES":
+            case 'AÉCIO NEVES':
                 return '#127bbf';
                 break;
-            case "MARINA SILVA":
+            case 'MARINA SILVA':
                 return '#e8d354';
                 break;
-            case "DILMA ROUSSEFF":
+            case 'DILMA ROUSSEFF':
                 return '#cc0000';
                 break;
         }
@@ -429,14 +429,14 @@ var App = {
             App.node
                 .data(data_eventos, function(d){ return d.ID;})
                 .transition()
-                .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
+                .attr('r', function(d) { console.log(d.scale); return d.radius * d.scale; })
                 ;
             App.force.resume();*/
 
-            var vis = $("#vis-wrapper");
-            var format = locale.timeFormat("(%d/%m)");
+            var vis = $('#vis-wrapper');
+            var format = locale.timeFormat('(%d/%m)');
             $('#vis-tip .data').text(format(d.DATA));
-            $('#vis-tip .local').text(d.MUNICIPIO + " - " + d.UF);
+            $('#vis-tip .local').text(d.MUNICIPIO + ' - ' + d.UF);
             $('#vis-tip .candidato').text(d.CANDIDATO).css('color',App.color(d.CANDIDATO));
             $('#vis-tip .categoria').text(d.CATEGORIA);
             $('#vis-tip .atividade').text(d.ATIVIDADE);
@@ -451,7 +451,7 @@ var App = {
             App.node
                 .data(data_eventos, function(d){ return d.ID;})
                 .transition()
-                .attr("r", function(d) { console.log(d.scale); return d.radius * d.scale; })
+                .attr('r', function(d) { console.log(d.scale); return d.radius * d.scale; })
                 ;
             App.force.resume();*/
             $('#vis-tip .string').text('');
@@ -460,14 +460,14 @@ var App = {
         mouseover_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
-                .style("opacity",.1)
+                .style('opacity',.1)
             App.events.ligaUF(d);
 
         },
         mouseout_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
-                .style("opacity",1)
+                .style('opacity',1)
             App.events.desligaUF(d);
         },
         ligaUF: function(d){
@@ -493,8 +493,8 @@ var App = {
 
 
 loadDataset([
-    'dados_aecioneves.csv',
-    'dados_dilmarousseff.csv',
-    'dados_marinasilva.csv'
+    'dataset/dados_aecioneves.csv',
+    'dataset/dados_dilmarousseff.csv',
+    'dataset/dados_marinasilva.csv'
 ], App.init);
 
