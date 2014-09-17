@@ -3,20 +3,35 @@
 
 // Custom imports & styles here.
 
+@import "web-fonts";
+@include web-fonts("Lato");
+
+$basefont: "Lato";
+
 body {
-	background: #222;
-	color: #fff;
-	font-family: "Bitter";
+	background: #fefefe;
+	color: #444;
+	font-family: $basefont;
+	margin: 0;
+	padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6, p {
-	font-family: "Bitter";
+	font-family: $basefont;
+}
+
+#container {
+	margin: 0 auto;
+	width: 600px;
+	height: 700px;
+	background: #fff;
+	position: relative;
 }
 
 #vis-control {
-	padding: 100px 0 0;
+	padding: 20px;
 	label {
-		color: #fff;
+		/*color: #fff;*/
 	}
 	#vis-time-range {
 		width: 100%;
@@ -26,8 +41,7 @@ h1, h2, h3, h4, h5, h6, p {
 #vis-wrapper {
 	position: relative;
 	background: transparent;
-	margin: 100px auto;
-	width: 900px;
+	z-index: 2;
 	.nodes_uf,
 	.node {
 		cursor: pointer;
@@ -36,8 +50,8 @@ h1, h2, h3, h4, h5, h6, p {
 
 #vis-tip {
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: 380px;
+	left: 300px;
 	text-align: center;
 	width: 240px;
 	height: 120px;
@@ -45,6 +59,7 @@ h1, h2, h3, h4, h5, h6, p {
 	margin-left: -120px;
 	font-size: 12px;
 	line-height: 1.5em;
+	z-index: 1;
 	.candidato {
 		font-size: 18px;
 	}

@@ -18,19 +18,21 @@
 
     </head>
     <body>
+        
+        <div id="container">
+            <div id="vis-control" class="medium-centered columns medium-6">
+                <label id="vis-time-date">Data</label>
+                <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
+            </div>
 
-        <div id="vis-control" class="medium-centered columns medium-6">
-            <label id="vis-time-date">Data</label>
-            <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
-        </div>
+            <div id="vis-wrapper"></div>
 
-        <div id="vis-wrapper"></div>
-
-        <div id="vis-tip">
-            <div class="local string"></div>
-            <h3 class="candidato string"></h3>
-            <div><span class="categoria string"></span> <span class="data string"></span></div>
-            <div class="atividade string"></div>
+            <div id="vis-tip">
+                <div class="local string"></div>
+                <h3 class="candidato string"></h3>
+                <div><span class="categoria string"></span> <span class="data string"></span></div>
+                <div class="atividade string"></div>
+            </div>
         </div>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

@@ -1,9 +1,9 @@
 // CONSTANTES
 
-var width = 900;
-var height = 900;
-var radius = 320;
-var force_radius = 260;
+var width = 600;
+var height = 600;
+var radius = 270;
+var force_radius = 240;
 var timeline_min = null;
 var timeline_max = null;
 var timeline = [];
@@ -12,6 +12,29 @@ var timeline = [];
 
 var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
     data_estados    = [
+        
+        {UF: 'ES', REGIAO: 3, NOME: 'Espírito Santo', CAPITAL: 'Vitória'},
+        {UF: 'MG', REGIAO: 3, NOME: 'Minas Gerais',   CAPITAL: 'Belo Horizonte'},
+        {UF: 'RJ', REGIAO: 3, NOME: 'Rio de Janeiro', CAPITAL: 'Rio de Janeiro'},
+        {UF: 'SP', REGIAO: 3, NOME: 'São Paulo',      CAPITAL: 'São Paulo'},
+
+        {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
+        
+        {UF: 'PR', REGIAO: 4, NOME: 'Paraná',            CAPITAL: 'Curitiba'},
+        {UF: 'SC', REGIAO: 4, NOME: 'Santa Catarina',    CAPITAL: 'Florianópolis'},
+        {UF: 'RS', REGIAO: 4, NOME: 'Rio Grande do Sul', CAPITAL: 'Porto Alegre'},
+
+        {UF: 'NULL9', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL10', REGIAO: null, NOME: null, CAPITAL: null},
+
+        {UF: 'GO', REGIAO: 2, NOME: 'Goiás',              CAPITAL: 'Goiânia'},
+        {UF: 'DF', REGIAO: 2, NOME: 'Distrito Federal',   CAPITAL: 'Brasília'},
+        {UF: 'MT', REGIAO: 2, NOME: 'Mato Grosso',        CAPITAL: 'Cuiaba'},
+        {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
+
+        {UF: 'NULL5', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL6', REGIAO: null, NOME: null, CAPITAL: null},
 
         {UF: 'AC', REGIAO: 0, NOME: 'Acre',      CAPITAL: 'Rio Branco'},
         {UF: 'AM', REGIAO: 0, NOME: 'Amazonas',  CAPITAL: 'Manaus'},
@@ -36,29 +59,6 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
     
         {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null},
-        
-        {UF: 'GO', REGIAO: 2, NOME: 'Goiás',              CAPITAL: 'Goiânia'},
-        {UF: 'DF', REGIAO: 2, NOME: 'Distrito Federal',   CAPITAL: 'Brasília'},
-        {UF: 'MT', REGIAO: 2, NOME: 'Mato Grosso',        CAPITAL: 'Cuiaba'},
-        {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
-
-        {UF: 'NULL5', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NULL6', REGIAO: null, NOME: null, CAPITAL: null},
-        
-        {UF: 'ES', REGIAO: 3, NOME: 'Espírito Santo', CAPITAL: 'Vitória'},
-        {UF: 'MG', REGIAO: 3, NOME: 'Minas Gerais',   CAPITAL: 'Belo Horizonte'},
-        {UF: 'RJ', REGIAO: 3, NOME: 'Rio de Janeiro', CAPITAL: 'Rio de Janeiro'},
-        {UF: 'SP', REGIAO: 3, NOME: 'São Paulo',      CAPITAL: 'São Paulo'},
-
-        {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
-        
-        {UF: 'PR', REGIAO: 4, NOME: 'Paraná',            CAPITAL: 'Curitiba'},
-        {UF: 'SC', REGIAO: 4, NOME: 'Santa Catarina',    CAPITAL: 'Florianópolis'},
-        {UF: 'RS', REGIAO: 4, NOME: 'Rio Grande do Sul', CAPITAL: 'Porto Alegre'},
-
-        {UF: 'NULL9', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NULL10', REGIAO: null, NOME: null, CAPITAL: null},
         
     ],
     data_candidatos = [],
@@ -184,7 +184,8 @@ wrapper = d3.select('#vis-wrapper').append('svg')
 rect = wrapper.append('rect')
     .attr('width', width)
     .attr('height', height)
-    .attr('fill', '#222')
+    .attr('fill', '#fff')
+    .attr('opacity', 0)
     .style('pointer-events', 'all');
 
 vis = wrapper.append('g');
@@ -263,7 +264,7 @@ var App = {
             .attr('d', function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
             .attr('class', 'UF-path')
             .style('stroke-width',2)
-            .style('stroke','#666')
+            .style('stroke','#999')
             .style('fill','none');
 
         App.nodes_uf.append('text')
@@ -271,10 +272,10 @@ var App = {
             .attr('dy', '.35em')
             .attr('x', -12)
             .attr('y', 16)
-            .attr('fill','#666')
+            .attr('fill','#999')
             .text(function(d) { return d.UF; })
             .attr('transform', 'rotate(-90)')
-            .filter(function(d) { return (angle(d.UF)) % 360 > 180; }) // flipped
+            .filter(function(d) { return (20+angle(d.UF)) % 360 > 180; }) // flipped
                 .attr('transform', 'rotate(90)')
                 .attr('x', 12)
                 .attr('y', -16)
@@ -445,10 +446,10 @@ var App = {
             $('#vis-tip .candidato').text(d.CANDIDATO).css('color',App.color(d.CANDIDATO));
             $('#vis-tip .categoria').text(d.CATEGORIA);
             $('#vis-tip .atividade').text(d.ATIVIDADE);
-            $('#vis-tip').css({
+            /*$('#vis-tip').css({
                 left: vis.offset().left + width * 0.5,
                 top: vis.offset().top + height * 0.5
-            });
+            });*/
             App.events.ligaUF(d);
         },
         mouseout_node: function(d){
@@ -478,18 +479,18 @@ var App = {
         ligaUF: function(d){
             d3.selectAll('[data-uf='+d.UF+'] .UF-text')
                 .transition().duration(300)
-                .attr('fill','#fff');
+                .attr('fill','#333');
             d3.selectAll('[data-uf='+d.UF+'] .UF-path')
                 .transition().duration(300)
-                .style('stroke','#fff');
+                .style('stroke','#333');
         },
         desligaUF: function(d){
             d3.selectAll('[data-uf='+d.UF+'] .UF-text')
                 .transition().duration(300)
-                .attr('fill','#666');
+                .attr('fill','#999');
             d3.selectAll('[data-uf='+d.UF+'] .UF-path')
                 .transition().duration(300)
-                .style('stroke','#666');
+                .style('stroke','#999');
         }
     }
 };
