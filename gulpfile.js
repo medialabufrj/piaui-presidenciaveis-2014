@@ -62,6 +62,11 @@ gulp.task('fonts', function () {
 });
 
 gulp.task('extras', function () {
+    return gulp.src(['app/datasets/*.csv'])
+        .pipe(gulp.dest('dist/datasets'));
+});
+
+gulp.task('datasets', function () {
     return gulp.src(['app/*.*', '!app/*.html'], { dot: true })
         .pipe(gulp.dest('dist'));
 });
@@ -70,7 +75,7 @@ gulp.task('clean', function () {
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
 
-gulp.task('build', ['html', 'images', 'fonts', 'extras']);
+gulp.task('build', ['html', 'images', 'fonts', 'extras', 'datasets']);
 
 gulp.task('default', ['clean'], function () {
     gulp.start('build');

@@ -493,8 +493,8 @@ var App = {
 
 
 loadDataset([
-    'dataset/dados_aecioneves.csv',
-    'dataset/dados_dilmarousseff.csv',
-    'dataset/dados_marinasilva.csv'
+    'datasets/dados_aecioneves.csv',
+    'datasets/dados_dilmarousseff.csv',
+    'datasets/dados_marinasilva.csv'
 ], App.init);
 
