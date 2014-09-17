@@ -84,20 +84,6 @@ var locale = d3.locale({
 
 // PROCESSAMENTO DE DADOS
 
-function loadDataset(arr,callback) {
-    var count = 0;
-    var id = 0;
-    var cbk = function(id){
-        count++;
-        if(count < arr.length){
-            loadCSV(arr[count], id, cbk);
-        } else {
-            if(callback) callback();
-        }
-    }
-    loadCSV(arr[0],id,cbk);
-}
-
 function loadCSV(file,id,callback){
 
     // DVS para carregar CSV separado por ;
@@ -107,11 +93,11 @@ function loadCSV(file,id,callback){
     dsv(file)
         .row(function(d){
             // alimenta array candidatos
-            if(data_candidatos.indexOf(d.CANDIDATO) == -1){
+            if(data_candidatos.indexOf(d.CANDIDATO) === -1){
                 data_candidatos.push(d.CANDIDATO);
             }
             // alimenta array categorias
-            if(data_categorias.indexOf(d.CATEGORIA) == -1){
+            if(data_categorias.indexOf(d.CATEGORIA) === -1){
                 data_categorias.push(d.CATEGORIA);
             }
             // adiciona id
@@ -124,24 +110,24 @@ function loadCSV(file,id,callback){
             d.DATA = format.parse(d.DATA);
             // unixtime
             var unixtime = +d.DATA;
-            if(timeline_min == null || timeline_min > unixtime){
+            if(timeline_min === null || timeline_min > unixtime){
                 timeline_min = unixtime;
             }
-            if(timeline_max == null || timeline_max < unixtime){
+            if(timeline_max === null || timeline_max < unixtime){
                 timeline_max = unixtime;
             }
-            if(timeline.indexOf(unixtime) == -1){
+            if(timeline.indexOf(unixtime) === -1){
                 timeline.push(unixtime);
             }
             //console.log();
             // force layout vars
             var CAPITAL = _.findWhere(data_estados,{UF: d.UF}).CAPITAL;
-            d.x = width * .5 - Math.random() * 200;
-            d.y = height * .5 - Math.random() * 200;
-            d.radius = CAPITAL == d.MUNICIPIO ? 5 : 3;
+            d.x = width * 0.5 - Math.random() * 200;
+            d.y = height * 0.5 - Math.random() * 200;
+            d.radius = CAPITAL === d.MUNICIPIO ? 5 : 3;
             d.scale = 1;
             d.cluster = d.UF;
-            if(!clusters[d.UF] || (clusters[d.UF].MUNICIPIO != CAPITAL && CAPITAL == d.MUNICIPIO)){
+            if(!clusters[d.UF] || (clusters[d.UF].MUNICIPIO !== CAPITAL && CAPITAL === d.MUNICIPIO)){
                 clusters[d.UF] = d;
             }
             // retorna obj completo
@@ -153,43 +139,64 @@ function loadCSV(file,id,callback){
             // log
             console.log('loaded CSV!');
             // chama callback
-            if(callback) callback(id);
+            if(callback){
+                callback(id);
+            }
         });
 
     console.log('loading file', file);
 }
 
-var d3line2 = d3.svg.line()
-    .x(function(d){return d.x;})
-    .y(function(d){return d.y;})
-    .interpolate('linear'); 
+
+function loadDataset(arr,callback) {
+    var count = 0;
+    var id = 0;
+    var cbk = function(id){
+        count++;
+        if(count < arr.length){
+            loadCSV(arr[count], id, cbk);
+        } else {
+            if(callback){
+                callback();
+            }
+        }
+    };
+    loadCSV(arr[0],id,cbk);
+}
 
 // INICIA GRAFOS
 
-var zoom = d3.behavior.zoom()
+var zoom, wrapper, rect, vis, angle, d3line2;
+
+zoom = d3.behavior.zoom()
     .scaleExtent([1, 5])
     .on('zoom', function(){
         vis.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
     });
 
-var wrapper = d3.select('#vis-wrapper').append('svg')
+wrapper = d3.select('#vis-wrapper').append('svg')
     .attr('width', width)
     .attr('height', height)
     .append('g')
     //.call(zoom)
     ;
 
-var rect = wrapper.append('rect')
+rect = wrapper.append('rect')
     .attr('width', width)
     .attr('height', height)
     .attr('fill', '#222')
     .style('pointer-events', 'all');
 
-var vis = wrapper.append('g');
+vis = wrapper.append('g');
 
-var angle = d3.scale.ordinal()
+angle = d3.scale.ordinal()
     .rangePoints([0, 360], 1)
     .domain(data_estados.map(function(d) { return d.UF; }));
+
+d3line2 = d3.svg.line()
+    .x(function(d){return d.x;})
+    .y(function(d){return d.y;})
+    .interpolate('linear'); 
 
 // VIS EVENTOS
 
@@ -211,7 +218,7 @@ var App = {
 
         App.timerange = $('#vis-time-range');
         App.timerange.attr('max',timeline.length-1);
-        App.timerange.on('change input', function(d) {
+        App.timerange.on('change input', function(e) {
             var current = parseInt(this.value);
             var format = locale.timeFormat('%d de %B de %Y');
             $('#vis-time-date').text(format(new Date(timeline[current])));
@@ -234,7 +241,7 @@ var App = {
         .attr('class', 'nodes_uf')
         .selectAll('g')
         .data(data_estados.filter(function(d){
-                return d.REGIAO != null;
+                return d.REGIAO !== null;
             }))
         .enter().append('g')
             .attr('data-uf', function(d) { return d.UF; })
@@ -244,7 +251,7 @@ var App = {
             })
             .on('mouseout', function(d){
                 App.events.mouseout_UF(d);
-            })
+            });
 
         /*
         App.nodes_uf.append('circle')
@@ -278,8 +285,8 @@ var App = {
 
         data_estados.map(function(d){
             var a = (180 + angle(d.UF)) / 180 * Math.PI,
-                x = width * .5 - Math.cos(a) * force_radius,
-                y = height * .5 - Math.sin(a) * force_radius;
+                x = width * 0.5 - Math.cos(a) * force_radius,
+                y = height * 0.5 - Math.sin(a) * force_radius;
             
             /*
             if(clusters[d.UF]){
@@ -292,15 +299,14 @@ var App = {
 
         data_eventos.map(function(d){
             var a = (180 + angle(d.UF)) / 180 * Math.PI,
-                x = width * .5 - Math.cos(a) * force_radius,
-                y = height * .5 - Math.sin(a) * force_radius;
+                x = width * 0.5 - Math.cos(a) * force_radius,
+                y = height * 0.5 - Math.sin(a) * force_radius;
 
-            d.x = x + Math.random()*10;
-            d.y = y + Math.random()*10;
+            d.x = x + Math.random() * 10;
+            d.y = y + Math.random() * 10;
         });
 
-        App.nodes_force = vis.append('g')
-            .attr('class', 'nodes_force')
+        App.nodes_force = vis.append('g').attr('class', 'nodes_force');
 
         App.node = App.nodes_force.selectAll('circle.node');
 
@@ -313,7 +319,7 @@ var App = {
             .start();
         
         vis.on('mousemove', function() {
-            var p1 = d3.mouse(this);
+            //var p1 = d3.mouse(this);
             //root.px = p1[0];
             //root.py = p1[1];
             //App.force.resume();
@@ -355,7 +361,7 @@ var App = {
 
         App.node
             .each(App.cluster(10 * e.alpha * e.alpha))
-            .each(App.collide(.5))
+            .each(App.collide(0.5))
             .attr('cx', function(d) { return d.x; })
             .attr('cy', function(d) { return d.y; });
         
@@ -366,26 +372,25 @@ var App = {
         switch(candidato){
             case 'AÉCIO NEVES':
                 return '#127bbf';
-                break;
             case 'MARINA SILVA':
                 return '#e8d354';
-                break;
             case 'DILMA ROUSSEFF':
                 return '#cc0000';
-                break;
         }
     },
     cluster: function(alpha){
         return function(d) {
             var cluster = clusters[d.cluster];
             //console.log(cluster.x,cluster.y)
-            if (cluster === d) return;
+            if (cluster === d){
+                return false;
+            }
             var x = d.x - cluster.x,
                 y = d.y - cluster.y,
                 l = Math.sqrt(x * x + y * y),
-                r = d.radius * d.scale + cluster.radius * .2;
-            if (l != r) {
-                l = (l - r) / l * alpha * .1;
+                r = d.radius * d.scale + cluster.radius * 0.2;
+            if (l !== r) {
+                l = (l - r) / l * alpha * 0.1;
                 d.x -= x *= l;
                 d.y -= y *= l;
                 //cluster.x += x;
@@ -440,10 +445,10 @@ var App = {
             $('#vis-tip .candidato').text(d.CANDIDATO).css('color',App.color(d.CANDIDATO));
             $('#vis-tip .categoria').text(d.CATEGORIA);
             $('#vis-tip .atividade').text(d.ATIVIDADE);
-             $('#vis-tip').css({
-                left: vis.offset().left + width * .5,
-                top: vis.offset().top + height * .5
-             })
+            $('#vis-tip').css({
+                left: vis.offset().left + width * 0.5,
+                top: vis.offset().top + height * 0.5
+            });
             App.events.ligaUF(d);
         },
         mouseout_node: function(d){
@@ -460,14 +465,14 @@ var App = {
         mouseover_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
-                .style('opacity',.1)
+                .style('opacity', 0.1);
             App.events.ligaUF(d);
 
         },
         mouseout_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
-                .style('opacity',1)
+                .style('opacity',1);
             App.events.desligaUF(d);
         },
         ligaUF: function(d){
