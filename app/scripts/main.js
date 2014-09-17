@@ -122,8 +122,6 @@ function loadCSV(file,id,callback){
             //console.log();
             // force layout vars
             var CAPITAL = _.findWhere(data_estados,{UF: d.UF}).CAPITAL;
-            d.x = width * 0.5 - Math.random() * 200;
-            d.y = height * 0.5 - Math.random() * 200;
             d.radius = CAPITAL === d.MUNICIPIO ? 5 : 3;
             d.scale = 1;
             d.cluster = d.UF;
@@ -298,15 +296,6 @@ var App = {
             clusters[d.UF] = {x: x, y: y, radius: 50};
         });
 
-        data_eventos.map(function(d){
-            var a = (180 + angle(d.UF)) / 180 * Math.PI,
-                x = width * 0.5 - Math.cos(a) * force_radius,
-                y = height * 0.5 - Math.sin(a) * force_radius;
-
-            d.x = x + Math.random() * 10;
-            d.y = y + Math.random() * 10;
-        });
-
         App.nodes_force = vis.append('g').attr('class', 'nodes_force');
 
         App.node = App.nodes_force.selectAll('circle.node');
@@ -319,7 +308,7 @@ var App = {
             .on('tick', App.tick)
             .start();
         
-        vis.on('mousemove', function() {
+        wrapper.on('mousemove', function() {
             //var p1 = d3.mouse(this);
             //root.px = p1[0];
             //root.py = p1[1];
@@ -330,17 +319,30 @@ var App = {
     },
 
     renderForceNodes: function(arr){
+
         App.node = App.node.data(arr, function(d){ return d.ID;});
 
         App.node.enter()
             .append('circle')
-                .attr('r', 0)
+                .attr('r', 0.5)
                 .style('fill', function(d) { return App.color(d.CANDIDATO); })
                 .attr('class', 'node')
                 .attr('data-uf', function(d) { return d.UF; })
                 .attr('data-candidato', function(d) { return d.CANDIDATO.split(' ').join('_'); })
-                .attr('cx', function(d) { return d.x; })
-                .attr('cy', function(d) { return d.y; })
+                .attr('cx', function(d){
+                    var a = (180 + angle(d.UF)) / 180 * Math.PI,
+                        x = width * 0.5 - Math.cos(a) * force_radius * 1.5;
+
+                    d.px = d.x = x + Math.random() * 10;
+                    return d.x;
+                })
+                .attr('cy', function(d){
+                    var a = (180 + angle(d.UF)) / 180 * Math.PI,
+                        y = height * 0.5 - Math.sin(a) * force_radius * 1.5;
+
+                    d.py = d.y = y + Math.random() * 10;
+                    return d.y;
+                })
                 .on('mouseover', function(d){
                     App.events.mouseover_node(d);
                 })
@@ -348,13 +350,14 @@ var App = {
                     App.events.mouseout_node(d);
                 })
                 .call(App.force.drag)
-                .transition().duration(1200)
+                .transition().duration(600)
                 .attr('r', function(d) { return d.radius * d.scale; })
                 ;
         App.node.exit()
             .transition()
             .attr('r', 0)
             .remove();
+        
         App.force.resume();
     },
 
@@ -390,6 +393,7 @@ var App = {
                 y = d.y - cluster.y,
                 l = Math.sqrt(x * x + y * y),
                 r = d.radius * d.scale + cluster.radius * 0.2;
+
             if (l !== r) {
                 l = (l - r) / l * alpha * 0.1;
                 d.x -= x *= l;
