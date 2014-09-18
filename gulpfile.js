@@ -61,12 +61,12 @@ gulp.task('fonts', function () {
         .pipe($.size());
 });
 
-gulp.task('extras', function () {
+gulp.task('datasets', function () {
     return gulp.src(['app/datasets/*.csv'])
         .pipe(gulp.dest('dist/datasets'));
 });
 
-gulp.task('datasets', function () {
+gulp.task('extras', function () {
     return gulp.src(['app/*.*', '!app/*.html'], { dot: true })
         .pipe(gulp.dest('dist'));
 });
