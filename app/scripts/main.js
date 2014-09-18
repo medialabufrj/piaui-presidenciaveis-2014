@@ -7,6 +7,7 @@ var force_radius = 240;
 var timeline_min = null;
 var timeline_max = null;
 var timeline = [];
+var angle_offset = 18;
 
 // DATASETS
 
@@ -28,34 +29,37 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
         {UF: 'NULL9', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL10', REGIAO: null, NOME: null, CAPITAL: null},
 
+        {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
         {UF: 'GO', REGIAO: 2, NOME: 'Goiás',              CAPITAL: 'Goiânia'},
         {UF: 'DF', REGIAO: 2, NOME: 'Distrito Federal',   CAPITAL: 'Brasília'},
         {UF: 'MT', REGIAO: 2, NOME: 'Mato Grosso',        CAPITAL: 'Cuiaba'},
-        {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
+        
 
         {UF: 'NULL5', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL6', REGIAO: null, NOME: null, CAPITAL: null},
 
+        
         {UF: 'AC', REGIAO: 0, NOME: 'Acre',      CAPITAL: 'Rio Branco'},
         {UF: 'AM', REGIAO: 0, NOME: 'Amazonas',  CAPITAL: 'Manaus'},
-        {UF: 'AP', REGIAO: 0, NOME: 'Amapá',     CAPITAL: 'Macapá'},
-        {UF: 'PA', REGIAO: 0, NOME: 'Pará',      CAPITAL: 'Belém'},
-        {UF: 'RR', REGIAO: 0, NOME: 'Roraima',   CAPITAL: 'Boa Vista'},
         {UF: 'RO', REGIAO: 0, NOME: 'Rondônia',  CAPITAL: 'Porto Velho'},
+        {UF: 'RR', REGIAO: 0, NOME: 'Roraima',   CAPITAL: 'Boa Vista'},
+        {UF: 'PA', REGIAO: 0, NOME: 'Pará',      CAPITAL: 'Belém'},
+        {UF: 'AP', REGIAO: 0, NOME: 'Amapá',     CAPITAL: 'Macapá'},
         {UF: 'TO', REGIAO: 0, NOME: 'Tocantins', CAPITAL: 'Palmas'},
+
 
         {UF: 'NULL1', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL2', REGIAO: null, NOME: null, CAPITAL: null},
 
         {UF: 'MA', REGIAO: 1, NOME: 'Maranhão',            CAPITAL: 'São Luis'},
         {UF: 'PI', REGIAO: 1, NOME: 'Piauí',               CAPITAL: 'Teresina'},
-        {UF: 'CE', REGIAO: 1, NOME: 'Ceará',               CAPITAL: 'Fortaleza'},
-        {UF: 'BA', REGIAO: 1, NOME: 'Bahia',               CAPITAL: 'Salvador'},
+        {UF: 'CE', REGIAO: 1, NOME: 'Ceará',               CAPITAL: 'Fortaleza'},    
         {UF: 'RN', REGIAO: 1, NOME: 'Rio Grande do Norte', CAPITAL: 'Natal'},
         {UF: 'PB', REGIAO: 1, NOME: 'Paraíba',             CAPITAL: 'João Pessoa'},
         {UF: 'PE', REGIAO: 1, NOME: 'Pernambuco',          CAPITAL: 'Recife'},
         {UF: 'AL', REGIAO: 1, NOME: 'Alagoas',             CAPITAL: 'Maceió'},
         {UF: 'SE', REGIAO: 1, NOME: 'Sergipe',             CAPITAL: 'Aracaju'},
+        {UF: 'BA', REGIAO: 1, NOME: 'Bahia',               CAPITAL: 'Salvador'},
     
         {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null},
@@ -244,7 +248,7 @@ var App = {
             }))
         .enter().append('g')
             .attr('data-uf', function(d) { return d.UF; })
-            .attr('transform', function(d) { return 'rotate(' + angle(d.UF) + ')translate(' + radius + ',0)'; })
+            .attr('transform', function(d) { return 'rotate(' + (angle(d.UF)+angle_offset) + ')translate(' + radius + ',0)'; })
             .on('mouseover', function(d){
                 App.events.mouseover_UF(d);
             })
@@ -283,7 +287,7 @@ var App = {
     buildForceGraph: function(){
 
         data_estados.map(function(d){
-            var a = (180 + angle(d.UF)) / 180 * Math.PI,
+            var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
                 x = width * 0.5 - Math.cos(a) * force_radius,
                 y = height * 0.5 - Math.sin(a) * force_radius;
             
@@ -324,21 +328,21 @@ var App = {
 
         App.node.enter()
             .append('circle')
-                .attr('r', 0.5)
+                .attr('r', 1)
                 .style('fill', function(d) { return App.color(d.CANDIDATO); })
                 .attr('class', 'node')
                 .attr('data-uf', function(d) { return d.UF; })
                 .attr('data-candidato', function(d) { return d.CANDIDATO.split(' ').join('_'); })
                 .attr('cx', function(d){
-                    var a = (180 + angle(d.UF)) / 180 * Math.PI,
-                        x = width * 0.5 - Math.cos(a) * force_radius * 1.5;
+                    var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
+                        x = width * 0.5 - Math.cos(a) * force_radius * 0.5;
 
                     d.px = d.x = x + Math.random() * 10;
                     return d.x;
                 })
                 .attr('cy', function(d){
-                    var a = (180 + angle(d.UF)) / 180 * Math.PI,
-                        y = height * 0.5 - Math.sin(a) * force_radius * 1.5;
+                    var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
+                        y = height * 0.5 - Math.sin(a) * force_radius * 0.5;
 
                     d.py = d.y = y + Math.random() * 10;
                     return d.y;
@@ -364,7 +368,7 @@ var App = {
     tick: function(e){
 
         App.node
-            .each(App.cluster(10 * e.alpha * e.alpha))
+            .each(App.cluster(20 * e.alpha * e.alpha))
             .each(App.collide(0.5))
             .attr('cx', function(d) { return d.x; })
             .attr('cy', function(d) { return d.y; });
@@ -385,7 +389,8 @@ var App = {
     cluster: function(alpha){
         return function(d) {
             var cluster = clusters[d.cluster];
-            //console.log(cluster.x,cluster.y)
+            //alpha = 0.025;
+            //console.log(alpha);
             if (cluster === d){
                 return false;
             }
