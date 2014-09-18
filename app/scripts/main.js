@@ -205,16 +205,20 @@ d3line2 = d3.svg.line()
 
 var App = {
 
+    bipart: null,
     nodes_uf: null,
     nodes_force: null,
     force: null,
     node: null,
     timerange: null,
 
+    current_date: null,
+
     init: function() {
 
         App.buildStatesRadial();
         App.buildForceGraph();
+        App.buildBipartite();
 
         timeline = timeline.sort();
         console.log(timeline);
@@ -225,15 +229,19 @@ var App = {
             var current = parseInt(this.value);
             var format = locale.timeFormat('%d de %B de %Y');
             $('#vis-time-date').text(format(new Date(timeline[current])));
-            console.log(timeline[current]);
-            App.renderForceNodes(_.filter(data_eventos,function(d){
-                return +d.DATA <= timeline[current];
-            }));
-            //var new_data = matrices[current]
-            //rerender(new_data);
+            // save timestamp and render force
+            App.current_date = timeline[current];
+            App.renderForceNodes(App.filterEventsBefore(App.current_date));
+            App.renderBipartiteRegions();
         })
         .change();
 
+    },
+
+    filterEventsBefore: function(timestamp){
+        return _.filter(data_eventos,function(d){
+            return +d.DATA <= timestamp;
+        });
     },
 
     buildStatesRadial: function(){
@@ -282,6 +290,75 @@ var App = {
                 .attr('x', 12)
                 .attr('y', -16)
             .style('text-anchor', 'end');
+    },
+
+    buildBipartite: function(){
+        App.bipart = vis.append('g')
+            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+            .append('g')
+            .attr('class', 'bipart');
+    },
+
+    renderBipartiteState: function(UF){
+        var table = [];
+        var data = App.filterEventsBefore(App.current_date);
+        data.map(function(d){
+
+        });
+        console.log(table);
+    },
+
+    renderBipartiteRegions: function(){
+        var table_count = [];
+        var table_links = [];
+        var data = App.filterEventsBefore(App.current_date);
+        data_candidatos.map(function(c,i){
+            var count = [c, _.where(data,{CANDIDATO: c}).length];
+            if(count[1] > 0){
+                table_count.push(count);
+            }
+            data_regioes.map(function(r,j){
+                var links = [c, r, _.where(data,{CANDIDATO: c, REGIAO: r}).length];
+                if(links[2] > 0){
+                    table_links.push(links);
+                }
+            });
+        });
+        //console.log(table_count, table_links);
+        App.renderBipartite(table_count,table_links);
+    },
+
+    renderBipartite: function(table_count, table_links){
+
+        //var q = d3.scale.quantize().domain([0, table_count.length-1]).range(table_count.map(function(d){return d[0];}));
+
+        var y_offset = 0;
+        var y_scale = d3.scale.linear().range([0,100]);
+        var sum = d3.sum(table_count,function(d){return d[1];})
+        
+        y_scale.domain([0, sum]);
+
+        var bar_cand = App.bipart.selectAll('.bar_cand')
+            .data(table_count, function(d){ return d[0];})
+            .enter().append("g").attr("class","bar_cand");
+
+        bar_cand
+                .append('rect')
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", 20)
+                .attr("height",function(d){ return y_scale(d[1]); })
+                .style("fill", function(d){return App.color(d[0])})
+                ;
+
+        App.bipart
+            .selectAll('rect')
+            .data(table_count, function(d){ return d[0];})
+            .transition().duration(600)     
+                .attr("height",function(d){ return y_scale(d[1]); })
+                .attr("y", function(d){ var y = y_offset; y_offset += y_scale(d[1]); return y;})
+                ;
+            
     },
 
     buildForceGraph: function(){
@@ -477,7 +554,6 @@ var App = {
                 .transition().duration(300)
                 .style('opacity', 0.1);
             App.events.ligaUF(d);
-
         },
         mouseout_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
