@@ -264,12 +264,6 @@ var App = {
                 App.events.mouseout_UF(d);
             });
 
-        /*
-        App.nodes_uf.append('circle')
-            .attr('r', 5)
-            .attr('fill','#666');
-        //*/
-
         App.nodes_uf.append('path')
             .attr('d', function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
             .attr('class', 'UF-path')
@@ -340,23 +334,34 @@ var App = {
 
         //var q = d3.scale.quantize().domain([0, table_count.length-1]).range(table_count.map(function(d){return d[0];}));
 
-        var y_offset = 0;
-        var y_scale = d3.scale.linear().range([0,100]);
-        var sum = d3.sum(table_count,function(d){return d[1];})
-        
-        y_scale.domain([0, sum]);
+        var bar_cand,
+            bar_other,
+            sum = d3.sum(table_count,function(d){return d[1];})
+            y_scale = d3.scale.linear().range([0,100]).domain([0, sum]),
+            y_offset = 0,
+            ;
+
+        // ordem decrescente
 
         table_count.sort(function(a,b){
             return a[1] <= b[1];
         });
 
+        // muda titulo
+
         App.bipart_title.text(title);
 
-        var bar_cand = App.bipart.selectAll('.bar_cand')
+        // update dos dados
+
+        bar_cand = App.bipart.selectAll('.bar_cand')
             .data(table_count, function(d){ return d[0];});
+
+        // enter
 
         bar_cand.enter()
             .append("g").attr("class","bar_cand");
+
+        // exit
 
         bar_cand.exit()
             .remove();
@@ -369,6 +374,8 @@ var App = {
                 d3.select(this.parentNode)
                 .remove();
             });*/
+        
+        // appends
 
         bar_cand
                 .append('rect')
@@ -391,6 +398,8 @@ var App = {
                 .style("fill", function(d){return App.color(d[0])})
                 ;
 
+        // transitions (update)
+        
         App.bipart
             .selectAll('.rect')
             .data(table_count, function(d){ return d[0];})
