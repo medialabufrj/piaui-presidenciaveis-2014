@@ -288,17 +288,17 @@ var App = {
 
     buildBipartite: function(){
         App.bipart = vis.append('g')
-            .attr('transform', 'translate(' + (width / 2 - 100) + ',' + (height / 2 - 50) + ')')
+            .attr('transform', 'translate(' + (width / 2 - 50) + ',' + (height / 2 - 75) + ')')
             .append('g')
             .attr('class', 'bipart');
 
         App.bipart_title = App.bipart.append('text');
 
         App.bipart_title
-            .attr("x", 100)
-            .attr("y", -20)
-            .style("fill","#999")
-            .attr("text-anchor", "middle")
+            .attr('x', 50)
+            .attr('y', -20)
+            .style('fill','#999')
+            .attr('text-anchor', 'middle')
             ;
     },
 
@@ -311,8 +311,8 @@ var App = {
             if(count[1] > 0){
                 table_count.push(count);
             }
-            data_regioes.map(function(r,j){
-                var links = [c, r, _.where(data,{CANDIDATO: c, REGIAO: r}).length];
+            data_categorias.map(function(r,j){
+                var links = [c, r, _.where(data,{CANDIDATO: c, UF: UF, CATEGORIA: r}).length];
                 if(links[2] > 0){
                     table_links.push(links);
                 }
@@ -323,11 +323,18 @@ var App = {
     },
 
     renderBipartiteRegions: function(){
-        
+        /*
+            data_regioes.map(function(r,j){
+                var links = [c, r, _.where(data,{CANDIDATO: c, REGIAO: r}).length];
+                if(links[2] > 0){
+                    table_links.push(links);
+                }
+            });
+        */
     },
 
     renderBipartiteNone: function(){
-        App.renderBipartite("",[],[]);
+        App.renderBipartite('',[],[]);
     },
 
     renderBipartite: function(title,table_count, table_links){
@@ -337,8 +344,9 @@ var App = {
         var bar_cand,
             bar_other,
             sum = d3.sum(table_count,function(d){return d[1];})
-            y_scale = d3.scale.linear().range([0,100]).domain([0, sum]),
+            y_scale = d3.scale.linear().range([0,150]).domain([0, sum]),
             y_offset = 0,
+            nest_links = null
             ;
 
         // ordem decrescente
@@ -346,6 +354,27 @@ var App = {
         table_count.sort(function(a,b){
             return a[1] <= b[1];
         });
+
+        nest_links = d3.nest()
+            .key(function(d){return d[1]})
+            .sortValues(function(a,b){
+                return a[2] <= b[2];
+            })
+            .entries(table_links)
+            ;
+
+        nest_links
+            .map(function(d){
+                d.COUNT = d3.sum(d.values,function(d){return d[2];})
+                return d;
+            });
+
+        nest_links
+            .sort(function(a,b){
+                return a.COUNT <= b.COUNT;
+            });
+
+        console.log('2pass',nest_links);
 
         // muda titulo
 
@@ -356,20 +385,29 @@ var App = {
         bar_cand = App.bipart.selectAll('.bar_cand')
             .data(table_count, function(d){ return d[0];});
 
+        bar_other = App.bipart.selectAll('.bar_other')
+            .data(nest_links, function(d){ return d.key;});
+
         // enter
 
         bar_cand.enter()
-            .append("g").attr("class","bar_cand");
+            .append('g').attr('class','bar_cand');
+
+        bar_other.enter()
+            .append('g').attr('class','bar_other');
 
         // exit
 
         bar_cand.exit()
             .remove();
+
+        bar_other.exit()
+            .remove();
             // transition child before remove parent
             /*.selectAll('rect')
             .transition()
-            .attr("height", 0)
-            .attr("y", 0)
+            .attr('height', 0)
+            .attr('y', 0)
             .each('end', function () {
                 d3.select(this.parentNode)
                 .remove();
@@ -379,33 +417,60 @@ var App = {
 
         bar_cand
                 .append('rect')
-                .attr("class", "rect")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("width", 20)
-                .attr("height", 0)
-                .style("fill", function(d){return App.color(d[0])})
+                .attr('class', 'rect')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', 20)
+                .attr('height', 0)
+                .style('fill', function(d){return App.color(d[0])})
                 ;
 
         bar_cand
                 .append('text')
-                .attr("class", "label")
-                .attr("x", -10)
-                .attr("y", 0)
-                .attr("opacity", 0)
-                .text(function(d){return d[0].split(" ")[0] + "  (" + d[1] + ")";})
+                .attr('class', 'label')
+                .attr('x', -10)
+                .attr('y', 0)
+                .attr('opacity', 0)
+                .text(function(d){return d[0].split(' ')[0] + '  (' + d[1] + ')';})
                 .style('text-anchor', 'end')
-                .style("fill", function(d){return App.color(d[0])})
+                .style('fill', function(d){return App.color(d[0])})
                 ;
 
+        var rect_other = bar_other
+                .append('rect')
+                .attr('class', 'rect_other')
+                .attr('x', 80)
+                .attr('y', 0)
+                .attr('width', 20)
+                .attr('height', function(d){ return Math.floor(y_scale(d.COUNT))})
+                .style('fill', '#999')
+                .style('transform','scale(1,0.1)')
+                ;
+
+        bar_other
+                .append('text')
+                .attr('class', 'label_other')
+                .attr('x', 110)
+                .attr('y', 0)
+                .attr('opacity', 0)
+                .text(function(d){return d.key;})
+                .style('text-anchor', 'start')
+                .style('fill', '#999')
+                ;
+
+        rect_other
+            .append('rect')
+            .attr('class', 'rect_other_inside')
+
+
         // transitions (update)
-        
+
         App.bipart
             .selectAll('.rect')
             .data(table_count, function(d){ return d[0];})
             .transition().duration(600)     
-                .attr("height",function(d){ return y_scale(d[1]); })
-                .attr("y", function(d){ var y = y_offset; y_offset += y_scale(d[1]); return y;})
+                .attr('height',function(d){ return Math.floor(y_scale(d[1])); })
+                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d[1])); return y+i;})
                 ;
 
         y_offset = 0;
@@ -414,9 +479,30 @@ var App = {
             .selectAll('.label')
             .data(table_count, function(d){ return d[0];})
             .transition().duration(600)
-                .attr("font-size", 12)
-                .attr("opacity", 1)
-                .attr("y", function(d){ var y = y_offset; y_offset += y_scale(d[1]); return y + y_scale(d[1]) * 0.5 + 6;})
+                .attr('font-size', 12)
+                .attr('opacity', 1)
+                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d[1])); return y + Math.floor(y_scale(d[1]) * 0.5) + 6 + i;})
+                ;
+        
+        y_offset = 0;
+
+        App.bipart
+            .selectAll('.rect_other')
+            .data(nest_links, function(d){ return d.key;})
+            .transition().duration(600)     
+                .style('transform', 'scale(1,1)')
+                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d.COUNT)); return y+i;})
+                ;
+
+        y_offset = 0;
+
+        App.bipart
+            .selectAll('.label_other')
+            .data(nest_links, function(d){ return d.key;})
+            .transition().duration(600)
+                .attr('font-size', 12)
+                .attr('opacity', function(d){ return y_scale(d.COUNT) > 8 ? 1 : 0})
+                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d.COUNT)); return y + Math.floor(y_scale(d.COUNT) * 0.5) + 6 + i;})
                 ;
             
     },
