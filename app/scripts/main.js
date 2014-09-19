@@ -236,6 +236,31 @@ var App = {
         })
         .change();
 
+        App.timeplay = $('#vis-time-play');
+        App.timeplay.on('click',function(e){
+            App.replay();
+        });
+        App.replay();
+    },
+
+    replay: function(){
+
+        App.timerange.val(App.timerange.attr('min')).change();
+        var time = 300;
+        var tick = function(){
+            var val = +App.timerange.val();
+            var step = +App.timerange.attr('step');
+            var min = +App.timerange.attr('min');
+            var max = +App.timerange.attr('max');
+            console.log(val,step);
+            if(val < max){
+                App.timerange.val(val+step).change();
+                setTimeout(tick,time);
+            }
+            
+        }
+
+        setTimeout(tick,time);
     },
 
     filterEventsBefore: function(timestamp){

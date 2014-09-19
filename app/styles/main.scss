@@ -30,11 +30,18 @@ h1, h2, h3, h4, h5, h6, p {
 
 #vis-control {
 	padding: 20px;
+	overflow: hidden;
 	label {
 		/*color: #fff;*/
+		display: block;
+	}
+	#vis-time-play {
+		width: 15%;
+		float: left;
 	}
 	#vis-time-range {
-		width: 100%;
+		width: 80%;
+		float: left;
 	}
 }
 
