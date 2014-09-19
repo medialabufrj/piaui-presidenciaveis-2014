@@ -252,7 +252,7 @@ var App = {
             var step = +App.timerange.attr('step');
             var min = +App.timerange.attr('min');
             var max = +App.timerange.attr('max');
-            console.log(val,step);
+
             if(val < max){
                 App.timerange.val(val+step).change();
                 setTimeout(tick,time);
@@ -399,8 +399,6 @@ var App = {
                 return a.COUNT <= b.COUNT;
             });
 
-        console.log('2pass',nest_links);
-
         // muda titulo
 
         App.bipart_title.text(title);
@@ -462,20 +460,16 @@ var App = {
                 ;
 
         var rect_other = bar_other
-                .append('rect')
+                .append('g')
                 .attr('class', 'rect_other')
-                .attr('x', 80)
-                .attr('y', 0)
-                .attr('width', 20)
-                .attr('height', function(d){ return Math.floor(y_scale(d.COUNT))})
-                .style('fill', '#999')
-                .style('transform','scale(1,0.1)')
+                .attr('transform','translate(80,0) scale(1,0)')
+                .attr('offset', 0)
                 ;
 
         bar_other
                 .append('text')
                 .attr('class', 'label_other')
-                .attr('x', 110)
+                .attr('x', 112)
                 .attr('y', 0)
                 .attr('opacity', 0)
                 .text(function(d){return d.key;})
@@ -483,12 +477,30 @@ var App = {
                 .style('fill', '#999')
                 ;
 
+        y_offset = 0;
+
+        sub_rects = rect_other.selectAll('rect')
+            .data(function(d){return d.values;})
+            .enter().append('rect').attr('class', 'sub_rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', 20)
+            ;
+
         rect_other
             .append('rect')
-            .attr('class', 'rect_other_inside')
+            .attr('class', 'sub_rect_line')
+            .attr('x', 21)
+            .attr('y', 0)
+            .attr('width', 2)
+            .attr('height',function(d){ return Math.floor(y_scale(d.COUNT)); })
+            .style('fill', '#ccc')
+            ;
 
 
         // transitions (update)
+
+        y_offset = 0;
 
         App.bipart
             .selectAll('.rect')
@@ -504,9 +516,10 @@ var App = {
             .selectAll('.label')
             .data(table_count, function(d){ return d[0];})
             .transition().duration(600)
+                .text(function(d){return d[0].split(' ')[0] + '  (' + d[1] + ')';})
                 .attr('font-size', 12)
                 .attr('opacity', 1)
-                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d[1])); return y + Math.floor(y_scale(d[1]) * 0.5) + 6 + i;})
+                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d[1])); return y + Math.floor(y_scale(d[1]) * 0.5) + 5 + i;})
                 ;
         
         y_offset = 0;
@@ -515,8 +528,11 @@ var App = {
             .selectAll('.rect_other')
             .data(nest_links, function(d){ return d.key;})
             .transition().duration(600)     
-                .style('transform', 'scale(1,1)')
-                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d.COUNT)); return y+i;})
+                .attr('transform', function(d,i){
+                        var y = y_offset;
+                        y_offset += Math.floor(y_scale(d.COUNT));
+                        return 'translate(80,' + (y + i) + ')scale(1,1)';
+                    })
                 ;
 
         y_offset = 0;
@@ -527,9 +543,27 @@ var App = {
             .transition().duration(600)
                 .attr('font-size', 12)
                 .attr('opacity', function(d){ return y_scale(d.COUNT) > 8 ? 1 : 0})
-                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d.COUNT)); return y + Math.floor(y_scale(d.COUNT) * 0.5) + 6 + i;})
+                .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d.COUNT)); return y + Math.floor(y_scale(d.COUNT) * 0.5) + 5 + i;})
                 ;
-            
+
+        y_offset = 0;
+
+        rect_other.selectAll('rect')
+            .data(function(d){return d.values;})
+            .transition().duration(600)
+            .attr('height', function(d){ return Math.floor(y_scale(d[2]))})
+            .style('fill', function(d){ return App.color(d[0])})
+            .attr('y', function(d,i){
+                if(i===0){
+                    y_offset = 0;
+                }
+                var y = y_offset;
+                y_offset += Math.floor(y_scale(d[2]));
+                console.log('TRANS',i,y, y_offset);
+                return y;
+            });
+        
+            console.log(nest_links)
     },
 
     buildForceGraph: function(){
@@ -723,6 +757,7 @@ var App = {
         mouseover_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
+                .attr('r', function(d) { return d.radius * d.scale; })
                 .style('opacity', 0.1);
             App.events.ligaUF(d);
             App.renderBipartiteState(d.UF);
@@ -730,6 +765,7 @@ var App = {
         mouseout_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
+                .attr('r', function(d) { return d.radius * d.scale; })
                 .style('opacity',1);
             App.events.desligaUF(d);
             App.renderBipartiteNone();
