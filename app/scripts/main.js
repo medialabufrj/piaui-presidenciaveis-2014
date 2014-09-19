@@ -755,6 +755,10 @@ var App = {
             App.events.desligaUF(d);
         },
         mouseover_UF: function(d){
+            var nodes = d3.selectAll('.node[data-uf='+d.UF+']');
+            if(!nodes[0].length){
+                return false;
+            }
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
                 .attr('r', function(d) { return d.radius * d.scale; })
