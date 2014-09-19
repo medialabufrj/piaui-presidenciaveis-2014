@@ -225,7 +225,7 @@ var App = {
 
         App.timerange = $('#vis-time-range');
         App.timerange.attr('max',timeline.length-1);
-        App.timerange.on('change input', function(e) {
+        App.timerange.on('change input', function() {
             var current = parseInt(this.value);
             var format = locale.timeFormat('%d de %B de %Y');
             $('#vis-time-date').text(format(new Date(timeline[current])));
@@ -237,9 +237,7 @@ var App = {
         .change();
 
         App.timeplay = $('#vis-time-play');
-        App.timeplay.on('click',function(e){
-            App.replay();
-        });
+        App.timeplay.on('click',App.replay);
         App.replay();
     },
 
@@ -250,7 +248,6 @@ var App = {
         var tick = function(){
             var val = +App.timerange.val();
             var step = +App.timerange.attr('step');
-            var min = +App.timerange.attr('min');
             var max = +App.timerange.attr('max');
 
             if(val < max){
@@ -258,7 +255,7 @@ var App = {
                 setTimeout(tick,time);
             }
             
-        }
+        };
 
         setTimeout(tick,time);
     },
@@ -290,7 +287,7 @@ var App = {
             });
 
         App.nodes_uf.append('path')
-            .attr('d', function(d){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
+            .attr('d', function(){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
             .attr('class', 'UF-path')
             .style('stroke-width',2)
             .style('stroke','#999')
@@ -331,12 +328,12 @@ var App = {
         var table_count = [];
         var table_links = [];
         var data = App.filterEventsBefore(App.current_date);
-        data_candidatos.map(function(c,i){
+        data_candidatos.map(function(c){
             var count = [c, _.where(data,{CANDIDATO: c, UF: UF}).length];
             if(count[1] > 0){
                 table_count.push(count);
             }
-            data_categorias.map(function(r,j){
+            data_categorias.map(function(r){
                 var links = [c, r, _.where(data,{CANDIDATO: c, UF: UF, CATEGORIA: r}).length];
                 if(links[2] > 0){
                     table_links.push(links);
@@ -368,7 +365,7 @@ var App = {
 
         var bar_cand,
             bar_other,
-            sum = d3.sum(table_count,function(d){return d[1];})
+            sum = d3.sum(table_count,function(d){return d[1];}),
             y_scale = d3.scale.linear().range([0,150]).domain([0, sum]),
             y_offset = 0,
             nest_links = null
@@ -381,7 +378,7 @@ var App = {
         });
 
         nest_links = d3.nest()
-            .key(function(d){return d[1]})
+            .key(function(d){return d[1];})
             .sortValues(function(a,b){
                 return a[2] <= b[2];
             })
@@ -390,7 +387,7 @@ var App = {
 
         nest_links
             .map(function(d){
-                d.COUNT = d3.sum(d.values,function(d){return d[2];})
+                d.COUNT = d3.sum(d.values,function(d){return d[2];});
                 return d;
             });
 
@@ -445,7 +442,7 @@ var App = {
                 .attr('y', 0)
                 .attr('width', 20)
                 .attr('height', 0)
-                .style('fill', function(d){return App.color(d[0])})
+                .style('fill', function(d){return App.color(d[0]);})
                 ;
 
         bar_cand
@@ -456,7 +453,7 @@ var App = {
                 .attr('opacity', 0)
                 .text(function(d){return d[0].split(' ')[0] + '  (' + d[1] + ')';})
                 .style('text-anchor', 'end')
-                .style('fill', function(d){return App.color(d[0])})
+                .style('fill', function(d){return App.color(d[0]);})
                 ;
 
         var rect_other = bar_other
@@ -479,7 +476,7 @@ var App = {
 
         y_offset = 0;
 
-        sub_rects = rect_other.selectAll('rect')
+        rect_other.selectAll('rect')
             .data(function(d){return d.values;})
             .enter().append('rect').attr('class', 'sub_rect')
             .attr('x', 0)
@@ -542,7 +539,7 @@ var App = {
             .data(nest_links, function(d){ return d.key;})
             .transition().duration(600)
                 .attr('font-size', 12)
-                .attr('opacity', function(d){ return y_scale(d.COUNT) > 8 ? 1 : 0})
+                .attr('opacity', function(d){ return y_scale(d.COUNT) > 8 ? 1 : 0;})
                 .attr('y', function(d,i){ var y = y_offset; y_offset += Math.floor(y_scale(d.COUNT)); return y + Math.floor(y_scale(d.COUNT) * 0.5) + 5 + i;})
                 ;
 
@@ -551,8 +548,8 @@ var App = {
         rect_other.selectAll('rect')
             .data(function(d){return d.values;})
             .transition().duration(600)
-            .attr('height', function(d){ return Math.floor(y_scale(d[2]))})
-            .style('fill', function(d){ return App.color(d[0])})
+            .attr('height', function(d){ return Math.floor(y_scale(d[2]));})
+            .style('fill', function(d){ return App.color(d[0]);})
             .attr('y', function(d,i){
                 if(i===0){
                     y_offset = 0;
@@ -562,8 +559,6 @@ var App = {
                 console.log('TRANS',i,y, y_offset);
                 return y;
             });
-        
-            console.log(nest_links)
     },
 
     buildForceGraph: function(){
@@ -730,7 +725,7 @@ var App = {
                 ;
             App.force.resume();*/
 
-            var vis = $('#vis-wrapper');
+            //var vis = $('#vis-wrapper');
             var format = locale.timeFormat('(%d/%m)');
             $('#vis-tip .data').text(format(d.DATA));
             $('#vis-tip .local').text(d.MUNICIPIO + ' - ' + d.UF);
