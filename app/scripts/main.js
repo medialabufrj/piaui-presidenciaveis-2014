@@ -232,7 +232,7 @@ var App = {
             // save timestamp and render force
             App.current_date = timeline[current];
             App.renderForceNodes(App.filterEventsBefore(App.current_date));
-            App.renderBipartiteRegions();
+            //App.renderBipartiteRegions();
         })
         .change();
 
@@ -294,26 +294,26 @@ var App = {
 
     buildBipartite: function(){
         App.bipart = vis.append('g')
-            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+            .attr('transform', 'translate(' + (width / 2 - 100) + ',' + (height / 2 - 50) + ')')
             .append('g')
             .attr('class', 'bipart');
+
+        App.bipart_title = App.bipart.append('text');
+
+        App.bipart_title
+            .attr("x", 100)
+            .attr("y", -20)
+            .style("fill","#999")
+            .attr("text-anchor", "middle")
+            ;
     },
 
     renderBipartiteState: function(UF){
-        var table = [];
-        var data = App.filterEventsBefore(App.current_date);
-        data.map(function(d){
-
-        });
-        console.log(table);
-    },
-
-    renderBipartiteRegions: function(){
         var table_count = [];
         var table_links = [];
         var data = App.filterEventsBefore(App.current_date);
         data_candidatos.map(function(c,i){
-            var count = [c, _.where(data,{CANDIDATO: c}).length];
+            var count = [c, _.where(data,{CANDIDATO: c, UF: UF}).length];
             if(count[1] > 0){
                 table_count.push(count);
             }
@@ -325,10 +325,18 @@ var App = {
             });
         });
         //console.log(table_count, table_links);
-        App.renderBipartite(table_count,table_links);
+        App.renderBipartite(_.findWhere(data_estados,{UF: UF}).NOME,table_count,table_links);
     },
 
-    renderBipartite: function(table_count, table_links){
+    renderBipartiteRegions: function(){
+        
+    },
+
+    renderBipartiteNone: function(){
+        App.renderBipartite("",[],[]);
+    },
+
+    renderBipartite: function(title,table_count, table_links){
 
         //var q = d3.scale.quantize().domain([0, table_count.length-1]).range(table_count.map(function(d){return d[0];}));
 
@@ -338,25 +346,68 @@ var App = {
         
         y_scale.domain([0, sum]);
 
+        table_count.sort(function(a,b){
+            return a[1] <= b[1];
+        });
+
+        App.bipart_title.text(title);
+
         var bar_cand = App.bipart.selectAll('.bar_cand')
-            .data(table_count, function(d){ return d[0];})
-            .enter().append("g").attr("class","bar_cand");
+            .data(table_count, function(d){ return d[0];});
+
+        bar_cand.enter()
+            .append("g").attr("class","bar_cand");
+
+        bar_cand.exit()
+            .remove();
+            // transition child before remove parent
+            /*.selectAll('rect')
+            .transition()
+            .attr("height", 0)
+            .attr("y", 0)
+            .each('end', function () {
+                d3.select(this.parentNode)
+                .remove();
+            });*/
 
         bar_cand
                 .append('rect')
+                .attr("class", "rect")
                 .attr("x", 0)
                 .attr("y", 0)
                 .attr("width", 20)
-                .attr("height",function(d){ return y_scale(d[1]); })
+                .attr("height", 0)
+                .style("fill", function(d){return App.color(d[0])})
+                ;
+
+        bar_cand
+                .append('text')
+                .attr("class", "label")
+                .attr("x", -10)
+                .attr("y", 0)
+                .attr("opacity", 0)
+                .text(function(d){return d[0].split(" ")[0] + "  (" + d[1] + ")";})
+                .style('text-anchor', 'end')
                 .style("fill", function(d){return App.color(d[0])})
                 ;
 
         App.bipart
-            .selectAll('rect')
+            .selectAll('.rect')
             .data(table_count, function(d){ return d[0];})
             .transition().duration(600)     
                 .attr("height",function(d){ return y_scale(d[1]); })
                 .attr("y", function(d){ var y = y_offset; y_offset += y_scale(d[1]); return y;})
+                ;
+
+        y_offset = 0;
+
+        App.bipart
+            .selectAll('.label')
+            .data(table_count, function(d){ return d[0];})
+            .transition().duration(600)
+                .attr("font-size", 12)
+                .attr("opacity", 1)
+                .attr("y", function(d){ var y = y_offset; y_offset += y_scale(d[1]); return y + y_scale(d[1]) * 0.5 + 6;})
                 ;
             
     },
@@ -554,12 +605,14 @@ var App = {
                 .transition().duration(300)
                 .style('opacity', 0.1);
             App.events.ligaUF(d);
+            App.renderBipartiteState(d.UF);
         },
         mouseout_UF: function(d){
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
                 .style('opacity',1);
             App.events.desligaUF(d);
+            App.renderBipartiteNone();
         },
         ligaUF: function(d){
             d3.selectAll('[data-uf='+d.UF+'] .UF-text')
