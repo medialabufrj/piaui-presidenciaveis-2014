@@ -72,7 +72,10 @@ function loadCSV(file,id,callback){
             if(timeline.indexOf(unixtime) === -1){
                 timeline.push(unixtime);
             }
-            //console.log();
+
+            // CHECK DATA
+            //console.log(d.CANDIDATO,unixtime,d.DATA);
+
             // force layout vars
             var CAPITAL = _.findWhere(data_estados,{UF: d.UF}).CAPITAL;
             d.radius = CAPITAL === d.MUNICIPIO ? 5 : 3;
