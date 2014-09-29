@@ -28,6 +28,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
 
         {UF: 'NULL9', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL10', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL11', REGIAO: null, NOME: null, CAPITAL: null},
 
         {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
         {UF: 'GO', REGIAO: 2, NOME: 'Goiás',              CAPITAL: 'Goiânia'},
@@ -37,6 +38,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
 
         {UF: 'NULL5', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL6', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
 
         
         {UF: 'AC', REGIAO: 0, NOME: 'Acre',      CAPITAL: 'Rio Branco'},
@@ -50,6 +52,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
 
         {UF: 'NULL1', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL2', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
 
         {UF: 'MA', REGIAO: 1, NOME: 'Maranhão',            CAPITAL: 'São Luis'},
         {UF: 'PI', REGIAO: 1, NOME: 'Piauí',               CAPITAL: 'Teresina'},
@@ -60,9 +63,10 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
         {UF: 'AL', REGIAO: 1, NOME: 'Alagoas',             CAPITAL: 'Maceió'},
         {UF: 'SE', REGIAO: 1, NOME: 'Sergipe',             CAPITAL: 'Aracaju'},
         {UF: 'BA', REGIAO: 1, NOME: 'Bahia',               CAPITAL: 'Salvador'},
-    
-        {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null},
+        
+        {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NY, EUA', REGIAO: null, NOME: null, CAPITAL: "Nova York"},
+        {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null}
         
     ],
     data_candidatos = [],
