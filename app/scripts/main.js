@@ -1,12 +1,3 @@
-// DATA (II)
-
-var data_candidatos = [],
-    data_candidatos_filter = [],
-    data_eventos    = [],
-    data_categorias = [],
-    clusters = {}
-    ;
-
 // CONSTANTES
 
 var width = 600;
@@ -17,6 +8,17 @@ var timeline_min = null;
 var timeline_max = null;
 var timeline = [];
 var angle_offset = 18;
+
+// DATA (II)
+
+var data_estados = data_estados || [],
+    data_regioes = data_regioes || [],
+    data_candidatos = [],
+    data_candidatos_filter = [],
+    data_eventos    = [],
+    data_categorias = [],
+    clusters = {}
+    ;
 
 var locale = d3.locale({
     'decimal': ',',
@@ -183,7 +185,21 @@ var App = {
         })
         .change();
 
-        React.renderComponent(SimpleFilter({title: "Candidatos", data: data_candidatos, savestate: App.reactFilterPeople}), document.getElementById('vis-filter-candidatos'));
+        React.renderComponent(
+            SimpleRadio({
+                title: "Visualizar",
+                data: ["Agenda","Trajetória"],
+                savestate: App.replay
+            }), document.getElementById('vis-filter-vis')
+        );
+
+        React.renderComponent(
+            SimpleFilter({
+                title: "Candidatos",
+                data: data_candidatos,
+                savestate: App.reactFilterPeople
+            }), document.getElementById('vis-filter-candidatos')
+        );
 
         App.timeplay = $('#vis-time-play');
         App.timeplay.on('click',App.replay);

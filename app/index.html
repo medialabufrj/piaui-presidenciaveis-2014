@@ -22,11 +22,14 @@
         <div id="container">
             <div id="vis-control" class="">
                 <label id="vis-time-date">Data</label>
-                <div class="visgroup">
+                <div class="vis-group">
                     <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
                     <input id="vis-time-play" type="button" value="Replay"/>
                 </div>
-                <div id="vis-filter-candidatos" class="vis-group vis-filter"></div>
+                <div class="vis-group">
+                    <div id="vis-filter-vis" class="vis-filter"></div>
+                    <div id="vis-filter-candidatos" class="vis-filter"></div>
+                </div>
             </div>
 
             <div id="vis-wrapper"></div>
@@ -37,6 +40,8 @@
                 <div><span class="categoria string"></span> <span class="data string"></span></div>
                 <div class="atividade string"></div>
             </div>
+
+            <img src="./images/footer.png" style="margin-top:50px;" alt=""/>
         </div>
 
         <!-- Google Analytics -->

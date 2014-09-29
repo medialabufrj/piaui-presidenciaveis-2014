@@ -4,9 +4,9 @@
 // Custom imports & styles here.
 
 @import "web-fonts";
-@include web-fonts(("PT Sans":("400","700")));
+@include web-fonts(("Open Sans":("400","700")));
 
-$basefont: "PT Sans";
+$basefont: "Open Sans";
 
 body {
 	background: #fefefe;
@@ -32,10 +32,14 @@ h1, h2, h3, h4, h5, h6, p {
 	padding: 20px;
 	overflow: hidden;
 	.vis-group {
+		margin: 10px 0;
 		clear: both;
 		display: block;
+		overflow: hidden;
 	}
 	.vis-filter {
+		width: 25%;
+		float: left;
 		font-size: 10px;
 		text-transform: uppercase;
 		.title {
@@ -65,7 +69,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 #vis-tip {
 	position: absolute;
-	top: 380px;
+	top: 500px;
 	left: 300px;
 	text-align: center;
 	width: 240px;
