@@ -4,9 +4,9 @@
 // Custom imports & styles here.
 
 @import "web-fonts";
-@include web-fonts("Lato");
+@include web-fonts(("PT Sans":("400","700")));
 
-$basefont: "Lato";
+$basefont: "PT Sans";
 
 body {
 	background: #fefefe;
@@ -31,9 +31,17 @@ h1, h2, h3, h4, h5, h6, p {
 #vis-control {
 	padding: 20px;
 	overflow: hidden;
-	label {
-		/*color: #fff;*/
+	.vis-group {
+		clear: both;
 		display: block;
+	}
+	.vis-filter {
+		font-size: 10px;
+		text-transform: uppercase;
+		.title {
+			font-weight: 700;
+			font-size: 12px;
+		}
 	}
 	#vis-time-play {
 		width: 15%;

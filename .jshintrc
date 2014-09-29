@@ -18,5 +18,5 @@
     "trailing": true,
     "smarttabs": true,
     "jquery": true,
-    "predef": [ "d3", "_" ]
+    "predef": [ "d3", "_", "React" ]
 }

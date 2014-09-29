@@ -20,10 +20,13 @@
     <body>
         
         <div id="container">
-            <div id="vis-control" class="medium-centered columns medium-6">
+            <div id="vis-control" class="">
                 <label id="vis-time-date">Data</label>
-                <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
-                <input id="vis-time-play" type="button" value="Replay"/>
+                <div class="visgroup">
+                    <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
+                    <input id="vis-time-play" type="button" value="Replay"/>
+                </div>
+                <div id="vis-filter-candidatos" class="vis-group vis-filter"></div>
             </div>
 
             <div id="vis-wrapper"></div>
@@ -53,10 +56,13 @@
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/d3/d3.js"></script>
         <script src="bower_components/underscore/underscore.js"></script>
+        <script src="bower_components/react/react-with-addons.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
         <!-- build:js scripts/main.js -->
+        <script src="scripts/components.js"></script>
+        <script src="scripts/data.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>
