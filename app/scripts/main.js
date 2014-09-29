@@ -160,6 +160,7 @@ var App = {
     force: null,
     node: null,
     timerange: null,
+    replay_timeout: null,
 
     current_date: null,
 
@@ -207,6 +208,10 @@ var App = {
     },
 
     replay: function(){
+        
+        if(App.replay_timeout){
+            clearTimeout(App.replay_timeout);
+        }
 
         App.timerange.val(App.timerange.attr('min')).change();
         var time = 300;
@@ -217,12 +222,14 @@ var App = {
 
             if(val < max){
                 App.timerange.val(val+step).change();
-                setTimeout(tick,time);
+                App.replay_timeout = setTimeout(tick,time);
+            } else {
+                App.replay_timeout = null;
             }
             
         };
 
-        setTimeout(tick,time);
+        App.replay_timeout = setTimeout(tick,time);
     },
 
     filterEventsBefore: function(timestamp){

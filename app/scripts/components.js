@@ -17,15 +17,15 @@ var SimpleRadio = React.createClass({displayName: 'SimpleRadio',
         var checks = this.state.data.map(function(d) {
             return (
                 React.DOM.div(null, 
-                    React.DOM.input({type: "radio", checked: d.selected, onChange: this.__changeSelection.bind(this, d.id)}), 
-                    d.id, 
+                    React.DOM.label(null, React.DOM.input({type: "radio", checked: d.selected, onChange: this.__changeSelection.bind(this, d.id)}), 
+                    d.id), 
                     React.DOM.br(null)
                 )
             );
         }.bind(this));
         return (
             React.DOM.form(null, 
-                React.DOM.label({className: "title"}, this.props.title), 
+                React.DOM.span({className: "title"}, this.props.title), React.DOM.br(null), 
                 React.DOM.br(null), 
                 checks
             )
@@ -60,8 +60,8 @@ var SimpleFilter = React.createClass({displayName: 'SimpleFilter',
         var checks = this.state.data.map(function(d) {
             return (
                 React.DOM.div(null, 
-                    React.DOM.input({type: "checkbox", checked: d.selected, onChange: this.__changeSelection.bind(this, d.id)}), 
-                    d.id, 
+                    React.DOM.label(null, React.DOM.input({type: "checkbox", checked: d.selected, onChange: this.__changeSelection.bind(this, d.id)}), 
+                    d.id), 
                     React.DOM.br(null)
                 )
             );
@@ -69,8 +69,8 @@ var SimpleFilter = React.createClass({displayName: 'SimpleFilter',
         return (
             React.DOM.form(null, 
                 
-                React.DOM.label({className: "title"}, this.props.title), React.DOM.br(null), 
-                React.DOM.input({type: "checkbox", ref: "globalSelector", onChange: this.__changeAllChecks}), "Todos", 
+                React.DOM.span({className: "title"}, this.props.title), React.DOM.br(null), 
+                React.DOM.label(null, React.DOM.input({type: "checkbox", ref: "globalSelector", onChange: this.__changeAllChecks}), "Todos"), 
                 React.DOM.br(null), 
                 checks
             )

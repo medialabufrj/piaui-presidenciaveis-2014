@@ -46,6 +46,9 @@ h1, h2, h3, h4, h5, h6, p {
 			font-weight: 700;
 			font-size: 12px;
 		}
+		label {
+			cursor: pointer;
+		}
 	}
 	#vis-time-play {
 		width: 15%;

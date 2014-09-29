@@ -17,15 +17,15 @@ var SimpleRadio = React.createClass({
         var checks = this.state.data.map(function(d) {
             return (
                 <div>
-                    <input type="radio" checked={d.selected} onChange={this.__changeSelection.bind(this, d.id)} />
-                    {d.id}
+                    <label><input type="radio" checked={d.selected} onChange={this.__changeSelection.bind(this, d.id)} />
+                    {d.id}</label>
                     <br />
                 </div>
             );
         }.bind(this));
         return (
             <form>
-                <label className="title">{this.props.title}</label>
+                <span className="title">{this.props.title}</span><br />
                 <br />
                 {checks}
             </form>
@@ -60,8 +60,8 @@ var SimpleFilter = React.createClass({
         var checks = this.state.data.map(function(d) {
             return (
                 <div>
-                    <input type="checkbox" checked={d.selected} onChange={this.__changeSelection.bind(this, d.id)} />
-                    {d.id}
+                    <label><input type="checkbox" checked={d.selected} onChange={this.__changeSelection.bind(this, d.id)} />
+                    {d.id}</label>
                     <br />
                 </div>
             );
@@ -69,8 +69,8 @@ var SimpleFilter = React.createClass({
         return (
             <form>
                 
-                <label className="title">{this.props.title}</label><br />
-                <input type="checkbox" ref="globalSelector" onChange={this.__changeAllChecks} />Todos
+                <span className="title">{this.props.title}</span><br />
+                <label><input type="checkbox" ref="globalSelector" onChange={this.__changeAllChecks} />Todos</label>
                 <br />
                 {checks}
             </form>
