@@ -25,8 +25,7 @@ var SimpleRadio = React.createClass({displayName: 'SimpleRadio',
         }.bind(this));
         return (
             React.DOM.form(null, 
-                React.DOM.span({className: "title"}, this.props.title), React.DOM.br(null), 
-                React.DOM.br(null), 
+                React.DOM.span({className: "title"}, this.props.title), 
                 checks
             )
         );
@@ -69,7 +68,7 @@ var SimpleFilter = React.createClass({displayName: 'SimpleFilter',
         return (
             React.DOM.form(null, 
                 
-                React.DOM.span({className: "title"}, this.props.title), React.DOM.br(null), 
+                React.DOM.span({className: "title"}, this.props.title), 
                 React.DOM.label(null, React.DOM.input({type: "checkbox", ref: "globalSelector", onChange: this.__changeAllChecks}), "Todos"), 
                 React.DOM.br(null), 
                 checks

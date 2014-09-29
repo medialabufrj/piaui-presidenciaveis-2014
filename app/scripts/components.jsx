@@ -25,8 +25,7 @@ var SimpleRadio = React.createClass({
         }.bind(this));
         return (
             <form>
-                <span className="title">{this.props.title}</span><br />
-                <br />
+                <span className="title">{this.props.title}</span>
                 {checks}
             </form>
         );
@@ -69,7 +68,7 @@ var SimpleFilter = React.createClass({
         return (
             <form>
                 
-                <span className="title">{this.props.title}</span><br />
+                <span className="title">{this.props.title}</span>
                 <label><input type="checkbox" ref="globalSelector" onChange={this.__changeAllChecks} />Todos</label>
                 <br />
                 {checks}
