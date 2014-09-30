@@ -74,6 +74,10 @@ h1, h2, h3, h4, h5, h6, p {
 	.nodes_uf,
 	.node {
 		cursor: pointer;
+		&:hover {
+			stroke: #000;
+			stroke-width: 2px;
+		}
 	}
 }
 
