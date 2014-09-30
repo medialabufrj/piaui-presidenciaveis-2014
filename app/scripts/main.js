@@ -949,7 +949,7 @@ var App = {
 
     getCoord: function(DATA, UF, CANDIDATO, radius){
         //var a = (data_candidatos.indexOf(CANDIDATO) -1 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
-        var a = (2 - timeline.indexOf(DATA)/timeline.length*4 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
+        var a = (data_candidatos.indexOf(CANDIDATO) * 1.5 + timeline.indexOf(DATA)/timeline.length * 1.5 - 1.5  + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
         return {
             x: width * 0.5 - Math.cos(a) * radius,
             y: height * 0.5 - Math.sin(a) * radius
