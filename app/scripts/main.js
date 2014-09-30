@@ -221,7 +221,7 @@ var App = {
         }
 
         App.timerange.val(App.timerange.attr('min')).change();
-        var time = 300;
+        var time = App.mode == "Agenda" ? 300 : 2000;
         var tick = function(){
             var val = +App.timerange.val();
             var step = +App.timerange.attr('step');
@@ -587,7 +587,6 @@ var App = {
         data_candidatos.map(function(c){ 
             travels[c].map(function(t,i){
                 if(i < travels[c].length - 1){
-
                     var coord1 = App.getCoord(t.UF, c, 250);
                     var coord4 = App.getCoord(travels[c][i+1].UF, c, 250);
                     var dist = App.dist(coord1,coord4);
@@ -597,16 +596,25 @@ var App = {
                     var siblings = _.filter(travels[c], function(e){
                         return e.DATA == t.DATA;
                     });
+
                     if(siblings.length > 1){
+
                         var index = _.indexOf(siblings, t);
                         var leng = siblings.length;
+                        var begin = t.DATA + index * aday / leng;
+                        var end = index < leng - 1
+                            ? t.DATA + (index + 1) * aday / leng
+                            : travels[c][i+1].DATA;
+
+                        console.log(c,t.UF,index,t.DATA,begin,end);
+
                         data_travel.push({
                             id: id,
                             CANDIDATO: c,
                             UF: t.UF,
                             DATA: t.DATA,
-                            BEGIN: t.DATA + index * aday / leng,
-                            END: index < leng - 1 ? t.DATA + (index + 1) * aday / leng : travels[c][i+1].DATA,
+                            BEGIN: begin,
+                            END: end,
                             ax: coord1.x, ay: coord1.y,
                             bx: coord2.x, by: coord2.y,
                             cx: coord3.x, cy: coord3.y,
@@ -631,12 +639,17 @@ var App = {
             });
         });
 
+        var test = _.findWhere(data_travel,function(d){
+            return d.END - d.BEGIN < aday;
+        });
+
+        console.log('test',test);
+
         App.travel_paths = vis.append('g').attr('class', 'travel_paths');
 
     },
 
     unrenderTravel: function(){
-        console.log('UNRENDER');
         App.travel_paths.selectAll('.travelpath')
             .data([])
             .exit()
@@ -644,7 +657,6 @@ var App = {
     },
 
     renderTravel: function(){
-        console.log('RENDER');
         var lineFunction = d3.svg.line()
             .interpolate('basis')
             .x(function(d) { return d.x; })
@@ -678,7 +690,7 @@ var App = {
                 .remove();
         
        travel_paths
-            .transition(300)
+            //.transition(300)
             .attr('opacity',function(d){
                 if(+d.END <= +App.timestamp){
                     return 0.2;
@@ -689,14 +701,19 @@ var App = {
                 return 0.2;
             })
             .attr("stroke-dasharray", function(d){
-                /*var l = d.node().getTotalLength();
-                if(+d.END <= +App.timestamp){
-                    return 1;
+                var res,
+                    l = this.getTotalLength(),
+                    i = d3.interpolateString("0," + l, l + "," + l);
+
+                if(d.END <= App.timestamp){
+                    res = 1;
+                } else if(d.BEGIN >= App.timestamp){
+                    res = 0;
+                } else {
+                    res = (App.timestamp-d.BEGIN)/(d.END-d.BEGIN);
                 }
-                if(+d.BEGIN > +App.timestamp){
-                    return 0;
-                }
-                return (+App.timestamp-d.BEGIN)/(+d.END-d.BEGIN);*/
+                //return res;
+                return i(res);
             })
             ;
     },
@@ -746,7 +763,7 @@ var App = {
             App.unrenderTravel();
         } else {
             App.__renderForceNodes([])
-            TweenLite.to(App, 1, {timestamp: App.current_date, onUpdate: function(){
+            TweenLite.to(App, 2, {timestamp: App.current_date, roundProps:"timestamp", ease: Linear.easeNone, onUpdate: function(){
                 $('#vis-time-date .timestamp').text(App.timestamp);
                 App.renderTravel();
             }});
