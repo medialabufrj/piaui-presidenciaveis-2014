@@ -18,6 +18,7 @@ var data_estados = data_estados || [],
     data_eventos    = [],
     data_categorias = [],
     data_travel = [],
+    data_travel_circles = [],
     clusters = {}
     ;
 
@@ -575,9 +576,12 @@ var App = {
 
         var aday = 24*60*60*1000;
         var travels = {};
+        var id = 0;
 
         data_candidatos.map(function(c){
             var lastobj = {DATA: null, UF: null};
+            data_travel_circles.push({CANDIDATO: c, id: id, x: 0, y: 0});
+            id++;
             if(travels[c] == null){
                 travels[c] = [];
             }
@@ -591,7 +595,7 @@ var App = {
             });
         });
 
-        var id = 0;
+        id = 0;
 
         data_candidatos.map(function(c){ 
             travels[c].map(function(t,i){
@@ -649,6 +653,7 @@ var App = {
         });
 
         App.travel_paths = vis.append('g').attr('class', 'travel_paths');
+        App.travel_circles = vis.append('g').attr('class', 'travel_circles');
 
     },
 
@@ -660,6 +665,7 @@ var App = {
     },
 
     renderTravel: function(){
+
         var lineFunction = d3.svg.line()
             .interpolate('basis')
             .x(function(d) { return d.x; })
@@ -668,6 +674,9 @@ var App = {
 
         var travel_paths = App.travel_paths.selectAll('.travelpath')
             .data(App.filterByPeople(data_travel),function(d){ return d.id; });
+
+        var travel_circles = App.travel_circles.selectAll('.travelcicle')
+            .data(App.filterByPeople(data_travel_circles),function(d){ return d.id; });
 
         travel_paths
             .enter()
@@ -691,8 +700,21 @@ var App = {
         travel_paths
             .exit()
                 .remove();
-        
-       travel_paths
+
+        travel_circles
+            .enter()
+            .append('circle')
+            .attr('class', 'travelcicle')
+            .attr('r', 5)
+            .attr('fill',function(d){
+                return App.color(d.CANDIDATO);
+            });
+
+        travel_circles
+            .exit()
+            .remove();
+
+        travel_paths
             //.transition(300)
             .attr('opacity',function(d){
                 if(+d.END <= +App.timestamp){
@@ -714,9 +736,18 @@ var App = {
                     res = 0;
                 } else {
                     res = (App.timestamp-d.BEGIN)/(d.END-d.BEGIN);
+                    var p = this.getPointAtLength(res * l);
+                    var c = _.findWhere(data_travel_circles,{CANDIDATO: d.CANDIDATO});
+                    c.x = p.x;
+                    c.y = p.y;
                 }
                 return i(res);
             })
+            ;
+
+        travel_circles
+            .attr('cx',function(d){return d.x;})
+            .attr('cy',function(d){return d.y;})
             ;
     },
 
@@ -841,6 +872,16 @@ var App = {
                 return '#e9ba00';
             case 'DILMA ROUSSEFF':
                 return '#cc3a3a';
+        }
+    },
+    image: function(candidato){
+        switch(candidato){
+            case 'AÉCIO NEVES':
+                return './images/aecio.png';
+            case 'MARINA SILVA':
+                return './images/marina.png';
+            case 'DILMA ROUSSEFF':
+                return './images/dilma.png';
         }
     },
     cluster: function(alpha){
