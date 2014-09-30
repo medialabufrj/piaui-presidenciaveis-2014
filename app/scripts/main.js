@@ -65,12 +65,7 @@ function loadCSV(file,id,callback){
             d.DATA = format.parse(d.DATA);
             // unixtime
             var unixtime = +d.DATA;
-            if(timeline_min === null || timeline_min > unixtime){
-                timeline_min = unixtime;
-            }
-            if(timeline_max === null || timeline_max < unixtime){
-                timeline_max = unixtime;
-            }
+
             if(timeline.indexOf(unixtime) === -1){
                 timeline.push(unixtime);
             }
@@ -167,7 +162,7 @@ var App = {
     timerange: null,
     timestamp: null,
     play_timeout: null,
-    mode: "Agenda",
+    mode: 'Agenda',
 
     current_date: null,
 
@@ -200,16 +195,16 @@ var App = {
         .change();
 
         React.renderComponent(
-            SimpleRadio({
-                title: "Visualizar",
-                data: ["Agenda","Trajetória"],
+            new SimpleRadio({
+                title: 'Visualizar',
+                data: ['Agenda','Trajetória'],
                 savestate: App.reactChangeMode
             }), document.getElementById('vis-filter-vis')
         );
 
         React.renderComponent(
-            SimpleFilter({
-                title: "Candidatos",
+            new SimpleFilter({
+                title: 'Candidatos',
                 data: data_candidatos,
                 savestate: App.reactFilterPeople
             }), document.getElementById('vis-filter-candidatos')
@@ -226,13 +221,14 @@ var App = {
             clearTimeout(App.play_timeout);
         }
 
-        console.log(reset,App.timerange.val(),timeline.length - 1)
-        if(reset || App.timerange.val() == timeline.length - 1){
+        //console.log(reset,App.timerange.val(),timeline.length - 1);
+
+        if(reset || App.timerange.val() === timeline.length - 1){
             App.timestamp = App.current_date = timeline[0];
             App.timerange.val(App.timerange.attr('min')).change();
         }    
 
-        var time = App.mode == "Agenda" ? 300 : 2000;
+        var time = App.mode === 'Agenda' ? 300 : 2000;
         var tick = function(){
             var val = +App.timerange.val();
             var step = +App.timerange.attr('step');
@@ -272,7 +268,7 @@ var App = {
 
     reactChangeMode: function(data){
         var id = _.findWhere(data,{selected: true}).id;
-        if(App.mode != id){
+        if(App.mode !== id){
             App.mode = id;
             App.play(true);
         }
@@ -583,11 +579,11 @@ var App = {
             var lastobj = {DATA: null, UF: null};
             data_travel_circles.push({CANDIDATO: c, id: id, x: 0, y: 0});
             id++;
-            if(travels[c] == null){
+            if(!travels[c]){
                 travels[c] = [];
             }
             _.filter(data_eventos, function(e){
-                return e.CANDIDATO == c;
+                return e.CANDIDATO === c;
             }).map(function(e){
                 if(lastobj.UF !== e.UF){
                     lastobj = {DATA: +e.DATA, UF: e.UF};
@@ -608,7 +604,7 @@ var App = {
                     var coord3 = App.getCoord(travels[c][i+1].DATA, travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
 
                     var siblings = _.filter(travels[c], function(e){
-                        return e.DATA == t.DATA;
+                        return e.DATA === t.DATA;
                     });
 
                     if(siblings.length > 1){
@@ -616,9 +612,7 @@ var App = {
                         var index = _.indexOf(siblings, t);
                         var leng = siblings.length;
                         var begin = t.DATA + index * aday / leng;
-                        var end = index < leng - 1
-                            ? t.DATA + (index + 1) * aday / leng
-                            : travels[c][i+1].DATA;
+                        var end = index < leng - 1 ? t.DATA + (index + 1) * aday / leng : travels[c][i+1].DATA;
 
                         //console.log(c,t.UF,index,t.DATA,begin,end);
 
@@ -690,7 +684,7 @@ var App = {
                 .attr('stroke', function(d){ return App.color(d.CANDIDATO);})
                 .attr('stroke-width', 2)
                 .attr('opacity', 0)
-                .attr('fill', "none")
+                .attr('fill', 'none')
                 .attr('d', function(d){
                     return lineFunction([
                         {x: d.ax, y: d.ay},
@@ -730,10 +724,10 @@ var App = {
                 }
                 return 0.4;
             })
-            .attr("stroke-dasharray", function(d){
+            .attr('stroke-dasharray', function(d){
                 var res,
                     l = this.getTotalLength(),
-                    i = d3.interpolateString("0," + l, l + "," + l);
+                    i = d3.interpolateString('0,' + l, l + ',' + l);
 
                 if(d.END <= App.timestamp){
                     res = 1;
@@ -795,13 +789,13 @@ var App = {
     },
 
     renderAll: function(){
-        if(App.mode == "Agenda"){
+        if(App.mode === 'Agenda'){
             App.renderForceNodesFiltered();
             TweenLite.killTweensOf(App);
             App.unrenderTravel();
         } else {
-            App.__renderForceNodes([])
-            TweenLite.to(App, 2, {timestamp: App.current_date, roundProps:"timestamp", ease: Linear.easeNone, onUpdate: function(){
+            App.__renderForceNodes([]);
+            TweenLite.to(App, 2, {timestamp: App.current_date, roundProps:'timestamp', ease: Linear.easeNone, onUpdate: function(){
                 $('#vis-time-date .timestamp').text(App.timestamp);
                 App.renderTravel();
             }});
