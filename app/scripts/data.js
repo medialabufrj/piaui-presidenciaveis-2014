@@ -40,7 +40,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
 
 
         {UF: 'NULL1', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NULL2', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NY-EUA', REGIAO: null, NOME: null, CAPITAL: 'Nova York'},
         {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
 
         {UF: 'MA', REGIAO: 1, NOME: 'Maranhão',            CAPITAL: 'São Luis'},
@@ -54,7 +54,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
         {UF: 'BA', REGIAO: 1, NOME: 'Bahia',               CAPITAL: 'Salvador'},
         
         {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NY-EUA', REGIAO: null, NOME: null, CAPITAL: 'Nova York'},
+        {UF: 'NULL2', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null}
         
     ];

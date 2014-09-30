@@ -5,7 +5,8 @@
     "jquery": "~1.11.0",
     "d3": "~3.4.11",
     "underscore": "~1.7.0",
-    "react": "~0.11.2"
+    "react": "~0.11.2",
+    "gsap": "~1.13.2"
   },
   "devDependencies": {}
 }

@@ -17,6 +17,7 @@ var data_estados = data_estados || [],
     data_candidatos_filter = [],
     data_eventos    = [],
     data_categorias = [],
+    data_travel = [],
     clusters = {}
     ;
 
@@ -163,7 +164,9 @@ var App = {
     force: null,
     node: null,
     timerange: null,
+    timestamp: null,
     replay_timeout: null,
+    mode: "Agenda",
 
     current_date: null,
 
@@ -172,19 +175,20 @@ var App = {
         App.buildStatesRadial();
         App.buildForceGraph();
         App.buildBipartite();
+        App.buildTravel();
 
         timeline = timeline.sort();
         console.log(timeline);
-
+        App.timestamp = timeline[0];
         App.timerange = $('#vis-time-range');
         App.timerange.attr('max',timeline.length-1);
         App.timerange.on('change input', function() {
             var current = parseInt(this.value);
             var format = locale.timeFormat('%d de %B de %Y');
-            $('#vis-time-date').text(format(new Date(timeline[current])));
+            $('#vis-time-date .data').text(format(new Date(timeline[current])));
             // save timestamp and render force
             App.current_date = timeline[current];
-            App.renderForceNodesFiltered();
+            App.renderAll();
             //App.renderBipartiteRegions();
         })
         .change();
@@ -193,7 +197,7 @@ var App = {
             SimpleRadio({
                 title: "Visualizar",
                 data: ["Agenda","Trajetória"],
-                savestate: App.replay
+                savestate: App.reactChangeMode
             }), document.getElementById('vis-filter-vis')
         );
 
@@ -241,7 +245,7 @@ var App = {
         });
     },
 
-    filterEventsByPeople: function(arr){
+    filterByPeople: function(arr){
         return _.filter(arr,function(d){
             //console.log(d.CANDIDATO)
             var filter = _.find(data_candidatos_filter,{id: d.CANDIDATO});
@@ -252,7 +256,15 @@ var App = {
     reactFilterPeople: function(arr){
         console.log(arr);
         data_candidatos_filter = arr;
-        App.renderForceNodesFiltered();
+        App.renderAll();
+    },
+
+    reactChangeMode: function(data){
+        var id = _.findWhere(data,{selected: true}).id;
+        if(App.mode != id){
+            App.mode = id;
+            App.replay();
+        }
     },
 
     buildStatesRadial: function(){
@@ -275,12 +287,12 @@ var App = {
                 App.events.mouseout_UF(d);
             });
 
-        App.nodes_uf.append('path')
+        /*App.nodes_uf.append('path')
             .attr('d', function(){return d3line2([{x: 0, y: 0},{x: -10,y:0}]);})
             .attr('class', 'UF-path')
             .style('stroke-width',2)
             .style('stroke','#999')
-            .style('fill','none');
+            .style('fill','none');*/
 
         App.nodes_uf.append('text')
             .attr('class', 'UF-text')
@@ -545,9 +557,148 @@ var App = {
                 }
                 var y = y_offset;
                 y_offset += Math.floor(y_scale(d[2]));
-                console.log('TRANS',i,y, y_offset);
+                //console.log('TRANS',i,y, y_offset);
                 return y;
             });
+    },
+
+    buildTravel: function(){
+
+        var aday = 24*60*60;
+        var travels = {};
+
+        data_candidatos.map(function(c){
+            var lastobj = {DATA: null, UF: null};
+            if(travels[c] == null){
+                travels[c] = [];
+            }
+            _.filter(data_eventos, function(e){
+                return e.CANDIDATO == c;
+            }).map(function(e){
+                if(lastobj.UF !== e.UF){
+                    lastobj = {DATA: +e.DATA, UF: e.UF};
+                    travels[c].push(lastobj);
+                }
+            });
+        });
+
+        var id = 0;
+
+        data_candidatos.map(function(c){ 
+            travels[c].map(function(t,i){
+                if(i < travels[c].length - 1){
+
+                    var coord1 = App.getCoord(t.UF, c, 250);
+                    var coord4 = App.getCoord(travels[c][i+1].UF, c, 250);
+                    var dist = App.dist(coord1,coord4);
+                    var coord2 = App.getCoord(t.UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
+                    var coord3 = App.getCoord(travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
+
+                    var siblings = _.filter(travels[c], function(e){
+                        return e.DATA == t.DATA;
+                    });
+                    if(siblings.length > 1){
+                        var index = _.indexOf(siblings, t);
+                        var leng = siblings.length;
+                        data_travel.push({
+                            id: id,
+                            CANDIDATO: c,
+                            UF: t.UF,
+                            DATA: t.DATA,
+                            BEGIN: t.DATA + index * aday / leng,
+                            END: index < leng - 1 ? t.DATA + (index + 1) * aday / leng : travels[c][i+1].DATA,
+                            ax: coord1.x, ay: coord1.y,
+                            bx: coord2.x, by: coord2.y,
+                            cx: coord3.x, cy: coord3.y,
+                            dx: coord4.x, dy: coord4.y
+                        });
+                    } else {
+                        data_travel.push({
+                            id: id,
+                            CANDIDATO: c,
+                            UF: t.UF,
+                            DATA: t.DATA,
+                            BEGIN: t.DATA,
+                            END: travels[c][i+1].DATA,
+                            ax: coord1.x, ay: coord1.y,
+                            bx: coord2.x, by: coord2.y,
+                            cx: coord3.x, cy: coord3.y,
+                            dx: coord4.x, dy: coord4.y
+                        });
+                    }
+                    id++;
+                }
+            });
+        });
+
+        App.travel_paths = vis.append('g').attr('class', 'travel_paths');
+
+    },
+
+    unrenderTravel: function(){
+        console.log('UNRENDER');
+        App.travel_paths.selectAll('.travelpath')
+            .data([])
+            .exit()
+                .remove();
+    },
+
+    renderTravel: function(){
+        console.log('RENDER');
+        var lineFunction = d3.svg.line()
+            .interpolate('basis')
+            .x(function(d) { return d.x; })
+            .y(function(d) { return d.y; });
+            
+
+        var travel_paths = App.travel_paths.selectAll('.travelpath')
+            .data(App.filterByPeople(data_travel),function(d){ return d.id; });
+
+        travel_paths
+            .enter()
+                .append('path')
+                .attr('class', 'travelpath')
+                .attr('stroke', function(d){ return App.color(d.CANDIDATO);})
+                .attr('stroke-width', 3)
+                .attr('opacity', 0)
+                .attr('fill', "none")
+                .attr('d', function(d){
+                    return lineFunction([
+                        {x: d.ax, y: d.ay},
+                        {x: d.bx, y: d.by},
+                        {x: d.cx, y: d.cy},
+                        {x: d.dx, y: d.dy}
+                        ]
+                    );
+                })
+                ;
+
+        travel_paths
+            .exit()
+                .remove();
+        
+       travel_paths
+            .transition(300)
+            .attr('opacity',function(d){
+                if(+d.END <= +App.timestamp){
+                    return 0.2;
+                }
+                if(+d.BEGIN > +App.timestamp){
+                    return 0;
+                }
+                return 0.2;
+            })
+            .attr("stroke-dasharray", function(d){
+                /*var l = d.node().getTotalLength();
+                if(+d.END <= +App.timestamp){
+                    return 1;
+                }
+                if(+d.BEGIN > +App.timestamp){
+                    return 0;
+                }
+                return (+App.timestamp-d.BEGIN)/(+d.END-d.BEGIN);*/
+            })
+            ;
     },
 
     buildForceGraph: function(){
@@ -588,13 +739,27 @@ var App = {
         console.log('FORCE!');
     },
 
-    renderForceNodesFiltered: function(){
-        var arr = App.filterEventsBefore(App.current_date);
-        arr = App.filterEventsByPeople(arr);
-        App.renderForceNodes(arr);
+    renderAll: function(){
+        if(App.mode == "Agenda"){
+            App.renderForceNodesFiltered();
+            TweenLite.killTweensOf(App);
+            App.unrenderTravel();
+        } else {
+            App.__renderForceNodes([])
+            TweenLite.to(App, 1, {timestamp: App.current_date, onUpdate: function(){
+                $('#vis-time-date .timestamp').text(App.timestamp);
+                App.renderTravel();
+            }});
+        }
     },
 
-    renderForceNodes: function(arr){
+    renderForceNodesFiltered: function(){
+        var arr = App.filterEventsBefore(App.current_date);
+        arr = App.filterByPeople(arr);
+        App.__renderForceNodes(arr);
+    },
+
+    __renderForceNodes: function(arr){
 
         App.node = App.node.data(arr, function(d){ return d.ID;});
 
@@ -648,6 +813,7 @@ var App = {
         //console.log('TICK!');
 
     },
+
     color: function(candidato){
         switch(candidato){
             case 'AÉCIO NEVES':
@@ -707,6 +873,20 @@ var App = {
                 }
                 return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
             });
+        };
+    },
+
+    dist: function(a,b){
+        var x = a.x-b.x;
+        var y = a.y-b.y;
+        return Math.sqrt(x*x+y*y);
+    },
+
+    getCoord: function(UF, CANDIDATO, radius){
+        var a = (data_candidatos.indexOf(CANDIDATO) -1 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
+        return {
+            x: width * 0.5 - Math.cos(a) * radius,
+            y: height * 0.5 - Math.sin(a) * radius
         };
     },
 
@@ -782,8 +962,6 @@ var App = {
         }
     }
 };
-
-
 
 // CARREGA DATASET E INICIA
 

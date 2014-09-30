@@ -21,7 +21,7 @@
         
         <div id="container">
             <div id="vis-control" class="">
-                <label id="vis-time-date">Data</label>
+                <label id="vis-time-date"><span class="data">Data</span> <span class="timestamp"></span></label>
                 <div class="vis-group">
                     <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
                     <input id="vis-time-play" type="button" value="Replay"/>
@@ -62,6 +62,7 @@
         <script src="bower_components/d3/d3.js"></script>
         <script src="bower_components/underscore/underscore.js"></script>
         <script src="bower_components/react/react-with-addons.js"></script>
+        <script src="bower_components/gsap/src/minified/TweenLite.min.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
