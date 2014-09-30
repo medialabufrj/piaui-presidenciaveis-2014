@@ -216,7 +216,7 @@ var App = {
         );
 
         App.timeplay = $('#vis-time-play');
-        App.timeplay.on('click',App.play);
+        App.timeplay.on('click',function(){App.play();});
         App.play();
     },
 
@@ -226,6 +226,7 @@ var App = {
             clearTimeout(App.play_timeout);
         }
 
+        console.log(reset,App.timerange.val(),timeline.length - 1)
         if(reset || App.timerange.val() == timeline.length - 1){
             App.timestamp = App.current_date = timeline[0];
             App.timerange.val(App.timerange.attr('min')).change();
@@ -601,10 +602,10 @@ var App = {
             travels[c].map(function(t,i){
                 if(i < travels[c].length - 1){
                     var coord1 = App.getCoord(t.DATA, t.UF, c, 270);
-                    var coord4 = App.getCoord(t.DATA, travels[c][i+1].UF, c, 270);
+                    var coord4 = App.getCoord(travels[c][i+1].DATA, travels[c][i+1].UF, c, 270);
                     var dist = App.dist(coord1,coord4);
                     var coord2 = App.getCoord(t.DATA, t.UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
-                    var coord3 = App.getCoord(t.DATA, travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
+                    var coord3 = App.getCoord(travels[c][i+1].DATA, travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
 
                     var siblings = _.filter(travels[c], function(e){
                         return e.DATA == t.DATA;
@@ -722,12 +723,12 @@ var App = {
             //.transition(300)
             .attr('opacity',function(d){
                 if(+d.END <= +App.timestamp){
-                    return 0.5;
+                    return 0.4;
                 }
                 if(+d.BEGIN > +App.timestamp){
                     return 0;
                 }
-                return 0.5;
+                return 0.4;
             })
             .attr("stroke-dasharray", function(d){
                 var res,
