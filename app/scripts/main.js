@@ -236,7 +236,7 @@ var App = {
             
         };
 
-        App.replay_timeout = setTimeout(tick,time);
+        App.replay_timeout = setTimeout(tick,300);
     },
 
     filterEventsBefore: function(timestamp){
@@ -564,7 +564,7 @@ var App = {
 
     buildTravel: function(){
 
-        var aday = 24*60*60;
+        var aday = 24*60*60*1000;
         var travels = {};
 
         data_candidatos.map(function(c){
@@ -606,7 +606,7 @@ var App = {
                             ? t.DATA + (index + 1) * aday / leng
                             : travels[c][i+1].DATA;
 
-                        console.log(c,t.UF,index,t.DATA,begin,end);
+                        //console.log(c,t.UF,index,t.DATA,begin,end);
 
                         data_travel.push({
                             id: id,
@@ -638,12 +638,6 @@ var App = {
                 }
             });
         });
-
-        var test = _.findWhere(data_travel,function(d){
-            return d.END - d.BEGIN < aday;
-        });
-
-        console.log('test',test);
 
         App.travel_paths = vis.append('g').attr('class', 'travel_paths');
 
@@ -693,12 +687,12 @@ var App = {
             //.transition(300)
             .attr('opacity',function(d){
                 if(+d.END <= +App.timestamp){
-                    return 0.2;
+                    return 0.5;
                 }
                 if(+d.BEGIN > +App.timestamp){
                     return 0;
                 }
-                return 0.2;
+                return 0.5;
             })
             .attr("stroke-dasharray", function(d){
                 var res,
@@ -712,7 +706,6 @@ var App = {
                 } else {
                     res = (App.timestamp-d.BEGIN)/(d.END-d.BEGIN);
                 }
-                //return res;
                 return i(res);
             })
             ;
