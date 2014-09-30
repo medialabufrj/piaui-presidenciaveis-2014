@@ -165,7 +165,7 @@ var App = {
     node: null,
     timerange: null,
     timestamp: null,
-    replay_timeout: null,
+    play_timeout: null,
     mode: "Agenda",
 
     current_date: null,
@@ -191,6 +191,11 @@ var App = {
             App.renderAll();
             //App.renderBipartiteRegions();
         })
+        .on('input', function(){
+            if(App.play_timeout){
+                clearTimeout(App.play_timeout);
+            }
+        })
         .change();
 
         React.renderComponent(
@@ -210,17 +215,21 @@ var App = {
         );
 
         App.timeplay = $('#vis-time-play');
-        App.timeplay.on('click',App.replay);
-        App.replay();
+        App.timeplay.on('click',App.play);
+        App.play();
     },
 
-    replay: function(){
+    play: function(reset){
         
-        if(App.replay_timeout){
-            clearTimeout(App.replay_timeout);
+        if(App.play_timeout){
+            clearTimeout(App.play_timeout);
         }
 
-        App.timerange.val(App.timerange.attr('min')).change();
+        if(reset || App.timerange.val() == timeline.length - 1){
+            App.timestamp = App.current_date = timeline[0];
+            App.timerange.val(App.timerange.attr('min')).change();
+        }    
+
         var time = App.mode == "Agenda" ? 300 : 2000;
         var tick = function(){
             var val = +App.timerange.val();
@@ -229,14 +238,14 @@ var App = {
 
             if(val < max){
                 App.timerange.val(val+step).change();
-                App.replay_timeout = setTimeout(tick,time);
+                App.play_timeout = setTimeout(tick,time);
             } else {
-                App.replay_timeout = null;
+                App.play_timeout = null;
             }
             
         };
 
-        App.replay_timeout = setTimeout(tick,300);
+        App.play_timeout = setTimeout(tick,300);
     },
 
     filterEventsBefore: function(timestamp){
@@ -263,7 +272,7 @@ var App = {
         var id = _.findWhere(data,{selected: true}).id;
         if(App.mode != id){
             App.mode = id;
-            App.replay();
+            App.play(true);
         }
     },
 
