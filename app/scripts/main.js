@@ -596,8 +596,8 @@ var App = {
         data_candidatos.map(function(c){ 
             travels[c].map(function(t,i){
                 if(i < travels[c].length - 1){
-                    var coord1 = App.getCoord(t.UF, c, 250);
-                    var coord4 = App.getCoord(travels[c][i+1].UF, c, 250);
+                    var coord1 = App.getCoord(t.UF, c, 270);
+                    var coord4 = App.getCoord(travels[c][i+1].UF, c, 270);
                     var dist = App.dist(coord1,coord4);
                     var coord2 = App.getCoord(t.UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
                     var coord3 = App.getCoord(travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
@@ -836,11 +836,11 @@ var App = {
     color: function(candidato){
         switch(candidato){
             case 'AÉCIO NEVES':
-                return '#127bbf';
+                return '#437fb7';
             case 'MARINA SILVA':
-                return '#e8d354';
+                return '#e9ba00';
             case 'DILMA ROUSSEFF':
-                return '#cc0000';
+                return '#cc3a3a';
         }
     },
     cluster: function(alpha){
