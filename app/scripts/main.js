@@ -677,6 +677,9 @@ var App = {
         var travel_circles = App.travel_circles.selectAll('.travelcircle')
             .data(App.filterByPeople(data_travel_circles),function(d){ return d.id; });
 
+        // ENTER
+
+        
         travel_paths
             .enter()
                 .append('path')
@@ -696,9 +699,7 @@ var App = {
                 })
                 ;
 
-        travel_paths
-            .exit()
-                .remove();
+        
 
         travel_circles
             .enter()
@@ -709,12 +710,22 @@ var App = {
                 return App.color(d.CANDIDATO);
             });
 
+        // REMOVE
+
+        travel_paths
+            .exit()
+            .remove();
+
         travel_circles
             .exit()
             .remove();
 
-        travel_paths
-            //.transition(300)
+        // UPDATE
+
+        function drawpath(path){
+            var l = path.node().getTotalLength();
+            console.log(path.data());
+            path
             .attr('opacity',function(d){
                 if(+d.END <= +App.timestamp){
                     return 0.4;
@@ -726,9 +737,8 @@ var App = {
             })
             .attr('stroke-dasharray', function(d){
                 var res,
-                    l = this.getTotalLength(),
                     i = d3.interpolateString('0,' + l, l + ',' + l);
-
+                
                 if(d.END <= App.timestamp){
                     res = 1;
                 } else if(d.BEGIN >= App.timestamp){
@@ -741,8 +751,11 @@ var App = {
                     c.y = p.y;
                 }
                 return i(res);
-            })
-            ;
+            });
+        }
+
+        drawpath(travel_paths);
+            
 
         travel_circles
             .attr('cx',function(d){return d.x;})
@@ -795,10 +808,18 @@ var App = {
             App.unrenderTravel();
         } else {
             App.__renderForceNodes([]);
-            TweenLite.to(App, 2, {timestamp: App.current_date, roundProps:'timestamp', ease: Linear.easeNone, onUpdate: function(){
-                $('#vis-time-date .timestamp').text(App.timestamp);
-                App.renderTravel();
-            }});
+            //console.log(App.current_date,typeof(App.current_date))
+            
+            TweenLite.to(App, 2, {
+                    timestamp: App.current_date,
+                    roundProps:'timestamp',
+                    ease: Linear.easeNone,
+                    onUpdate: function(){
+                        $('#vis-time-date .timestamp').text(App.timestamp);
+                        App.renderTravel();
+                    }
+                });
+            
         }
     },
 
