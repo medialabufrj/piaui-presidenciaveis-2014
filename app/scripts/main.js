@@ -600,11 +600,11 @@ var App = {
         data_candidatos.map(function(c){ 
             travels[c].map(function(t,i){
                 if(i < travels[c].length - 1){
-                    var coord1 = App.getCoord(t.UF, c, 270);
-                    var coord4 = App.getCoord(travels[c][i+1].UF, c, 270);
+                    var coord1 = App.getCoord(t.DATA, t.UF, c, 270);
+                    var coord4 = App.getCoord(t.DATA, travels[c][i+1].UF, c, 270);
                     var dist = App.dist(coord1,coord4);
-                    var coord2 = App.getCoord(t.UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
-                    var coord3 = App.getCoord(travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
+                    var coord2 = App.getCoord(t.DATA, t.UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
+                    var coord3 = App.getCoord(t.DATA, travels[c][i+1].UF, c, dist > 150 ? 100 : 100 + 100 / dist * 50);
 
                     var siblings = _.filter(travels[c], function(e){
                         return e.DATA == t.DATA;
@@ -662,6 +662,10 @@ var App = {
             .data([])
             .exit()
                 .remove();
+        App.travel_circles.selectAll('.travelcircle')
+            .data([])
+            .exit()
+                .remove();
     },
 
     renderTravel: function(){
@@ -675,7 +679,7 @@ var App = {
         var travel_paths = App.travel_paths.selectAll('.travelpath')
             .data(App.filterByPeople(data_travel),function(d){ return d.id; });
 
-        var travel_circles = App.travel_circles.selectAll('.travelcicle')
+        var travel_circles = App.travel_circles.selectAll('.travelcircle')
             .data(App.filterByPeople(data_travel_circles),function(d){ return d.id; });
 
         travel_paths
@@ -683,7 +687,7 @@ var App = {
                 .append('path')
                 .attr('class', 'travelpath')
                 .attr('stroke', function(d){ return App.color(d.CANDIDATO);})
-                .attr('stroke-width', 3)
+                .attr('stroke-width', 2)
                 .attr('opacity', 0)
                 .attr('fill', "none")
                 .attr('d', function(d){
@@ -704,7 +708,7 @@ var App = {
         travel_circles
             .enter()
             .append('circle')
-            .attr('class', 'travelcicle')
+            .attr('class', 'travelcircle')
             .attr('r', 5)
             .attr('fill',function(d){
                 return App.color(d.CANDIDATO);
@@ -942,8 +946,9 @@ var App = {
         return Math.sqrt(x*x+y*y);
     },
 
-    getCoord: function(UF, CANDIDATO, radius){
-        var a = (data_candidatos.indexOf(CANDIDATO) -1 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
+    getCoord: function(DATA, UF, CANDIDATO, radius){
+        //var a = (data_candidatos.indexOf(CANDIDATO) -1 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
+        var a = (2 - timeline.indexOf(DATA)/timeline.length*4 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
         return {
             x: width * 0.5 - Math.cos(a) * radius,
             y: height * 0.5 - Math.sin(a) * radius
