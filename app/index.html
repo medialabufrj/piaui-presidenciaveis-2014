@@ -20,14 +20,14 @@
     <body>
         
         <div id="container">
-            <div id="vis-control" class="">
-                <label id="vis-time-date"><span class="data">Data</span> <span class="timestamp"></span></label>
-                <div class="vis-group">
-                    <input id="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
-                    <input id="vis-time-play" type="button" value="Play"/>
+            <div id="vis-control" class="vis-control">
+                <label id="vis-time-date" class="vis-time-date"><span class="data">Data</span> <span class="timestamp"></span></label>
+                <div class="vis-timeline vis-group">
+                    <input id="vis-time-range" class="vis-time-range" type="range" min="0" max="10" value="0" step="1"/>
+                    <input id="vis-time-play" class="vis-time-play" type="button" value="Play"/>
                 </div>
-                <div class="vis-group">
-                    <div id="vis-filter-candidatos" class="vis-filter"></div>
+                <div class="vis-filter-group-1 vis-group">
+                    <div id="vis-filter-candidatos" class="vis-filter right"></div>
                     <div id="vis-filter-vis" class="vis-filter"></div>
                 </div>
             </div>
@@ -40,8 +40,25 @@
                 <div><span class="categoria string"></span> <span class="data string"></span></div>
                 <div class="atividade string"></div>
             </div>
-
-            <img src="./images/footer.png" style="margin-top:50px;" alt=""/>
+            <div id="vis-control-2" class="vis-control">
+                <div class="vis-filter-group-2 vis-group">
+                    
+                </div>
+            </div>
+            <div class="vis-footer">
+                <dl>
+                    <dt>Pesquisa e checagem de dados</dt>
+                    <dd>Gabriela Caesar e Luiza Miguez</dd>
+                </dl>
+                <dl>
+                    <dt>Visualização</dt>
+                    <dd>Medialab.UFRJ</dd>
+                </dl>
+                <dl>
+                    <dt>Design</dt>
+                    <dd>Marlus Araujo</dd>
+                </dl>
+            </div>
         </div>
 
         <!-- Google Analytics -->

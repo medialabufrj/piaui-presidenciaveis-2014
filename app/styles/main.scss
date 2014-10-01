@@ -3,10 +3,12 @@
 
 // Custom imports & styles here.
 
-@import "web-fonts";
-@include web-fonts(("Open Sans":("400","700")));
+$basefont: "Lato";
+$basefont_weight: 700;
 
-$basefont: "Open Sans";
+
+@import "web-fonts";
+@include web-fonts(($basefont:("400",$basefont_weight)));
 
 body {
 	background: #fefefe;
@@ -23,28 +25,29 @@ h1, h2, h3, h4, h5, h6, p {
 #container {
 	margin: 0 auto;
 	width: 600px;
-	height: 700px;
+	height: auto;
 	background: #fff;
 	position: relative;
 }
 
-#vis-control {
-	padding: 20px;
+.vis-control {
+	//padding: 20px;
 	overflow: hidden;
 	.vis-group {
-		margin: 10px 0;
 		clear: both;
 		display: block;
 		overflow: hidden;
 	}
 	.vis-filter {
-		width: 25%;
+		width: 20%;
 		float: left;
 		font-size: 10px;
 		text-transform: uppercase;
+		&.right {
+			float: right;
+		}
 		.title {
-			font-weight: 700;
-			font-size: 12px;
+			font-weight: $basefont_weight;
 			margin-bottom: 5px;
 			display: block;
 		}
@@ -52,15 +55,20 @@ h1, h2, h3, h4, h5, h6, p {
 			cursor: pointer;
 		}
 	}
-	#vis-time-play {
+	.vis-timeline {
+		margin-bottom: 16px;
+	}
+	.vis-time-play {
 		width: 15%;
 		float: left;
 	}
-	#vis-time-range {
+	.vis-time-range {
 		width: 80%;
 		float: left;
 	}
-	#vis-time-date {
+	.vis-time-date {
+		font-size: 22px;
+		font-weight: $basefont_weight;
 		.timestamp {
 			color: #eee;
 		}
@@ -101,5 +109,31 @@ h1, h2, h3, h4, h5, h6, p {
 	.categoria, .data {
 		text-transform: uppercase;
 		color: #999;
+	}
+}
+
+#vis-control-2 {
+	height: 100px;
+}
+
+.vis-footer {
+	color: #555;
+	border-top: 1px solid #eee;
+	margin-top: 10px;
+	padding-top: 10px;
+	overflow: hidden;
+	dl {
+		float: left;
+		font-size: 12px;
+		padding: 0;
+		margin: 0;
+		margin-right: 20px;
+		dt {
+			font-weight: $basefont_weight;
+		}
+		dd {
+			margin: 0;
+			padding: 0;
+		}
 	}
 }

@@ -50,12 +50,15 @@ var SimpleFilter = React.createClass({displayName: 'SimpleFilter',
         };
     },
     componentDidMount: function(){
-        this.refs.globalSelector.getDOMNode().checked = true;
+        if(this.refs.globalSelector){
+            this.refs.globalSelector.getDOMNode().checked = true;
+        }
     },
     componentDidUpdate: function(){
         this.props.savestate(this.state.data);
     },
     render: function() {
+        
         var checks = this.state.data.map(function(d) {
             return (
                 React.DOM.div(null, 
@@ -65,15 +68,20 @@ var SimpleFilter = React.createClass({displayName: 'SimpleFilter',
                 )
             );
         }.bind(this));
-        return (
-            React.DOM.form(null, 
-                
+        var model = (this.props.global) ?
+            (React.DOM.form(null, 
                 React.DOM.span({className: "title"}, this.props.title), 
                 React.DOM.label(null, React.DOM.input({type: "checkbox", ref: "globalSelector", onChange: this.__changeAllChecks}), "Todos"), 
                 React.DOM.br(null), 
                 checks
-            )
-        );
+            ))
+            :
+            (React.DOM.form(null, 
+                React.DOM.span({className: "title"}, this.props.title), 
+                checks
+            ))
+            ;
+        return model;
     },
     __changeSelection: function(id) {
         var state = this.state.data.map(function(d) {
