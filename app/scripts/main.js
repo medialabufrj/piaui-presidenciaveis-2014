@@ -664,12 +664,7 @@ var App = {
     },
 
     renderTravel: function(){
-
-        var lineFunction = d3.svg.line()
-            .interpolate('basis')
-            .x(function(d) { return d.x; })
-            .y(function(d) { return d.y; });
-            
+    
 
         var travel_paths = App.travel_paths.selectAll('.travelpath')
             .data(App.filterByPeople(data_travel),function(d){ return d.id; });
@@ -689,13 +684,16 @@ var App = {
                 .attr('opacity', 0)
                 .attr('fill', 'none')
                 .attr('d', function(d){
-                    return lineFunction([
-                        {x: d.ax, y: d.ay},
-                        {x: d.bx, y: d.by},
-                        {x: d.cx, y: d.cy},
-                        {x: d.dx, y: d.dy}
-                        ]
-                    );
+                    // TIP: FIREFOX COMPATIBILITY
+                    // Writing your clean functions is better!
+                    return 'M'
+                        + [d.ax, d.ay].join(" ")
+                        + ' C '
+                        + [
+                            [d.bx, d.by].join(" "),
+                            [d.cx, d.cy].join(" "),
+                            [d.dx, d.dy].join(" ")
+                        ].join(", ");
                 })
                 ;
 
@@ -722,10 +720,7 @@ var App = {
 
         // UPDATE
 
-        function drawpath(path){
-            var l = path.node().getTotalLength();
-            console.log(path.data());
-            path
+        travel_paths
             .attr('opacity',function(d){
                 if(+d.END <= +App.timestamp){
                     return 0.4;
@@ -737,6 +732,7 @@ var App = {
             })
             .attr('stroke-dasharray', function(d){
                 var res,
+                    l = this.getTotalLength(),
                     i = d3.interpolateString('0,' + l, l + ',' + l);
                 
                 if(d.END <= App.timestamp){
@@ -752,9 +748,6 @@ var App = {
                 }
                 return i(res);
             });
-        }
-
-        drawpath(travel_paths);
             
 
         travel_circles
