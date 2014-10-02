@@ -9,6 +9,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
         {UF: 'SP', REGIAO: 3, NOME: 'São Paulo',      CAPITAL: 'São Paulo'},
 
         {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL12', REGIAO: null, NOME: null, CAPITAL: null},
         {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
         
         {UF: 'PR', REGIAO: 4, NOME: 'Paraná',            CAPITAL: 'Curitiba'},

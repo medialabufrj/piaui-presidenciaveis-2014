@@ -37,6 +37,7 @@ h1, h2, h3, h4, h5, h6, p {
 		clear: both;
 		display: block;
 		overflow: hidden;
+		margin-left: 5px;
 	}
 	.vis-filter {
 		width: 20%;
@@ -56,21 +57,39 @@ h1, h2, h3, h4, h5, h6, p {
 		}
 	}
 	.vis-timeline {
-		margin-bottom: 16px;
-	}
-	.vis-time-play {
-		width: 15%;
-		float: left;
-	}
-	.vis-time-range {
-		width: 80%;
-		float: left;
+		margin-bottom: 10px;
 	}
 	.vis-time-date {
+		margin-left: 5px;
 		font-size: 22px;
 		font-weight: $basefont_weight;
 		.timestamp {
 			color: #eee;
+		}
+	}
+}
+
+.range-timeline {
+	.slider {
+		cursor: pointer;
+	}
+	.play-button {
+		cursor: pointer;
+		&:hover{
+			.play-button-bg {
+				fill: #ddd;
+			}
+		}
+		&.play{
+			.icon-play {
+				display: none;
+			}
+			.icon-pause {
+				display: block;
+			}
+		}
+		.icon-pause {
+			display: none;
 		}
 	}
 }
@@ -93,7 +112,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 #vis-tip {
 	position: absolute;
-	top: 500px;
+	top: 450px;
 	left: 300px;
 	text-align: center;
 	width: 240px;

@@ -155,21 +155,34 @@ d3line2 = d3.svg.line()
 var RangeTimeline = {
 
     init: function(){
+
+        // drag behavior
+
         this.drag = d3.behavior.drag()
             //.origin(function(d) { return d; })
-            .on('drag',this.updateSlider)
-            .on('dragstart',this.updateSlider)
+            .on('drag',this.onDrag)
+            .on('dragstart',this.onDrag)
             //.on('dragend',this.updateSlider)
             ;
+
+        // svg
+
         this.wrapper = d3.select('#timeline-d3').append('svg')
+            .attr('class','range-timeline')
             .attr('width', width)
             .attr('height', 50)
             ;
+
+        // slider
+
         this.slider = this.wrapper.append('g')
             .data([{ x: 50, y: 50 }])
             .attr('class', 'slider')
             .call(this.drag)
             ;
+
+        // slider bg
+
         this.base = this.slider.append('rect')
             .attr('class', 'range-base')
             .attr('width', width-20)
@@ -180,9 +193,12 @@ var RangeTimeline = {
             .attr('ry', 16)
             .attr('fill', '#eee')
             ;
+        
+        // slider range
+
         this.range = this.slider.append('rect')
             .attr('class', 'range')
-            .attr('width', 50)
+            .attr('width', 60)
             .attr('height', 32)
             .attr('y', 10)
             .attr('x', 20)
@@ -190,28 +206,132 @@ var RangeTimeline = {
             .attr('ry', 15)
             .attr('fill', '#999')
             ;
+
+        // slider circle
+
         this.circle = this.slider.append('circle')
             .attr('class', 'range-circle')
             .attr('r', 8)
             .attr('cy', 26)
-            .attr('cx', 54)
+            .attr('cx', 64)
             .attr('fill', '#fff')
             ;
+
+        // play-pause button
+
+        this.button = this.wrapper.append('g')
+            .attr('class', 'play-button')
+            .on('click',function(){
+                if(RangeTimeline.play_timeout){
+                    RangeTimeline.clearPlay();
+                }else{
+                    RangeTimeline.play();
+                }
+            });
+
+        this.button.append('circle')
+            .attr('class', 'play-button-bg')
+            .attr('r',20)
+            .attr('cx',21)
+            .attr('cy',25)
+            .attr('fill','#fff')
+            .attr('stroke','#999')
+            .attr('stroke-width',2)
+            ;
+
+        this.button_icon_play = this.button.append('polygon')
+            .attr('class', 'icon-play')
+            .attr('points', '15,16 15,34 30,25')
+            .attr('fill', '#999')
+            ;
+
+        this.button_icon_pause = this.button.append('g')
+            .attr('class', 'icon-pause');
+
+        this.button_icon_pause.append('rect')
+            .attr('width', 4)
+            .attr('height', 18)
+            .attr('y', 16)
+            .attr('x', 15)
+            .attr('fill', '#999')
+            ;
+        this.button_icon_pause.append('rect')
+            .attr('width', 4)
+            .attr('height', 18)
+            .attr('y', 16)
+            .attr('x', 22)
+            .attr('fill', '#999')
+            ;
+
+        this.updateSliderStep(0);
+        this.play();
     },
 
-    updateSlider: function(d){
+    onDrag: function(d){
+
         var x = d3.event.x || d3.event.sourceEvent.layerX;
-        var y = d3.event.y || d3.event.sourceEvent.layerY;
-        x = Math.min(width-20,Math.max(50,x));
+
+        RangeTimeline.updateSlider(x);
+        RangeTimeline.clearPlay();
+    },
+
+    updateSliderStep: function(current){
+
+        var format = locale.timeFormat('%d de %B de %Y');
+        var stepW = (width-20-60)/(timeline.length-1);
+        var other_x = 60 + current * stepW;
+
+        this.range.attr('width', other_x);
+        this.circle.attr('cx', 20 + other_x - 16);
         
-        var stepW = (width-20-50)/timeline.length;
-        var perc = (x-50)/(width-20-50);
-        var other_x = 50 + Math.floor(perc * timeline.length) * stepW;
-        console.log(perc,other_x)
+        $('#vis-time-date .data').text(format(new Date(timeline[current])));
         
-        RangeTimeline.range.attr('width', other_x);
-        RangeTimeline.circle.attr('cx', 20 + other_x - 16);
-    }
+        this.current = current;
+
+        App.current_date = timeline[current];
+        App.renderAll();
+    },
+
+    updateSlider: function(x){
+        x = Math.min(width-20,Math.max(60,x));
+        var perc = (x-60)/(width-20-60);
+        var current = parseInt(perc*(timeline.length-1));
+        RangeTimeline.updateSliderStep(current);
+    },
+
+    clearPlay: function(){
+        if(RangeTimeline.play_timeout){
+            clearTimeout(RangeTimeline.play_timeout);
+            RangeTimeline.play_timeout = null;
+        }
+        this.button.classed('play',false);
+    },
+
+    play: function(reset){
+
+        RangeTimeline.clearPlay();
+
+        //console.log(reset,App.timerange.val(),timeline.length - 1);
+
+        if(reset || RangeTimeline.current === timeline.length - 1){
+            App.timestamp = App.current_date = timeline[0];
+            RangeTimeline.updateSlider(0);
+        }    
+
+        var time = App.mode === 'Agenda' ? 300 : 2000;
+        var tick = function(){
+            if(RangeTimeline.current < timeline.length - 1){
+                RangeTimeline.updateSliderStep(RangeTimeline.current+1);
+                RangeTimeline.play_timeout = setTimeout(tick,time);
+            } else {
+                RangeTimeline.clearPlay();
+            }
+            
+        };
+
+        App.play_timeout = setTimeout(tick,300);
+        this.button.classed('play',true);
+    },
 };
 
 
@@ -226,7 +346,6 @@ var App = {
     node: null,
     timerange: null,
     timestamp: null,
-    play_timeout: null,
     mode: 'Agenda',
 
     current_date: null,
@@ -237,29 +356,6 @@ var App = {
         App.buildForceGraph();
         App.buildBipartite();
         App.buildTravel();
-
-        timeline = timeline.sort();
-        console.log(timeline);
-        App.timestamp = timeline[0];
-        App.timerange = $('#vis-time-range');
-        App.timerange.attr('max',timeline.length-1);
-        App.timerange.on('change input', function() {
-            var current = parseInt(this.value);
-            var format = locale.timeFormat('%d de %B de %Y');
-            $('#vis-time-date .data').text(format(new Date(timeline[current])));
-            // save timestamp and render force
-            App.current_date = timeline[current];
-            App.renderAll();
-            //App.renderBipartiteRegions();
-        })
-        .on('input', function(){
-            if(App.play_timeout){
-                clearTimeout(App.play_timeout);
-            }
-        })
-        .change();
-
-        RangeTimeline.init();
 
         React.renderComponent(
             new SimpleRadio({
@@ -277,40 +373,12 @@ var App = {
             }), document.getElementById('vis-filter-candidatos')
         );
 
-        App.timeplay = $('#vis-time-play');
-        App.timeplay.on('click',function(){App.play();});
-        App.play();
-    },
+        timeline = timeline.sort();
+        console.log(timeline);
+        App.timestamp = timeline[0];
 
-    play: function(reset){
-        
-        if(App.play_timeout){
-            clearTimeout(App.play_timeout);
-        }
+        RangeTimeline.init();
 
-        //console.log(reset,App.timerange.val(),timeline.length - 1);
-
-        if(reset || App.timerange.val() === timeline.length - 1){
-            App.timestamp = App.current_date = timeline[0];
-            App.timerange.val(App.timerange.attr('min')).change();
-        }    
-
-        var time = App.mode === 'Agenda' ? 300 : 2000;
-        var tick = function(){
-            var val = +App.timerange.val();
-            var step = +App.timerange.attr('step');
-            var max = +App.timerange.attr('max');
-
-            if(val < max){
-                App.timerange.val(val+step).change();
-                App.play_timeout = setTimeout(tick,time);
-            } else {
-                App.play_timeout = null;
-            }
-            
-        };
-
-        App.play_timeout = setTimeout(tick,300);
     },
 
     filterEventsBefore: function(timestamp){
@@ -337,7 +405,7 @@ var App = {
         var id = _.findWhere(data,{selected: true}).id;
         if(App.mode !== id){
             App.mode = id;
-            App.play(true);
+            RangeTimeline.play(true);
         }
     },
 
@@ -818,6 +886,9 @@ var App = {
             
 
         travel_circles
+            .attr('opacity',function(){
+                return App.timestamp == timeline[0] || App.timestamp == timeline[timeline.length-1] ? 0 : 1;
+            })
             .attr('cx',function(d){return d.x;})
             .attr('cy',function(d){return d.y;})
             ;
@@ -826,9 +897,10 @@ var App = {
     buildForceGraph: function(){
 
         data_estados.map(function(d){
+            var r = d.REGIAO === null ? 300 : force_radius;
             var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
-                x = width * 0.5 - Math.cos(a) * force_radius,
-                y = height * 0.5 - Math.sin(a) * force_radius;
+                x = width * 0.5 - Math.cos(a) * r,
+                y = height * 0.5 - Math.sin(a) * r;
             
             /*
             if(clusters[d.UF]){
@@ -875,7 +947,7 @@ var App = {
                     roundProps:'timestamp',
                     ease: Linear.easeNone,
                     onUpdate: function(){
-                        $('#vis-time-date .timestamp').text(App.timestamp);
+                        //$('#vis-time-date .timestamp').text(App.timestamp);
                         App.renderTravel();
                     }
                 });
@@ -967,7 +1039,7 @@ var App = {
     cluster: function(alpha){
         return function(d) {
             var cluster = clusters[d.cluster];
-            //alpha = 0.025;
+            //alpha = 0.2;
             //console.log(alpha);
             if (cluster === d){
                 return false;
