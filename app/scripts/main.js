@@ -347,7 +347,7 @@ var App = {
     timerange: null,
     timestamp: null,
     mode: 'Agenda',
-
+    active_uf: null,
     current_date: null,
 
     init: function() {
@@ -356,6 +356,7 @@ var App = {
         App.buildForceGraph();
         App.buildBipartite();
         App.buildTravel();
+        App.buildInfoUF();
 
         React.renderComponent(
             new SimpleRadio({
@@ -704,6 +705,163 @@ var App = {
             });
     },
 
+    buildInfoUF: function(){
+        App.vis_infouf = vis.append('g')
+            .attr('transform', 'translate(' + (width / 2 - 80) + ',' + (height / 2 - 75) + ')')
+            .append('g')
+            .attr('class', 'infouf');
+
+        App.vis_infouf_title = App.vis_infouf.append('text');
+
+        App.vis_infouf_title
+            .attr('x', 0)
+            .attr('y', -20)
+            .style('fill','#999')
+            //.attr('text-anchor', 'middle')
+            ;
+    },
+
+    renderInfoUF: function(data,UF){
+
+        var cand_offset = 50;
+        var table_count = [];
+        var data = App.filterEventsBefore(App.current_date);
+        var estado = _.findWhere(data_estados,{UF:UF});
+
+        if(estado){
+            App.vis_infouf_title.text(estado.NOME);
+        }else{
+            App.vis_infouf_title.text('');
+        }
+
+        data_candidatos.map(function(c){
+            var count = [c, _.where(data,{CANDIDATO: c, UF: UF}).length];
+            if(count[1] > 0){
+                table_count.push(count);
+            }
+        });
+
+        table_count.sort(function(a,b){
+            return a[1] <= b[1];
+        }).map(function(d,i){
+            return d.push(i);
+        });
+
+        var cand_name = App.vis_infouf.selectAll('.cand-name')
+            .data(table_count,function(d){return d[0];})
+            ;
+
+        cand_name
+            .enter()
+            .append('text')
+            .attr('class','cand-name')
+            .text(function(d){return App.realname(d[0]);})
+            .attr('fill',function(d){return App.color(d[0]);})
+            .attr('y',function(d){return 20 + d[2] * cand_offset;})
+            .attr('x',40)
+            ;
+
+        var cand_placeholder = App.vis_infouf.selectAll('.cand-placeholder')
+            .data(table_count,function(d){return d[0];})
+            ;
+
+        cand_placeholder
+            .enter()
+            .append('circle')
+            .attr('class','cand-placeholder')
+            .attr('fill',function(d){return App.color(d[0]);})
+            .attr('r', 18)
+            .attr('cy', function(d){return 20 + d[2] * cand_offset;})
+            .attr('cx', 18)
+            ;
+
+        var cand_image = App.vis_infouf.selectAll('.cand-image')
+            .data(table_count,function(d){return d[0];})
+            ;
+
+        cand_image
+            .enter()
+            .append('image')
+            .attr('class','cand-image')
+            .attr('y', function(d){return 4 + d[2] * cand_offset;})
+            .attr('x', 2)
+            .attr('width', 32)
+            .attr('height', 32)
+            .attr('xlink:href',function(d){return App.image(d[0]);})
+            ;
+
+        var cand_count = App.vis_infouf.selectAll('.cand-count')
+            .data(table_count,function(d){return d[0];})
+            ;
+
+        cand_count
+            .enter()
+            .append('text')
+            .attr('class','cand-count')
+            .text(function(d){return d[1];})
+            .attr('fill',function(d){return App.color(d[0]);})
+            .attr('y',function(d){return 20 + 16 + d[2] * cand_offset;})
+            .attr('x',45)
+            .attr('font-size',12)
+            .transition(600)
+            .attr('x',function(d,i){return 45 + d[1] * 3;})
+            ;
+
+        var cand_count_bar = App.vis_infouf.selectAll('.cand-count-bar')
+            .data(table_count,function(d){return d[0];})
+            ;
+
+        cand_count_bar
+            .enter()
+            .append('rect')
+            .attr('class','cand-count-bar')
+            .attr('fill',function(d){return App.color(d[0]);})
+            .attr('x', 40)
+            .attr('y',function(d){return 30 + d[2] * cand_offset;})
+            .attr('width', 0)
+            .attr('height', 5)
+            .transition(600)
+            .attr('width',function(d,i){return d[1] * 3;})
+            ;
+
+        cand_name.exit().remove();
+        cand_placeholder.exit().remove();
+        cand_image.exit().remove();
+        cand_count.exit().remove();
+        cand_count_bar.exit().remove();
+        
+
+        // update
+
+        App.vis_infouf.selectAll('.cand-name')
+            .transition(300)
+            .attr('y',function(d){return 20 + d[2] * cand_offset;})
+            ;
+
+        App.vis_infouf.selectAll('.cand-placeholder')
+            .transition(300)
+            .attr('cy', function(d){return 20 + d[2] * cand_offset;})
+            ;
+
+        App.vis_infouf.selectAll('.cand-image')
+            .transition(300)
+            .attr('y', function(d){return 4 + d[2] * cand_offset;})
+            ;
+
+        App.vis_infouf.selectAll('.cand-count')
+            .transition(300)
+            .text(function(d){return d[1];})
+            .attr('y',function(d){return 20 + 16 + d[2] * cand_offset;})
+            .attr('x',function(d){return 45 + d[1] * 3;})
+            ;
+
+        App.vis_infouf.selectAll('.cand-count-bar')
+            .transition(300)
+            .attr('y',function(d){return 30 + d[2] * cand_offset;})
+            .attr('width',function(d){return d[1] * 3;})
+            ;
+    },
+
     buildTravel: function(){
 
         var aday = 24*60*60*1000;
@@ -920,7 +1078,7 @@ var App = {
             .size([width, height])
             .gravity(0.01)
             .charge(0)
-            .friction(.7)
+            .friction(.8)
             .on('tick', App.tick)
             .start();
         
@@ -939,6 +1097,9 @@ var App = {
             App.renderForceNodesFiltered();
             TweenLite.killTweensOf(App);
             App.unrenderTravel();
+            if(App.active_uf !== null){
+                App.events.mouseover_UF(App.active_uf);
+            }
         } else {
             App.__renderForceNodes([]);
             //console.log(App.current_date,typeof(App.current_date))
@@ -1035,6 +1196,16 @@ var App = {
                 return './images/marina.png';
             case 'DILMA ROUSSEFF':
                 return './images/dilma.png';
+        }
+    },
+    realname: function(candidato){
+        switch(candidato){
+            case 'AÉCIO NEVES':
+                return 'Aécio Neves';
+            case 'MARINA SILVA':
+                return 'Marina Silva';
+            case 'DILMA ROUSSEFF':
+                return 'Dilma Rousseff';
         }
     },
     cluster: function(alpha){
@@ -1139,40 +1310,45 @@ var App = {
             App.events.desligaUF(d);
         },
         mouseover_UF: function(d){
+            if(App.mode !== 'Agenda'){
+                return false;
+            }
+            App.active_uf = d;
             var nodes = d3.selectAll('.node[data-uf='+d.UF+']');
+            d3.selectAll('.node:not([data-uf='+d.UF+'])')
+                .transition().duration(300)
+                .attr('r', function(n) { return n.radius * n.scale; })
+                .style('opacity', 0.1);
+            App.events.ligaUF(d);
             if(!nodes[0].length){
                 return false;
             }
-            d3.selectAll('.node:not([data-uf='+d.UF+'])')
-                .transition().duration(300)
-                .attr('r', function(d) { return d.radius * d.scale; })
-                .style('opacity', 0.1);
-            App.events.ligaUF(d);
-            App.renderBipartiteState(d.UF);
+            //App.renderBipartiteState(d.UF);
+            App.renderInfoUF(data_eventos,d.UF);
+            
         },
         mouseout_UF: function(d){
+            App.active_uf = null;
             d3.selectAll('.node:not([data-uf='+d.UF+'])')
                 .transition().duration(300)
-                .attr('r', function(d) { return d.radius * d.scale; })
+                .attr('r', function(n) { return n.radius * n.scale; })
                 .style('opacity',1);
             App.events.desligaUF(d);
-            App.renderBipartiteNone();
+            //App.renderBipartiteNone();
+            App.renderInfoUF([]);
         },
         ligaUF: function(d){
-            d3.selectAll('[data-uf='+d.UF+'] .UF-text')
+            d3.selectAll('.nodes_uf [data-uf='+d.UF+'] .UF-text')
                 .transition().duration(300)
                 .attr('fill','#333');
-            d3.selectAll('[data-uf='+d.UF+'] .UF-path')
+            d3.selectAll('.nodes_uf :not([data-uf='+d.UF+']) .UF-text')
                 .transition().duration(300)
-                .style('stroke','#333');
+                .attr('fill','#ddd');
         },
         desligaUF: function(d){
-            d3.selectAll('[data-uf='+d.UF+'] .UF-text')
+            d3.selectAll('.nodes_uf .UF-text')
                 .transition().duration(300)
                 .attr('fill','#999');
-            d3.selectAll('[data-uf='+d.UF+'] .UF-path')
-                .transition().duration(300)
-                .style('stroke','#999');
         }
     }
 };
