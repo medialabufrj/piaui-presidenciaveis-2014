@@ -150,6 +150,71 @@ d3line2 = d3.svg.line()
     .y(function(d){return d.y;})
     .interpolate('linear'); 
 
+// TIMELINE RANGE D3
+
+var RangeTimeline = {
+
+    init: function(){
+        this.drag = d3.behavior.drag()
+            //.origin(function(d) { return d; })
+            .on('drag',this.updateSlider)
+            .on('dragstart',this.updateSlider)
+            //.on('dragend',this.updateSlider)
+            ;
+        this.wrapper = d3.select('#timeline-d3').append('svg')
+            .attr('width', width)
+            .attr('height', 50)
+            ;
+        this.slider = this.wrapper.append('g')
+            .data([{ x: 50, y: 50 }])
+            .attr('class', 'slider')
+            .call(this.drag)
+            ;
+        this.base = this.slider.append('rect')
+            .attr('class', 'range-base')
+            .attr('width', width-20)
+            .attr('height', 32)
+            .attr('y', 10)
+            .attr('x', 20)
+            .attr('rx', 16)
+            .attr('ry', 16)
+            .attr('fill', '#eee')
+            ;
+        this.range = this.slider.append('rect')
+            .attr('class', 'range')
+            .attr('width', 50)
+            .attr('height', 32)
+            .attr('y', 10)
+            .attr('x', 20)
+            .attr('rx', 15)
+            .attr('ry', 15)
+            .attr('fill', '#999')
+            ;
+        this.circle = this.slider.append('circle')
+            .attr('class', 'range-circle')
+            .attr('r', 8)
+            .attr('cy', 26)
+            .attr('cx', 54)
+            .attr('fill', '#fff')
+            ;
+    },
+
+    updateSlider: function(d){
+        var x = d3.event.x || d3.event.sourceEvent.layerX;
+        var y = d3.event.y || d3.event.sourceEvent.layerY;
+        x = Math.min(width-20,Math.max(50,x));
+        
+        var stepW = (width-20-50)/timeline.length;
+        var perc = (x-50)/(width-20-50);
+        var other_x = 50 + Math.floor(perc * timeline.length) * stepW;
+        console.log(perc,other_x)
+        
+        RangeTimeline.range.attr('width', other_x);
+        RangeTimeline.circle.attr('cx', 20 + other_x - 16);
+    }
+};
+
+
 // VIS EVENTOS
 
 var App = {
@@ -193,6 +258,8 @@ var App = {
             }
         })
         .change();
+
+        RangeTimeline.init();
 
         React.renderComponent(
             new SimpleRadio({
@@ -687,13 +754,13 @@ var App = {
                     // TIP: FIREFOX COMPATIBILITY
                     // Writing your clean functions is better!
                     return 'M'
-                        + [d.ax, d.ay].join(" ")
+                        + [d.ax, d.ay].join(' ')
                         + ' C '
                         + [
-                            [d.bx, d.by].join(" "),
-                            [d.cx, d.cy].join(" "),
-                            [d.dx, d.dy].join(" ")
-                        ].join(", ");
+                            [d.bx, d.by].join(' '),
+                            [d.cx, d.cy].join(' '),
+                            [d.dx, d.dy].join(' ')
+                        ].join(', ');
                 })
                 ;
 
