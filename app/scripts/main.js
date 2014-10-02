@@ -3,7 +3,7 @@
 var width = 600;
 var height = 600;
 var radius = 270;
-var force_radius = 240;
+var force_radius = 230;
 var timeline_min = null;
 var timeline_max = null;
 var timeline = [];
@@ -920,6 +920,7 @@ var App = {
             .size([width, height])
             .gravity(0.01)
             .charge(0)
+            .friction(.7)
             .on('tick', App.tick)
             .start();
         
@@ -974,14 +975,14 @@ var App = {
                 .attr('data-candidato', function(d) { return d.CANDIDATO.split(' ').join('_'); })
                 .attr('cx', function(d){
                     var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
-                        x = width * 0.5 - Math.cos(a) * force_radius * 0.5;
+                        x = width * 0.5 - Math.cos(a) * force_radius * 1.3;
 
                     d.px = d.x = x + Math.random() * 10;
                     return d.x;
                 })
                 .attr('cy', function(d){
                     var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
-                        y = height * 0.5 - Math.sin(a) * force_radius * 0.5;
+                        y = height * 0.5 - Math.sin(a) * force_radius * 1.3;
 
                     d.py = d.y = y + Math.random() * 10;
                     return d.y;
@@ -1050,7 +1051,7 @@ var App = {
                 r = d.radius * d.scale + cluster.radius * 0.2;
 
             if (l !== r) {
-                l = (l - r) / l * alpha * 0.1;
+                l = (l - r) / l * alpha * 0.05;
                 d.x -= x *= l;
                 d.y -= y *= l;
                 //cluster.x += x;

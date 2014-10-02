@@ -41,7 +41,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
 
 
         {UF: 'NULL1', REGIAO: null, NOME: null, CAPITAL: null},
-        {UF: 'NY-EUA', REGIAO: null, NOME: null, CAPITAL: 'Nova York'},
+        {UF: 'EUA', REGIAO: null, NOME: null, CAPITAL: 'Nova York'},
         {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
 
         {UF: 'MA', REGIAO: 1, NOME: 'Maranhão',            CAPITAL: 'São Luis'},

@@ -112,18 +112,19 @@ h1, h2, h3, h4, h5, h6, p {
 
 #vis-tip {
 	position: absolute;
-	top: 450px;
+	top: 460px;
 	left: 300px;
 	text-align: center;
-	width: 240px;
+	width: 220px;
 	height: 120px;
 	margin-top: -60px;
-	margin-left: -120px;
+	margin-left: -110px;
 	font-size: 12px;
 	line-height: 1.5em;
 	z-index: 1;
 	.candidato {
 		font-size: 18px;
+		margin: .5em;
 	}
 	.categoria, .data {
 		text-transform: uppercase;
