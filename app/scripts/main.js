@@ -10,16 +10,6 @@ var timeline_max = null;
 var timeline = [];
 var angle_offset = 18;
 
-
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame    ||
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
 // DATA (II)
 
 var data_estados = data_estados || [],
@@ -81,9 +71,6 @@ function loadCSV(file,id,callback){
                 timeline.push(unixtime);
             }
 
-            // CHECK DATA
-            //console.log(d.CANDIDATO,unixtime,d.DATA);
-
             // force layout vars
             var CAPITAL = _.findWhere(data_estados,{UF: d.UF}).CAPITAL;
             d.radius = CAPITAL === d.MUNICIPIO ? 5 : 3;
@@ -98,15 +85,11 @@ function loadCSV(file,id,callback){
         .get(function(error, rows){
             // alimenta array eventos
             data_eventos = _.union(rows,data_eventos);
-            // log
-            console.log('loaded CSV!');
             // chama callback
             if(callback){
                 callback(id);
             }
         });
-
-    console.log('loading file', file);
 }
 
 
@@ -322,8 +305,6 @@ var RangeTimeline = {
 
         RangeTimeline.clearPlay();
 
-        //console.log(reset,App.timerange.val(),timeline.length - 1);
-
         if(reset || RangeTimeline.current === timeline.length - 1){
             App.timestamp = App.current_date = timeline[0];
             RangeTimeline.updateSlider(0);
@@ -386,7 +367,7 @@ var App = {
         );
 
         timeline = timeline.sort();
-        console.log(timeline);
+        
         App.timestamp = timeline[0];
 
         RangeTimeline.init();
@@ -403,14 +384,12 @@ var App = {
 
     filterByPeople: function(arr){
         return _.filter(arr,function(d){
-            //console.log(d.CANDIDATO)
             var filter = _.find(data_candidatos_filter,{id: d.CANDIDATO});
             return filter ? filter.selected : 1;
         });
     },
 
     reactFilterPeople: function(arr){
-        console.log(arr);
         data_candidatos_filter = arr;
         App.renderAll();
     },
@@ -497,7 +476,7 @@ var App = {
                 }
             });
         });
-        //console.log(table_count, table_links);
+
         App.renderBipartite(_.findWhere(data_estados,{UF: UF}).NOME,table_count,table_links);
     },
 
@@ -713,7 +692,6 @@ var App = {
                 }
                 var y = y_offset;
                 y_offset += Math.floor(y_scale(d[2]));
-                //console.log('TRANS',i,y, y_offset);
                 return y;
             });
     },
@@ -920,8 +898,6 @@ var App = {
                         var begin = t.DATA + index * aday / leng;
                         var end = index < leng - 1 ? t.DATA + (index + 1) * aday / leng : travels[c][i+1].DATA;
 
-                        //console.log(c,t.UF,index,t.DATA,begin,end);
-
                         data_travel.push({
                             id: id,
                             CANDIDATO: c,
@@ -1091,21 +1067,6 @@ var App = {
             .on('tick', App.tick)
             .start();
         
-        wrapper.on('mousemove', function() {
-            //var p1 = d3.mouse(this);
-            //root.px = p1[0];
-            //root.py = p1[1];
-            //App.force.resume();
-        });
-
-        console.log('FORCE!');
-
-        //App.animForce();
-    },
-
-    animForce: function(){
-        requestAnimFrame(App.animForce);
-        App.force.resume();
     },
 
     renderAll: function(){
@@ -1118,7 +1079,6 @@ var App = {
             }
         } else {
             App.__renderForceNodes([]);
-            //console.log(App.current_date,typeof(App.current_date))
             
             TweenLite.to(App, 2, {
                     timestamp: App.current_date,
@@ -1189,8 +1149,6 @@ var App = {
             .each(App.collide(0.5))
             .attr('cx', function(d) { return d.x; })
             .attr('cy', function(d) { return d.y; });
-        
-        //console.log('TICK!');
 
     },
 
@@ -1228,7 +1186,6 @@ var App = {
         return function(d) {
             var cluster = clusters[d.cluster];
             alpha = Math.max(0.1,alpha);
-            //console.log(alpha);
             if (cluster === d){
                 return false;
             }
@@ -1300,7 +1257,7 @@ var App = {
             App.node
                 .data(data_eventos, function(d){ return d.ID;})
                 .transition()
-                .attr('r', function(d) { console.log(d.scale); return d.radius * d.scale; })
+                .attr('r', function(d) { return d.radius * d.scale; })
                 ;
             App.force.resume();*/
 
@@ -1322,7 +1279,7 @@ var App = {
             App.node
                 .data(data_eventos, function(d){ return d.ID;})
                 .transition()
-                .attr('r', function(d) { console.log(d.scale); return d.radius * d.scale; })
+                .attr('r', function(d) { return d.radius * d.scale; })
                 ;
             App.force.resume();*/
             $('#vis-tip .string').text('');
