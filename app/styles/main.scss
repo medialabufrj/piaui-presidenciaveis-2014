@@ -57,7 +57,7 @@ h1, h2, h3, h4, h5, h6, p {
 		}
 	}
 	.vis-timeline {
-		margin-bottom: 10px;
+		
 	}
 	.vis-time-date {
 		color: #999;
@@ -100,6 +100,7 @@ h1, h2, h3, h4, h5, h6, p {
 #vis-wrapper {
 	position: relative;
 	background: transparent;
+	height: 700px;
 	z-index: 2;
 	.nodes_uf{
 		cursor: pointer;
@@ -111,6 +112,29 @@ h1, h2, h3, h4, h5, h6, p {
 			stroke-width: 2px;
 		}
 	}
+}
+
+#vis-filter-candidatos {
+	position: absolute;
+	width: 110px;
+	top: 90px;
+	right: 0;
+	z-index: 5;
+}
+#vis-filter-vis {
+	position: absolute;
+	width: 110px;
+	top: 90px;
+	left: 0;
+	z-index: 5;
+}
+#vis-label-ext {
+	position: absolute;
+	top: 90px;
+	left: 250px;
+	font-size: 10px;
+	color: #999;
+	text-transform: uppercase;
 }
 
 #vis-tip {

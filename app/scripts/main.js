@@ -1,13 +1,24 @@
 // CONSTANTES
 
 var width = 600;
-var height = 600;
+var real_height = 660;
+var height = 720;
 var radius = 270;
-var force_radius = 230;
+var force_radius = 250;
 var timeline_min = null;
 var timeline_max = null;
 var timeline = [];
 var angle_offset = 18;
+
+
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
 
 // DATA (II)
 
@@ -127,14 +138,14 @@ zoom = d3.behavior.zoom()
 
 wrapper = d3.select('#vis-wrapper').append('svg')
     .attr('width', width)
-    .attr('height', height)
+    .attr('height', real_height)
     .append('g')
     //.call(zoom)
     ;
 
 rect = wrapper.append('rect')
     .attr('width', width)
-    .attr('height', height)
+    .attr('height', real_height)
     .attr('fill', '#fff')
     .attr('opacity', 0)
     .style('pointer-events', 'all');
@@ -379,6 +390,8 @@ var App = {
         App.timestamp = timeline[0];
 
         RangeTimeline.init();
+
+        $('#vis-label-ext').text('exterior');
 
     },
 
@@ -1055,17 +1068,13 @@ var App = {
     buildForceGraph: function(){
 
         data_estados.map(function(d){
-            var r = d.REGIAO === null ? 300 : force_radius;
+            var r = d.REGIAO === null ? 340 : force_radius;
+                r = d.UF === 'RJ' || d.UF === 'SP' || d.UF === 'MG' ? force_radius * 0.8 : r;
+                r = d.UF === 'DF' ? force_radius * 0.9 : r;
             var a = (180 + angle_offset + angle(d.UF)) / 180 * Math.PI,
                 x = width * 0.5 - Math.cos(a) * r,
                 y = height * 0.5 - Math.sin(a) * r;
-            
-            /*
-            if(clusters[d.UF]){
-                clusters[d.UF].x = x;
-                clusters[d.UF].x = y;
-            }
-            */
+
             clusters[d.UF] = {x: x, y: y, radius: 50};
         });
 
@@ -1090,6 +1099,13 @@ var App = {
         });
 
         console.log('FORCE!');
+
+        //App.animForce();
+    },
+
+    animForce: function(){
+        requestAnimFrame(App.animForce);
+        App.force.resume();
     },
 
     renderAll: function(){
@@ -1211,7 +1227,7 @@ var App = {
     cluster: function(alpha){
         return function(d) {
             var cluster = clusters[d.cluster];
-            //alpha = 0.2;
+            alpha = Math.max(0.1,alpha);
             //console.log(alpha);
             if (cluster === d){
                 return false;
@@ -1233,8 +1249,8 @@ var App = {
     collide: function(alpha){
         var quadtree = d3.geom.quadtree(data_eventos),
             padding = 2,
-            clusterPadding = 10,
-            maxRadius = 10;
+            clusterPadding = 16,
+            maxRadius = 20;
         return function(d) {
             var r = d.radius * d.scale + maxRadius + Math.max(padding, clusterPadding),
                 nx1 = d.x - r,
@@ -1269,6 +1285,9 @@ var App = {
     getCoord: function(DATA, UF, CANDIDATO, radius){
         //var a = (data_candidatos.indexOf(CANDIDATO) -1 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
         var a = (data_candidatos.indexOf(CANDIDATO) * 1.5 + timeline.indexOf(DATA)/timeline.length * 1.5 - 1.5  + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
+        if(UF=="EUA"){
+            radius *= 1.2;
+        }
         return {
             x: width * 0.5 - Math.cos(a) * radius,
             y: height * 0.5 - Math.sin(a) * radius
