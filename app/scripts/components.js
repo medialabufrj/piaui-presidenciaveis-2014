@@ -68,6 +68,13 @@ var SimpleFilter = React.createClass({displayName: 'SimpleFilter',
                 )
             );
         }.bind(this));
+        if(this.props.cols){
+            var r = Math.round(checks.length / this.props.cols)
+            checks = [
+                React.DOM.div({className: "col"}, checks.splice(0,r)),
+                React.DOM.div({className: "col"}, checks)
+            ];
+        }
         var model = (this.props.global) ?
             (React.DOM.form(null, 
                 React.DOM.span({className: "title"}, this.props.title), 

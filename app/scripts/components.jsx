@@ -68,6 +68,13 @@ var SimpleFilter = React.createClass({
                 </div>
             );
         }.bind(this));
+        if(this.props.cols){
+            var r = Math.round(checks.length / this.props.cols)
+            checks = [
+                <div className="col">{checks.splice(0,r)}</div>,
+                <div className="col">{checks}</div>
+            ];
+        }
         var model = (this.props.global) ?
             (<form>
                 <span className="title">{this.props.title}</span>

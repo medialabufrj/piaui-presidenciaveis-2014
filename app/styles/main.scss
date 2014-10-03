@@ -31,29 +31,64 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .vis-control {
-	//padding: 20px;
 	overflow: hidden;
-	.vis-group {
-		clear: both;
-		display: block;
-		overflow: hidden;
-		margin-left: 5px;
+}
+
+.vis-filter {
+	float: left;
+	font-size: 10px;
+	text-transform: uppercase;
+	&.right {
+		float: right;
 	}
-	.vis-filter {
-		width: 20%;
+	.title {
+		font-weight: $basefont_weight;
+		margin-bottom: 5px;
+		display: block;
+	}
+	label {
+		cursor: pointer;
+	}
+	.col {
 		float: left;
-		font-size: 10px;
-		text-transform: uppercase;
-		&.right {
-			float: right;
+		margin-right: 20px;
+	}
+}
+
+#vis-control-2 {
+	.vis-label div {
+		line-height: 1.75em;
+		margin-right: 20px;
+		min-width: 100px;
+	}
+	.vis-label {
+		div::before {
+			content: ' ';
+			display: inline-block;
+			background: #999;
+			width: 10px;
+			height: 10px;
+			border-radius: 5px;
+			margin-right: 5px;
+			position: relative;
+			top: 2px;
 		}
-		.title {
-			font-weight: $basefont_weight;
-			margin-bottom: 5px;
-			display: block;
+		.aecio::before {
+			background: #437fb7;
 		}
-		label {
-			cursor: pointer;
+		.dilma::before {
+			background: #cc3a3a;
+		}
+		.marina::before {
+			background: #e9ba00;
+		}
+		.interior::before {
+			width: 6px;
+			height: 6px;
+			border-radius: 3px;
+			margin-right: 9px;
+			top: 0px;
+			left: 2px;
 		}
 	}
 }
@@ -137,6 +172,18 @@ h1, h2, h3, h4, h5, h6, p {
 	text-transform: uppercase;
 }
 
+#vis-filter-categorias, #vis-legenda-size {
+	display: none;
+	body[data-mode="Agenda"] & {
+		display: block;
+	}
+}
+
+#vis-filter-categorias {
+	float: right;
+	margin-right: 0;
+}
+
 #vis-tip {
 	position: absolute;
 	top: 430px;
@@ -160,14 +207,15 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 #vis-control-2 {
-	height: 20px;
+	height: 80px;
 }
 
 .vis-footer {
 	color: #555;
 	border-top: 1px solid #eee;
-	margin-top: 10px;
-	padding-top: 10px;
+	border-bottom: 1px solid #eee;
+	margin: 12px 0;
+	padding: 12px 0;
 	overflow: hidden;
 	dl {
 		float: left;

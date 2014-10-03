@@ -76,6 +76,7 @@ var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
     data_candidatos_filter = [],
     data_eventos    = [],
     data_categorias = [],
+    data_categorias_filter = [],
     data_travel = [],
     data_travel_circles = [],
     clusters = {}
@@ -565,6 +566,15 @@ App = {
             }), document.getElementById('vis-filter-candidatos')
         );
 
+        React.renderComponent(
+            new SimpleFilter({
+                title: 'Filtrar agenda',
+                data: data_categorias.sort(),
+                cols: 2,
+                savestate: App.reactFilterCats
+            }), document.getElementById('vis-filter-categorias')
+        );
+
         timeline = timeline.sort();
         
         App.timestamp = timeline[0];
@@ -588,15 +598,28 @@ App = {
         });
     },
 
+    filterByCats: function(arr){
+        return _.filter(arr,function(d){
+            var filter = _.find(data_categorias_filter,{id: d.CATEGORIA});
+            return filter ? filter.selected : 1;
+        });
+    },
+
     reactFilterPeople: function(arr){
         data_candidatos_filter = arr;
         App.renderAll();
+    },
+
+    reactFilterCats: function(arr){
+        data_categorias_filter = arr;
+        App.renderAll();  
     },
 
     reactChangeMode: function(data){
         var id = _.findWhere(data,{selected: true}).id;
         if(App.mode !== id){
             App.mode = id;
+            $('body').attr('data-mode',id);
             RangeTimeline.play(true);
         }
     },
@@ -915,7 +938,7 @@ App = {
 
         var cand_offset = 50;
         var table_count = [];
-        var data = data_array ? data_array : App.filterByPeople(App.filterEventsBefore(App.current_date));
+        var data = data_array ? data_array : App.filterByCats(App.filterByPeople(App.filterEventsBefore(App.current_date)));
         var estado = _.findWhere(data_estados,{UF:UF});
 
         if(estado){
@@ -1305,6 +1328,7 @@ App = {
     renderForceNodesFiltered: function(){
         var arr = App.filterEventsBefore(App.current_date);
         arr = App.filterByPeople(arr);
+        arr = App.filterByCats(arr);
         App.__renderForceNodes(arr);
     },
 
