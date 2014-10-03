@@ -1,19 +1,77 @@
 // CONSTANTES
 
-var width = 600;
-var real_height = 660;
-var height = 720;
-var radius = 270;
-var force_radius = 250;
-var timeline_min = null;
-var timeline_max = null;
-var timeline = [];
-var angle_offset = 18;
+var App,
+    RangeTimeline,
+    width = 600,
+    real_height = 660,
+    height = 720,
+    radius = 270,
+    force_radius = 250,
+    timeline = [],
+    angle_offset = 18
+    ;
 
-// DATA (II)
+// DATA
 
-var data_estados = data_estados || [],
-    data_regioes = data_regioes || [],
+var data_regioes    = ['Norte','Nordeste','Centro-oeste','Sudeste','Sul'],
+    data_estados    = [
+        
+        {UF: 'ES', REGIAO: 3, NOME: 'Espírito Santo', CAPITAL: 'Vitória'},
+        {UF: 'MG', REGIAO: 3, NOME: 'Minas Gerais',   CAPITAL: 'Belo Horizonte'},
+        {UF: 'RJ', REGIAO: 3, NOME: 'Rio de Janeiro', CAPITAL: 'Rio de Janeiro'},
+        {UF: 'SP', REGIAO: 3, NOME: 'São Paulo',      CAPITAL: 'São Paulo'},
+
+        {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL12', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
+        
+        {UF: 'PR', REGIAO: 4, NOME: 'Paraná',            CAPITAL: 'Curitiba'},
+        {UF: 'SC', REGIAO: 4, NOME: 'Santa Catarina',    CAPITAL: 'Florianópolis'},
+        {UF: 'RS', REGIAO: 4, NOME: 'Rio Grande do Sul', CAPITAL: 'Porto Alegre'},
+
+        {UF: 'NULL9', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL10', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL11', REGIAO: null, NOME: null, CAPITAL: null},
+
+        {UF: 'MS', REGIAO: 2, NOME: 'Mato Grosso do Sul', CAPITAL: 'Campo Grande'},
+        {UF: 'GO', REGIAO: 2, NOME: 'Goiás',              CAPITAL: 'Goiânia'},
+        {UF: 'DF', REGIAO: 2, NOME: 'Distrito Federal',   CAPITAL: 'Brasília'},
+        {UF: 'MT', REGIAO: 2, NOME: 'Mato Grosso',        CAPITAL: 'Cuiaba'},
+        
+
+        {UF: 'NULL5', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL6', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL7', REGIAO: null, NOME: null, CAPITAL: null},
+
+        
+        {UF: 'AC', REGIAO: 0, NOME: 'Acre',      CAPITAL: 'Rio Branco'},
+        {UF: 'AM', REGIAO: 0, NOME: 'Amazonas',  CAPITAL: 'Manaus'},
+        {UF: 'RO', REGIAO: 0, NOME: 'Rondônia',  CAPITAL: 'Porto Velho'},
+        {UF: 'RR', REGIAO: 0, NOME: 'Roraima',   CAPITAL: 'Boa Vista'},
+        {UF: 'PA', REGIAO: 0, NOME: 'Pará',      CAPITAL: 'Belém'},
+        {UF: 'AP', REGIAO: 0, NOME: 'Amapá',     CAPITAL: 'Macapá'},
+        {UF: 'TO', REGIAO: 0, NOME: 'Tocantins', CAPITAL: 'Palmas'},
+
+
+        {UF: 'NULL1', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'EUA', REGIAO: null, NOME: null, CAPITAL: 'Nova York'},
+        {UF: 'NULL3', REGIAO: null, NOME: null, CAPITAL: null},
+
+        {UF: 'MA', REGIAO: 1, NOME: 'Maranhão',            CAPITAL: 'São Luis'},
+        {UF: 'PI', REGIAO: 1, NOME: 'Piauí',               CAPITAL: 'Teresina'},
+        {UF: 'CE', REGIAO: 1, NOME: 'Ceará',               CAPITAL: 'Fortaleza'},    
+        {UF: 'RN', REGIAO: 1, NOME: 'Rio Grande do Norte', CAPITAL: 'Natal'},
+        {UF: 'PB', REGIAO: 1, NOME: 'Paraíba',             CAPITAL: 'João Pessoa'},
+        {UF: 'PE', REGIAO: 1, NOME: 'Pernambuco',          CAPITAL: 'Recife'},
+        {UF: 'AL', REGIAO: 1, NOME: 'Alagoas',             CAPITAL: 'Maceió'},
+        {UF: 'SE', REGIAO: 1, NOME: 'Sergipe',             CAPITAL: 'Aracaju'},
+        {UF: 'BA', REGIAO: 1, NOME: 'Bahia',               CAPITAL: 'Salvador'},
+        
+        {UF: 'NULL8', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL2', REGIAO: null, NOME: null, CAPITAL: null},
+        {UF: 'NULL4', REGIAO: null, NOME: null, CAPITAL: null}
+        
+    ],
     data_candidatos = [],
     data_candidatos_filter = [],
     data_eventos    = [],
@@ -146,7 +204,7 @@ d3line2 = d3.svg.line()
 
 // TIMELINE RANGE D3
 
-var RangeTimeline = {
+RangeTimeline = {
 
     init: function(){
 
@@ -261,7 +319,7 @@ var RangeTimeline = {
         this.play();
     },
 
-    onDrag: function(d){
+    onDrag: function(){
 
         var x = d3.event.x || d3.event.sourceEvent.layerX;
 
@@ -329,7 +387,7 @@ var RangeTimeline = {
 
 // VIS EVENTOS
 
-var App = {
+App = {
 
     bipart: null,
     nodes_uf: null,
@@ -712,11 +770,11 @@ var App = {
             ;
     },
 
-    renderInfoUF: function(data,UF){
+    renderInfoUF: function(UF,data_array){
 
         var cand_offset = 50;
         var table_count = [];
-        var data = App.filterEventsBefore(App.current_date);
+        var data = data_array ? data_array : App.filterByPeople(App.filterEventsBefore(App.current_date));
         var estado = _.findWhere(data_estados,{UF:UF});
 
         if(estado){
@@ -733,7 +791,18 @@ var App = {
         });
 
         table_count.sort(function(a,b){
-            return a[1] <= b[1];
+            if(a[1]!==b[1]){
+                return a[1] <= b[1];    
+            }
+            var A = a[0].toLowerCase();
+            var B = b[0].toLowerCase();
+            if (A < B){
+                return -1;
+            }else if (A > B){
+                return  1;
+            }else{
+                return 0;
+            }
         }).map(function(d,i){
             return d.push(i);
         });
@@ -795,7 +864,7 @@ var App = {
             .attr('x',45)
             .attr('font-size',12)
             .transition(600)
-            .attr('x',function(d,i){return 45 + d[1] * 3;})
+            .attr('x',function(d){return 45 + d[1] * 3;})
             ;
 
         var cand_count_bar = App.vis_infouf.selectAll('.cand-count-bar')
@@ -812,7 +881,7 @@ var App = {
             .attr('width', 0)
             .attr('height', 5)
             .transition(600)
-            .attr('width',function(d,i){return d[1] * 3;})
+            .attr('width',function(d){return d[1] * 3;})
             ;
 
         cand_name.exit().remove();
@@ -968,14 +1037,13 @@ var App = {
                 .attr('d', function(d){
                     // TIP: FIREFOX COMPATIBILITY
                     // Writing your clean functions is better!
-                    return 'M'
-                        + [d.ax, d.ay].join(' ')
-                        + ' C '
-                        + [
-                            [d.bx, d.by].join(' '),
-                            [d.cx, d.cy].join(' '),
-                            [d.dx, d.dy].join(' ')
-                        ].join(', ');
+                    var p1 = [d.ax, d.ay].join(' ');
+                    var p2_4 = [
+                        [d.bx, d.by].join(' '),
+                        [d.cx, d.cy].join(' '),
+                        [d.dx, d.dy].join(' ')
+                    ].join(', ');
+                    return 'M' + p1 + ' C ' + p2_4;
                 })
                 ;
 
@@ -1034,7 +1102,7 @@ var App = {
 
         travel_circles
             .attr('opacity',function(){
-                return App.timestamp == timeline[0] || App.timestamp == timeline[timeline.length-1] ? 0 : 1;
+                return App.timestamp === timeline[0] || App.timestamp === timeline[timeline.length-1] ? 0 : 1;
             })
             .attr('cx',function(d){return d.x;})
             .attr('cy',function(d){return d.y;})
@@ -1063,7 +1131,7 @@ var App = {
             .size([width, height])
             .gravity(0.01)
             .charge(0)
-            .friction(.8)
+            .friction(0.8)
             .on('tick', App.tick)
             .start();
         
@@ -1242,7 +1310,7 @@ var App = {
     getCoord: function(DATA, UF, CANDIDATO, radius){
         //var a = (data_candidatos.indexOf(CANDIDATO) -1 + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
         var a = (data_candidatos.indexOf(CANDIDATO) * 1.5 + timeline.indexOf(DATA)/timeline.length * 1.5 - 1.5  + 180 + angle_offset + angle(UF)) / 180 * Math.PI;
-        if(UF=="EUA"){
+        if(UF === 'EUA'){
             radius *= 1.2;
         }
         return {
@@ -1300,7 +1368,7 @@ var App = {
                 return false;
             }
             //App.renderBipartiteState(d.UF);
-            App.renderInfoUF(data_eventos,d.UF);
+            App.renderInfoUF(d.UF);
             
         },
         mouseout_UF: function(d){
@@ -1311,7 +1379,7 @@ var App = {
                 .style('opacity',1);
             App.events.desligaUF(d);
             //App.renderBipartiteNone();
-            App.renderInfoUF([]);
+            App.renderInfoUF(null,[]);
         },
         ligaUF: function(d){
             d3.selectAll('.nodes_uf [data-uf='+d.UF+'] .UF-text')
@@ -1321,7 +1389,7 @@ var App = {
                 .transition().duration(300)
                 .attr('fill','#ddd');
         },
-        desligaUF: function(d){
+        desligaUF: function(){
             d3.selectAll('.nodes_uf .UF-text')
                 .transition().duration(300)
                 .attr('fill','#999');
