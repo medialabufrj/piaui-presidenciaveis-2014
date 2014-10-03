@@ -418,12 +418,12 @@ RangeTimeline = {
             .append('rect')
             .attr('class','rect')
             .attr('width', function(d){
-                return d.TEXTO.length*6;
+                return (d.TEXTO.length + 5)*6;
             })
             .attr('height', 24)
             .attr('y', 6)
             .attr('x', function(d){
-                return -d.TEXTO.length*3;
+                return -(d.TEXTO.length + 5)*3;
             })
             .attr('rx', 5)
             .attr('ry', 5)
@@ -445,7 +445,11 @@ RangeTimeline = {
             .attr('font-size',11)
             .attr('fill','#fff')
             .style('text-anchor', 'middle')
-            .text(function(d){return d.TEXTO;})
+            .text(function(d){
+                var format = locale.timeFormat('%d/%m - ');
+                var data = format(d.DATA);
+                return data + d.TEXTO;
+            })
             .attr('x',0)
             .attr('y',22)
             ;
