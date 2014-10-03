@@ -56,11 +56,11 @@ h1, h2, h3, h4, h5, h6, p {
 			cursor: pointer;
 		}
 	}
-	.vis-timeline {
-		
-	}
-	.vis-time-date {
-		color: #999;
+}
+
+#timeline-d3 {
+	.datedisplay {
+		fill: #999;
 		margin-left: 5px;
 		margin-bottom: 5px;
 		font-size: 20px;

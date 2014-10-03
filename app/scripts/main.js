@@ -208,6 +208,8 @@ RangeTimeline = {
 
     init: function(){
 
+        var _this = this;
+
         // drag behavior
 
         this.drag = d3.behavior.drag()
@@ -222,7 +224,16 @@ RangeTimeline = {
         this.wrapper = d3.select('#timeline-d3').append('svg')
             .attr('class','range-timeline')
             .attr('width', width)
-            .attr('height', 50)
+            .attr('height', 80)
+            ;
+
+        // date display
+
+        this.datedisplay = this.wrapper.append('text')
+            .attr('class', 'datedisplay')
+            .text('')
+            .attr('x',0)
+            .attr('y',20)
             ;
 
         // slider
@@ -230,6 +241,7 @@ RangeTimeline = {
         this.slider = this.wrapper.append('g')
             .data([{ x: 50, y: 50 }])
             .attr('class', 'slider')
+            .attr('transform', 'translate(0 30)')
             .call(this.drag)
             ;
 
@@ -273,6 +285,7 @@ RangeTimeline = {
 
         this.button = this.wrapper.append('g')
             .attr('class', 'play-button')
+            .attr('transform', 'translate(0 30)')
             .on('click',function(){
                 if(RangeTimeline.play_timeout){
                     RangeTimeline.clearPlay();
@@ -315,8 +328,135 @@ RangeTimeline = {
             .attr('fill', '#999')
             ;
 
+        // TOOLTIP
+
+        this.tooltip = this.wrapper.append('g')
+            .attr('class', 'tooltip')
+            ;
+
+        //this.tooltip.
+
+        // UPDATE
+
         this.updateSliderStep(0);
         this.play();
+
+        // LOAD MARCOS
+        
+        this.destaques_data = [];
+
+        var dsv = d3.dsv(';', 'text/plain');
+
+        dsv('./datasets/destaques.csv')
+            .row(function(d){
+                var format = d3.time.format('%d.%m.%Y');
+                d.DATA_STRING = d.DATA;
+                d.DATA = format.parse(d.DATA);
+                d.TIMESTAMP = +d.DATA;
+                return d;
+            })
+            .get(function(error, rows){
+                _this.destaques_data = rows;
+                _this.renderDestaques();
+            });
+    },
+
+    renderDestaques: function(){
+
+        var _this = this;
+
+        this.destaques = this.slider.selectAll('.destaques').data(this.destaques_data);
+        this.destaques
+            .enter().append('circle')
+            .attr('class','destaques')
+            .attr('r',0)
+            .attr('cy',26)
+            .attr('cx',function(d){
+                var stepW = (width-20-60)/(timeline.length-1);
+                return 64 + timeline.indexOf(d.TIMESTAMP) * stepW;
+            })
+            .attr('fill',function(d){return App.color(d.CANDIDATO);})
+            .on("mouseover", function(d){_this.showtooltip(d);})
+            .on("mouseout", function(d){_this.hidetooltip(d);})
+            .transition(300)
+            .attr('r',5)
+            ;
+    },
+
+    showtooltip: function(d){
+        this.updatetooltip([d]);
+    },
+
+    hidetooltip: function(d){
+        this.updatetooltip([]);
+    },
+
+    updatetooltip: function(data){
+
+        var text = this.tooltip.selectAll('.text').data(data);
+        var rect = this.tooltip.selectAll('.rect').data(data);
+        var seta = this.tooltip.selectAll('.seta').data(data);
+        
+        this.tooltip.data(data)
+            .attr('transform',function(d){
+                var stepW = (width-20-60)/(timeline.length-1);
+                var x = 64 + timeline.indexOf(d.TIMESTAMP) * stepW;
+                return 'translate(' + x + ' 10)';
+            })
+            .attr('opacity',0)
+            .transition(300)
+            .attr('opacity',1)
+            .attr('transform',function(d){
+                var stepW = (width-20-60)/(timeline.length-1);
+                var x = 64 + timeline.indexOf(d.TIMESTAMP) * stepW;
+                return 'translate(' + x + ' 6)';
+            });
+
+        rect
+            .enter()
+            .append('rect')
+            .attr('class','rect')
+            .attr('width', function(d){
+                return d.TEXTO.length*6;
+            })
+            .attr('height', 24)
+            .attr('y', 6)
+            .attr('x', function(d){
+                return -d.TEXTO.length*3;
+            })
+            .attr('rx', 5)
+            .attr('ry', 5)
+            .attr('fill',function(d){return App.color(d.CANDIDATO);})
+            ;
+
+        seta
+            .enter()
+            .append('polygon')
+            .attr('class','seta')
+            .attr('points', '-10,28 0,36 10,28')
+            .attr('fill',function(d){return App.color(d.CANDIDATO);})
+            ;
+
+        text
+            .enter()
+            .append('text')
+            .attr('class','text')
+            .attr('font-size',11)
+            .attr('fill','#fff')
+            .style('text-anchor', 'middle')
+            .text(function(d){return d.TEXTO;})
+            .attr('x',0)
+            .attr('y',22)
+            ;
+
+        text.exit()
+            .remove();
+
+        rect.exit()
+            .remove();
+
+        seta.exit()
+            .remove();
     },
 
     onDrag: function(){
@@ -336,7 +476,8 @@ RangeTimeline = {
         this.range.attr('width', other_x);
         this.circle.attr('cx', 20 + other_x - 16);
         
-        $('#vis-time-date .data').text(format(new Date(timeline[current])));
+        //$('#vis-time-date .data').text(format(new Date(timeline[current])));
+        this.datedisplay.text(format(new Date(timeline[current])));
         
         this.current = current;
 
