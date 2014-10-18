@@ -1570,8 +1570,8 @@ App = {
 
 
 loadDataset([
+    //'datasets/dados_marinasilva.csv',
     'datasets/dados_aecioneves.csv',
-    'datasets/dados_dilmarousseff.csv',
-    'datasets/dados_marinasilva.csv'
+    'datasets/dados_dilmarousseff.csv'
 ], App.init);
 
