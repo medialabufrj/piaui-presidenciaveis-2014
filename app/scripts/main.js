@@ -1409,7 +1409,7 @@ App = {
             case 'DILMA ROUSSEFF':
                 return '#cc3a3a';
             case 'NEUTRO':
-                return '#893bbe';
+                return '#606060';
 
         }
     },
