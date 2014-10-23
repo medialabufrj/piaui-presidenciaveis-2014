@@ -585,7 +585,7 @@ App = {
 
         RangeTimeline.init();
 
-        $('#vis-label-ext').text('exterior');
+        //$('#vis-label-ext').text('exterior');
 
     },
 
