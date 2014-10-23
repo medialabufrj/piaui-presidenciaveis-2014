@@ -402,6 +402,8 @@ RangeTimeline = {
             .attr('transform',function(d){
                 var stepW = (width-20-60)/(timeline.length-1);
                 var x = 64 + timeline.indexOf(d.TIMESTAMP) * stepW;
+                var w = (d.TEXTO.length + 5)*6*0.5;
+                x = Math.min(x,600-w);
                 return 'translate(' + x + ' 10)';
             })
             .attr('opacity',0)
@@ -410,6 +412,8 @@ RangeTimeline = {
             .attr('transform',function(d){
                 var stepW = (width-20-60)/(timeline.length-1);
                 var x = 64 + timeline.indexOf(d.TIMESTAMP) * stepW;
+                var w = (d.TEXTO.length + 5)*6*0.5;
+                x = Math.min(x,600-w);
                 return 'translate(' + x + ' 6)';
             });
 
@@ -436,6 +440,13 @@ RangeTimeline = {
             .attr('class','seta')
             .attr('points', '-10,28 0,36 10,28')
             .attr('fill',function(d){return App.color(d.CANDIDATO);})
+            .attr('transform',function(d){
+                var stepW = (width-20-60)/(timeline.length-1);
+                var px = 64 + timeline.indexOf(d.TIMESTAMP) * stepW;
+                var w = (d.TEXTO.length + 5)*6*0.5;
+                var x = px < 600-w ? 0 : (600-w-px)*-1;
+                return 'translate(' + x + ' 0)';
+            });
             ;
 
         text
@@ -1397,6 +1408,9 @@ App = {
                 return '#e9ba00';
             case 'DILMA ROUSSEFF':
                 return '#cc3a3a';
+            case 'NEUTRO':
+                return '#893bbe';
+
         }
     },
     image: function(candidato){
