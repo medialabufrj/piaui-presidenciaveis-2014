@@ -2,25 +2,28 @@
 
 #### Visualização interativa da agenda de campanha dos candidatos à presidência, desenvolvida no MediaLab UFRJ para o blog especial da Revista Piauí.
 
-- https://piaui.folha.uol.com.br/infografico-as-viagens-de-dilma-marina-e-aecio/
-- http://vis.medialabufrj.net/piaui/
+http://vis.medialabufrj.net/piaui/
+
 
 |     |     |     |
 | --- | --- | --- |
 | ![](http://marlus.com/associated-files/piaui-vis/presidenciaveis-1.jpg) | ![](http://marlus.com/associated-files/piaui-vis/presidenciaveis-2.jpg) | ![](http://marlus.com/associated-files/piaui-vis/presidenciaveis-3.jpg) |
 
+
+-----
+
+Transcrição da matéria original: https://piaui.folha.uol.com.br/infografico-as-viagens-de-dilma-marina-e-aecio/
+
 Analisamos os dados de viagem dos três principais candidatos a partir do dia 20 de agosto, data em que a candidatura de Marina Silva foi oficializada, até dia primeiro de outubro. Neste período, Dilma foi quem visitou menos estados no país. No total, a petista viajou a oito, contra 14 estados percorridos por Marina e 13, por Aécio.
 
 A Região Norte foi a menos lembrada pelos três presidenciáveis. No período analisado, nenhum candidato passou por Acre, Rondônia, Roraima, Amapá e Tocantins. Enquanto Dilma ficou mais pelo eixo Brasília-Rio de Janeiro-São Paulo, com caminhadas, coletivas de imprensa e reuniões, Aécio não passou pela capital no período. Marina foi a única a ir a Manaus, no Amazonas.
 
-Instruções adicionais:
+> **Instruções adicionais:**
+> - Mexa na linha do tempo à vontade para selecionar datas específicas
+> - Coloque o mouse em cima de um estado para saber quantas vezes cada candidato esteve ali
+> - Coloque o mouse em cima de uma bolinha vermelha, azul ou amarela para saber qual foi o compromisso do candidato naquele estado
+> - Marque a opção “visualizar por trajetória” para acompanhar os caminhos percorridos por cada candidato
 
-- Mexa na linha do tempo à vontade para selecionar datas específicas
-- Coloque o mouse em cima de um estado para saber quantas vezes cada candidato esteve ali
-- Coloque o mouse em cima de uma bolinha vermelha, azul ou amarela para saber qual foi o compromisso do candidato naquele estado
-- Marque a opção “visualizar por trajetória” para acompanhar os caminhos percorridos por cada candidato
-
-——
 
 A repórter Carol Pires, da piauí, avaliou os números do gráfico:
 
@@ -31,6 +34,8 @@ Maior colégio eleitoral do país, o Sudeste concentra 43% dos eleitores: daí a
 **Marina Silva:** Quando se tornou a cabeça de chapa da candidatura do PSB e os números dispararam – numa simulação de primeiro turno, chegou a empatar com Dilma Rousseff em pesquisas de âmbito nacional, ficando em primeiro lugar em São Paulo e no Rio de Janeiro –, a candidata foi brigar por votos no Nordeste. As viagens também visavam combater a “central de boatos”, como a notícia de que Marina iria acabar com o Bolsa Família.
 
 **Dilma Rousseff:** No Distrito Federal, o palanque de Dilma é fraco – Agnelo Queiroz, do PT, é o segundo na lista dos piores governadores do país, com índices de rejeição mais altos do que o ex-governador José Roberto Arruda, preso no exercício do mandato. Associar-se a ele não seria uma boa estratégia, ao contrário. Mas, como precisa conciliar os compromissos de presidente com os de candidata, várias reuniões foram feitas na capital – fora do horário expediente, sob pena de ser multada pela Justiça Eleitoral. Além do mais, seu comitê de campanha tem base em Brasília, que também abriga sucursais de boa parte da imprensa.
+
+-----
 
 **Distrito Federal e Goiás:**
 
@@ -73,11 +78,11 @@ Em Pernambuco, Marina Silva e a viúva do ex-governador, Renata Campos, assumira
 
 -----
 
-**Pesquisa e checagem de dados**
+**Pesquisa e checagem de dados**  
 Gabriela Caesar e Luiza Miguez
 
-**Visualização**
+**Visualização**  
 Medialab.UFRJ
 
-**Design**
+**Design**  
 Marlus Araujo
