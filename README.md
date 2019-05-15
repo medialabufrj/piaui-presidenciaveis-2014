@@ -1,9 +1,13 @@
 # INFOGRÁFICO: AS VIAGENS DE DILMA, MARINA E AÉCIO
 
-### Visualização interativa da agenda de campanha dos candidatos à presidência, desenvolvida no MediaLab UFRJ para o blog especial da Revista Piauí.
+#### Visualização interativa da agenda de campanha dos candidatos à presidência, desenvolvida no MediaLab UFRJ para o blog especial da Revista Piauí.
 
 - https://piaui.folha.uol.com.br/infografico-as-viagens-de-dilma-marina-e-aecio/
 - http://vis.medialabufrj.net/piaui/
+
+|     |     |     |
+| --- | --- | --- |
+| ![](http://marlus.com/associated-files/piaui-vis/presidenciaveis-1.jpg) | ![](http://marlus.com/associated-files/piaui-vis/presidenciaveis-2.jpg) | ![](http://marlus.com/associated-files/piaui-vis/presidenciaveis-3.jpg) |
 
 Analisamos os dados de viagem dos três principais candidatos a partir do dia 20 de agosto, data em que a candidatura de Marina Silva foi oficializada, até dia primeiro de outubro. Neste período, Dilma foi quem visitou menos estados no país. No total, a petista viajou a oito, contra 14 estados percorridos por Marina e 13, por Aécio.
 
@@ -65,3 +69,15 @@ Em Pernambuco, Marina Silva e a viúva do ex-governador, Renata Campos, assumira
 **Paraná:**
 
 É notável a ausência de Dilma no Paraná, onde Gleisi Hoffmann, ex-ministra da Casa Civil e muito próxima da presidenciável, está com apenas cerca de 10% das intenções de voto para o governo do estado. Beto Richa lidera e tem o apoio de Aécio Neves. Richa também era o candidato de Eduardo Campos, mas Marina, inicialmente contra as alianças com o PSDB nos estados, preferiu se manter neutra na campanha paranaense. Tal estratégia parece equivocada, pois a despeito de ter viajado ao estado para fazer campanha, a candidata perdeu a liderança nas pesquisas locais.
+
+
+-----
+
+**Pesquisa e checagem de dados**
+Gabriela Caesar e Luiza Miguez
+
+**Visualização**
+Medialab.UFRJ
+
+**Design**
+Marlus Araujo
