@@ -2,8 +2,7 @@
 
 #### Visualização interativa da agenda de campanha dos candidatos à presidência, desenvolvida no MediaLab UFRJ para o blog especial da Revista Piauí.
 
-http://vis.medialabufrj.net/piaui/
-
+https://medialabufrj.github.io/piaui-presidenciaveis-2014/
 
 |     |     |     |
 | --- | --- | --- |
