@@ -44,14 +44,8 @@ article {
 // ————————————————————————————————
 
 .article-header {
-	margin-bottom: 8px;
+	margin-bottom: 24px;
 	padding-bottom: 0;
-
-	hr {
-		border: none;
-		border-top: 1px solid $color-border;
-		margin: 20px 0;
-	}
 }
 
 .article-tag {
@@ -92,13 +86,8 @@ article {
 		letter-spacing: 0.05em;
 	}
 
-	&::after {
-		content: none;
-	}
-
 	.original-link {
-		padding-left: 12px;
-		border-left: 1px solid $color-border;
+		margin-left: 4px;
 	}
 }
 
@@ -107,9 +96,8 @@ article {
 	font-size: 18px;
 	line-height: 1.6;
 	color: #555;
-	margin: 0 0 24px;
+	margin: 0;
 }
-
 
 .instructions-title {
 	display: block;
@@ -123,14 +111,18 @@ article {
 }
 
 // ————————————————————————————————
-// Instructions
+// Vis Section (dataviz + instructions)
 // ————————————————————————————————
+
+.vis-section {
+	margin-bottom: 32px;
+}
 
 .instructions {
 	background: #f0f0f0;
 	border-radius: 4px;
 	padding: 16px 20px 16px 24px;
-	margin-bottom: 32px;
+	margin-top: 24px;
 	font-family: $basefont;
 	font-size: 12px;
 	font-weight: 300;
@@ -148,6 +140,22 @@ article {
 		&:last-child {
 			margin-bottom: 0;
 		}
+	}
+}
+
+@media (min-width: 1100px) {
+	.vis-section {
+		display: flex;
+		align-items: flex-start;
+		gap: 20px;
+	}
+
+	.instructions {
+		position: sticky;
+		top: 20px;
+		width: 180px;
+		min-width: 180px;
+		margin-top: 0;
 	}
 }
 
