@@ -1,26 +1,159 @@
-// bower:scss
-// endbower
-
 // Custom imports & styles here.
 
 $basefont: "Lato";
 $basefont_weight: 700;
-
+$seriffont: Georgia, "Times New Roman", serif;
+$color-text: #333;
+$color-muted: #888;
+$color-border: #e0e0e0;
+$color-bg: #fafafa;
 
 @import "web-fonts";
-@include web-fonts(($basefont:("400",$basefont_weight)));
+$titlefont: "Instrument Serif";
+
+@include web-fonts(($basefont:("300","400",$basefont_weight), $titlefont:("400")));
+
+// ————————————————————————————————
+// Base
+// ————————————————————————————————
 
 body {
-	background: #fefefe;
-	color: #444;
-	font-family: $basefont;
+	background: $color-bg;
+	color: $color-text;
+	font-family: $seriffont;
 	margin: 0;
 	padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6 {
 	font-family: $basefont;
 }
+
+// ————————————————————————————————
+// Article layout
+// ————————————————————————————————
+
+article {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 40px 20px 60px;
+}
+
+// ————————————————————————————————
+// Header
+// ————————————————————————————————
+
+.article-header {
+	margin-bottom: 8px;
+	padding-bottom: 0;
+
+	hr {
+		border: none;
+		border-top: 1px solid $color-border;
+		margin: 20px 0;
+	}
+}
+
+.article-tag {
+	display: block;
+	font-family: $basefont;
+	font-size: 11px;
+	font-weight: 400;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: $color-muted;
+	margin-bottom: 16px;
+
+	em {
+		font-style: normal;
+		font-weight: $basefont_weight;
+	}
+}
+
+.article-header h1 {
+	font-family: $titlefont, $seriffont;
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 1.2;
+	margin: 0 0 12px;
+	color: #111;
+}
+
+.header-meta {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+
+	time {
+		font-family: $basefont;
+		font-size: 12px;
+		color: $color-muted;
+		letter-spacing: 0.05em;
+	}
+
+	&::after {
+		content: none;
+	}
+
+	.original-link {
+		padding-left: 12px;
+		border-left: 1px solid $color-border;
+	}
+}
+
+.lead {
+	font-family: $seriffont;
+	font-size: 18px;
+	line-height: 1.6;
+	color: #555;
+	margin: 0 0 24px;
+}
+
+
+.instructions-title {
+	display: block;
+	font-family: $basefont;
+	font-size: 11px;
+	font-weight: $basefont_weight;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: $color-muted;
+	margin-bottom: 4px;
+}
+
+// ————————————————————————————————
+// Instructions
+// ————————————————————————————————
+
+.instructions {
+	background: #f0f0f0;
+	border-radius: 4px;
+	padding: 16px 20px 16px 24px;
+	margin-bottom: 32px;
+	font-family: $basefont;
+	font-size: 12px;
+	font-weight: 300;
+	color: #666;
+	line-height: 1.6;
+
+	ul {
+		margin: 0;
+		padding-left: 16px;
+	}
+
+	li {
+		margin-bottom: 4px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+// ————————————————————————————————
+// Visualization (existing styles)
+// ————————————————————————————————
 
 #container {
 	margin: 0 auto;
@@ -28,6 +161,9 @@ h1, h2, h3, h4, h5, h6, p {
 	height: auto;
 	background: #fff;
 	position: relative;
+	padding: 24px;
+	box-sizing: content-box;
+	font-family: $basefont;
 }
 
 .vis-control {
@@ -36,6 +172,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .vis-filter {
 	float: left;
+	font-family: $basefont;
 	font-size: 10px;
 	text-transform: uppercase;
 	&.right {
@@ -152,21 +289,22 @@ h1, h2, h3, h4, h5, h6, p {
 #vis-filter-candidatos {
 	position: absolute;
 	width: 110px;
-	top: 90px;
-	right: 0;
+	top: 114px;
+	right: 24px;
 	z-index: 5;
 }
 #vis-filter-vis {
 	position: absolute;
 	width: 110px;
-	top: 90px;
-	left: 0;
+	top: 114px;
+	left: 24px;
 	z-index: 5;
 }
 #vis-label-ext {
 	position: absolute;
-	top: 90px;
-	left: 250px;
+	top: 114px;
+	left: 274px;
+	font-family: $basefont;
 	font-size: 10px;
 	color: #999;
 	text-transform: uppercase;
@@ -193,6 +331,7 @@ h1, h2, h3, h4, h5, h6, p {
 	height: 120px;
 	margin-top: -60px;
 	margin-left: -110px;
+	font-family: $basefont;
 	font-size: 12px;
 	line-height: 1.5em;
 	z-index: 1;
@@ -210,25 +349,96 @@ h1, h2, h3, h4, h5, h6, p {
 	height: 80px;
 }
 
-.vis-footer {
-	color: #555;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid #eee;
-	margin: 12px 0;
-	padding: 12px 0;
+// ————————————————————————————————
+// Article body
+// ————————————————————————————————
+
+.article-body {
+	margin-top: 40px;
+	padding-top: 32px;
+	border-top: 1px solid $color-border;
+
+	p {
+		font-size: 17px;
+		line-height: 1.75;
+		margin: 0 0 20px;
+		color: $color-text;
+	}
+
+	.analysis-intro {
+		font-size: 17px;
+		color: #555;
+	}
+
+	hr {
+		border: none;
+		border-top: 1px solid $color-border;
+		margin: 32px 0;
+	}
+
+	h2 {
+		font-size: 22px;
+		font-weight: $basefont_weight;
+		margin: 40px 0 20px;
+		color: #111;
+	}
+
+	h3 {
+		font-size: 17px;
+		font-weight: $basefont_weight;
+		margin: 28px 0 12px;
+		color: #222;
+	}
+}
+
+// ————————————————————————————————
+// Footer
+// ————————————————————————————————
+
+.article-footer {
+	margin-top: 48px;
+	padding-top: 24px;
+	border-top: 1px solid $color-border;
+}
+
+.credits {
 	overflow: hidden;
+	margin-top: 24px;
+	margin-bottom: 24px;
+
 	dl {
 		float: left;
+		font-family: $basefont;
 		font-size: 12px;
 		padding: 0;
 		margin: 0;
 		margin-right: 20px;
+
 		dt {
 			font-weight: $basefont_weight;
+			color: #555;
 		}
+
 		dd {
 			margin: 0;
 			padding: 0;
+			color: $color-muted;
 		}
+	}
+}
+
+.original-link {
+	display: inline-block;
+	font-family: $basefont;
+	font-size: 13px;
+	color: $color-muted;
+	text-decoration: none;
+	border-bottom: 1px solid $color-border;
+	padding-bottom: 2px;
+	transition: color 0.2s, border-color 0.2s;
+
+	&:hover {
+		color: $color-text;
+		border-color: $color-text;
 	}
 }
